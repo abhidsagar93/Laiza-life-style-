@@ -41,10 +41,14 @@ function json(res, statusCode, body) {
 }
 
 function generateInvoiceNumber(orderNumber) {
-  // Unique per call — even a regenerated link for the same order gets a fresh reference,
-  // since PayU rejects a reused invoice number outright.
-  const suffix = Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase();
-  return `PAYU-${orderNumber}-${suffix}`.slice(0, 50);
+  // PayU requires this to be strictly alphanumeric — no hyphens, underscores, or
+  // any other punctuation. Still unique per call, since PayU rejects a reused
+  // invoice number outright (even on an intentional regenerate).
+  const cleanOrderNumber = String(orderNumber).replace(/[^a-zA-Z0-9]/g, '');
+  const suffix = (Date.now().toString(36) + Math.random().toString(36).slice(2, 6))
+    .replace(/[^a-zA-Z0-9]/g, '')
+    .toUpperCase();
+  return `PAYU${cleanOrderNumber}${suffix}`.slice(0, 50);
 }
 
 async function getPayUAccessToken(env) {
@@ -222,4 +226,57 @@ module.exports = async function handler(req, res) {
         amount,
         status: 'failed',
         payu_raw_response: payuResult,
-        error_message: failMes
+        error_message: failMessage,
+        created_by: adminUserId
+      });
+      return json(res, 502, { error: failMessage });
+    }
+  } catch (err) {
+    await supabaseAdmin.from('payu_payment_links').insert({
+      order_id: orderId,
+      invoice_number: invoiceNumber,
+      amount,
+      status: 'failed',
+      error_message: err.message,
+      created_by: adminUserId
+    });
+    return json(res, 502, { error: 'Could not reach PayU: ' + err.message });
+  }
+
+  // ---- 9. Save the successful result ----
+  const { data: savedLink, error: saveError } = await supabaseAdmin
+    .from('payu_payment_links')
+    .insert({
+      order_id: orderId,
+      invoice_number: invoiceNumber,
+      payment_link: payuResult.result.paymentLink,
+      amount,
+      status: 'active',
+      payu_raw_response: payuResult.result,
+      expiry_date: payuResult.result.expiryDate || null,
+      created_by: adminUserId
+    })
+    .select()
+    .single();
+
+  if (saveError) {
+    // The link WAS created on PayU's side even though our save failed — surface both facts
+    // rather than silently losing track of a real, live payment link.
+    return json(res, 500, {
+      error: 'Payment link was created on PayU but could not be saved: ' + saveError.message,
+      paymentLink: payuResult.result.paymentLink,
+      invoiceNumber
+    });
+  }
+
+  // ---- 10. Return the payment URL to the admin panel ----
+  return json(res, 200, {
+    reused: false,
+    id: savedLink.id,
+    paymentLink: savedLink.payment_link,
+    invoiceNumber: savedLink.invoice_number,
+    amount: savedLink.amount,
+    expiryDate: savedLink.expiry_date
+  });
+};
+
