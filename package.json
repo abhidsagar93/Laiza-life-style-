@@ -1,0 +1,13 @@
+{
+  "name": "laiza-lifestyle",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Laiza Lifestyle storefront (static) + Vercel serverless functions (/api)",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}
+
