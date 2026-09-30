@@ -339,6 +339,16 @@ module.exports = async (req, res) => {
     })
     .eq('id', orderId);
 
+  // Move the order along: an AWB means it is booked with the courier and waiting for pickup.
+  // Later statuses (Shipped, Delivered…) are set automatically by sync-tracking.js.
+  if (['pending', 'confirmed', 'processing', 'packed'].includes(order.status)) {
+    await supabaseAdmin.from('orders').update({ status: 'ready_for_dispatch' }).eq('id', orderId);
+    await supabaseAdmin.from('order_status_history').insert({
+      order_id: orderId, status: 'ready_for_dispatch',
+      note: `Shipment booked with ${courierName} — AWB ${awbCode}`
+    });
+  }
+
   await supabaseAdmin
     .from('delivery_orders')
     .insert({
