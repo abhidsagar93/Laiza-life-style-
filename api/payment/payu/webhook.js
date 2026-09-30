@@ -129,7 +129,7 @@ module.exports = async function handler(req, res) {
 
   const { data: order } = await supabaseAdmin
     .from('orders')
-    .select('id, order_number, payment_status')
+    .select('id, order_number, payment_status, status')
     .eq('id', orderId)
     .single();
 
@@ -149,8 +149,18 @@ module.exports = async function handler(req, res) {
   if (isSuccess) {
     await supabaseAdmin
       .from('orders')
-      .update({ payment_status: 'paid' })
+      .update({
+        payment_status: 'paid',
+        // A new order that is now paid is confirmed; never overwrite a later status.
+        ...(order.status === 'pending' ? { status: 'confirmed' } : {})
+      })
       .eq('id', orderId);
+
+    if (order.status === 'pending') {
+      await supabaseAdmin.from('order_status_history').insert({
+        order_id: orderId, status: 'confirmed', note: `Payment received via PayU (txn ${payload.txnid || '—'})`
+      });
+    }
 
     await supabaseAdmin
       .from('payu_payment_links')
