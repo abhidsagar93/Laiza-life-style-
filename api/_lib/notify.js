@@ -30,13 +30,20 @@ function escapeHtml(s) {
   ));
 }
 
+// Numbers (order no., amount, AWB) are shown in Arial so they read as plain,
+// straight digits instead of the serif email font's old-style numerals.
+const NUM_STYLE = 'font-family:Arial,Helvetica,sans-serif';
+function num(s) {
+  return `<span style="${NUM_STYLE}">${escapeHtml(s)}</span>`;
+}
+
 function money(n) {
   return '₹' + Number(n || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 });
 }
 
 function buildEmail(event, o) {
   const name = escapeHtml(o.name);
-  const num = escapeHtml(o.order_number);
+  const orderNo = num(o.order_number);
   let subject, heading, body;
 
   if (event === 'confirmed') {
@@ -44,23 +51,23 @@ function buildEmail(event, o) {
     heading = 'Thank you for your order!';
     body = `
       <p>Hi ${name},</p>
-      <p>Your order <strong>${num}</strong> is confirmed and being prepared.</p>
-      <p style="font-size:18px;margin:20px 0"><strong>Total: ${escapeHtml(money(o.total))}</strong></p>
+      <p>Your order <strong>${orderNo}</strong> is confirmed and being prepared.</p>
+      <p style="font-size:18px;margin:20px 0"><strong>Total: ${num(money(o.total))}</strong></p>
       <p>We'll email you again with a tracking link as soon as it ships.</p>`;
   } else if (event === 'shipped') {
     subject = `Your order ${o.order_number} has shipped — Laiza Lifestyle`;
     heading = 'Your order is on its way';
     body = `
       <p>Hi ${name},</p>
-      <p>Your order <strong>${num}</strong> has shipped via <strong>${escapeHtml(o.courier_name || 'our courier partner')}</strong>.</p>
-      ${o.awb_code ? `<p>Tracking number (AWB): <strong>${escapeHtml(o.awb_code)}</strong></p>` : ''}
+      <p>Your order <strong>${orderNo}</strong> has shipped via <strong>${escapeHtml(o.courier_name || 'our courier partner')}</strong>.</p>
+      ${o.awb_code ? `<p>Tracking number (AWB): <strong>${num(o.awb_code)}</strong></p>` : ''}
       ${o.tracking_url ? `<p style="margin:24px 0"><a href="${escapeHtml(o.tracking_url)}" style="background:#1a1a1a;color:#fff;padding:12px 22px;text-decoration:none;border-radius:4px;display:inline-block">Track your order</a></p>` : ''}`;
   } else if (event === 'delivered') {
     subject = `Order ${o.order_number} delivered — Laiza Lifestyle`;
     heading = 'Delivered!';
     body = `
       <p>Hi ${name},</p>
-      <p>Your order <strong>${num}</strong> has been delivered. We hope you love it.</p>
+      <p>Your order <strong>${orderNo}</strong> has been delivered. We hope you love it.</p>
       <p>Thank you for shopping with Laiza Lifestyle.</p>`;
   } else {
     return null;
