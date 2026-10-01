@@ -84,20 +84,25 @@ async function handleCreateCheckout(req, res) {
     auth: { autoRefreshToken: false, persistSession: false }
   });
 
-  // ---- 1. Authenticate the customer ----
+  // ---- 1. Identify the customer ----
+  // Signed-in customers send their session token. Guests (no account) send none —
+  // they may only pay for a guest order (user_id is null) that was created recently,
+  // which is checked in step 3. The order id itself is an unguessable UUID.
   const authHeader = req.headers.authorization || '';
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
-  if (!token) {
-    return json(res, 401, { error: 'Missing Authorization header' });
+  let userData = null;
+  let userId = null;
+  if (token) {
+    const { data, error: userError } = await supabaseAdmin.auth.getUser(token);
+    if (userError || !data?.user) {
+      console.error('create-checkout: auth.getUser failed', {
+        message: userError?.message, status: userError?.status, name: userError?.name
+      });
+      return json(res, 401, { error: 'Invalid or expired session' });
+    }
+    userData = data;
+    userId = data.user.id;
   }
-  const { data: userData, error: userError } = await supabaseAdmin.auth.getUser(token);
-  if (userError || !userData?.user) {
-    console.error('create-checkout: auth.getUser failed', {
-      message: userError?.message, status: userError?.status, name: userError?.name
-    });
-    return json(res, 401, { error: 'Invalid or expired session' });
-  }
-  const userId = userData.user.id;
 
   // ---- 2. Parse input — orderId ONLY. Amount is never accepted from the client. ----
   let body;
@@ -114,15 +119,22 @@ async function handleCreateCheckout(req, res) {
   // ---- 3. Fetch the order — the ONLY source of truth for amount ----
   const { data: order, error: orderError } = await supabaseAdmin
     .from('orders')
-    .select('id, order_number, user_id, total, status, payment_status')
+    .select('id, order_number, user_id, total, status, payment_status, created_at, customer_email, shipping_full_name, shipping_phone')
     .eq('id', orderId)
     .single();
 
   if (orderError || !order) {
     return json(res, 404, { error: 'Order not found' });
   }
-  if (order.user_id !== userId) {
-    return json(res, 403, { error: 'Not authorized to pay for this order.' });
+  const isGuestOrder = order.user_id === null;
+  if (isGuestOrder) {
+    // Guest orders can be paid from the checkout page right after they're placed.
+    const ageMs = Date.now() - new Date(order.created_at).getTime();
+    if (!(ageMs >= 0 && ageMs < 2 * 60 * 60 * 1000)) {
+      return json(res, 403, { error: 'This payment session has expired. Please contact us on WhatsApp to complete payment.' });
+    }
+  } else if (order.user_id !== userId) {
+    return json(res, userId ? 403 : 401, { error: userId ? 'Not authorized to pay for this order.' : 'Please log in to pay for this order.' });
   }
   if (order.payment_status === 'paid') {
     return json(res, 409, { error: 'This order has already been paid.' });
@@ -137,12 +149,17 @@ async function handleCreateCheckout(req, res) {
   }
 
   // ---- 4. Customer contact info (required by Hosted Checkout) ----
-  const { data: profile } = await supabaseAdmin
-    .from('profiles').select('full_name, email, phone').eq('id', userId).single();
+  let profile = null;
+  if (userId) {
+    const { data } = await supabaseAdmin
+      .from('profiles').select('full_name, email, phone').eq('id', userId).single();
+    profile = data;
+  }
 
-  const firstname = (profile?.full_name || 'Customer').split(' ')[0].slice(0, 60);
-  const email = profile?.email || userData.user.email || '';
-  const phone = (profile?.phone || '').replace(/\D/g, '').slice(-10);
+  // Guests: everything comes from the details they typed at checkout (saved on the order).
+  const firstname = (profile?.full_name || order.shipping_full_name || 'Customer').trim().split(' ')[0].slice(0, 60) || 'Customer';
+  const email = profile?.email || userData?.user?.email || order.customer_email || '';
+  const phone = (profile?.phone || order.shipping_phone || '').replace(/\D/g, '').slice(-10);
 
   if (!email) {
     return json(res, 400, { error: 'A valid email is required to start payment. Please update your profile.' });
