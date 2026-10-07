@@ -13,6 +13,8 @@
 // what went out and what failed. A notification failure never throws back into
 // payment or shipping logic.
 
+const { sendMetaPurchase } = require('./meta-capi');
+
 const FROM_EMAIL = 'Laiza Lifestyle <orders@laizalifestyle.com>';
 const REPLY_TO = 'laizalifestyle@gmail.com';
 const SITE_URL = 'https://laizalifestyle.com';
@@ -147,8 +149,68 @@ async function sendWhatsApp(phone, event, o) {
     : { status: 'failed', detail: JSON.stringify(data).slice(0, 500) };
 }
 
+
+// ---------- Admin alert: email the shop owner the moment an order is confirmed ----------
+// (COD orders: right after checkout. Online orders: once PayU confirms payment.)
+// Uses store_settings.notify_admin_new_order + admin_notification_email from the admin panel.
+async function alertAdminNewOrder(supabaseAdmin, orderId) {
+  const key = process.env.RESEND_API_KEY;
+  const { data: st } = await supabaseAdmin
+    .from('store_settings').select('notify_admin_new_order, admin_notification_email').limit(1).maybeSingle();
+  const to = st?.admin_notification_email;
+  const log = (result) => supabaseAdmin.from('notification_log').insert({
+    order_id: orderId, event: 'admin_new_order', channel: 'email', recipient: to || null, status: result.status, detail: result.detail || null
+  });
+  if (!st || st.notify_admin_new_order === false) return;
+  if (!key || !to) { await log({ status: 'skipped', detail: !key ? 'RESEND_API_KEY not set' : 'no admin email in settings' }); return; }
+
+  const { data: already } = await supabaseAdmin.from('notification_log').select('id')
+    .eq('order_id', orderId).eq('event', 'admin_new_order').eq('status', 'sent').limit(1);
+  if (already && already.length) return;
+
+  const { data: o } = await supabaseAdmin.from('orders')
+    .select('order_number, total, payment_method, payment_status, shipping_full_name, customer_name, shipping_phone, shipping_address, shipping_city, shipping_state, shipping_pincode, discount_amount, offer_discount, created_at')
+    .eq('id', orderId).maybeSingle();
+  if (!o) return;
+  const { data: items } = await supabaseAdmin.from('order_items')
+    .select('product_name, quantity, line_total').eq('order_id', orderId);
+
+  const name = o.shipping_full_name || o.customer_name || 'Customer';
+  const isCod = /cash on delivery|\bcod\b/i.test(o.payment_method || '');
+  const payLabel = isCod ? 'Cash on Delivery — collect on delivery' : `Paid online (${escapeHtml(o.payment_method || 'PayU')})`;
+  const rows = (items || []).map(i => `<tr><td style="padding:6px 0">${escapeHtml(i.product_name)} × ${num(i.quantity)}</td><td align="right" style="padding:6px 0">${num(money(i.line_total))}</td></tr>`).join('');
+  const subject = `🛍️ New order ${o.order_number} — ${money(o.total)} (${isCod ? 'COD' : 'Paid'})`;
+  const html = `<!doctype html><html><body style="margin:0;background:#f5f3ef;font-family:Arial,Helvetica,sans-serif;color:#1a1a1a">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:20px 10px"><tr><td align="center">
+  <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fff;border-radius:6px;overflow:hidden">
+    <tr><td style="background:#1a1a1a;color:#e8ce93;padding:16px 24px;font-size:18px;letter-spacing:3px">LAIZA · NEW ORDER</td></tr>
+    <tr><td style="padding:22px 24px;font-size:15px;line-height:1.55">
+      <p style="font-size:22px;margin:0 0 6px"><strong>${num(o.order_number)}</strong></p>
+      <p style="font-size:20px;margin:0 0 14px;color:#2f7a47"><strong>${num(money(o.total))}</strong> · ${payLabel}</p>
+      <table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #eee;border-bottom:1px solid #eee;margin:8px 0 14px">${rows}</table>
+      <p style="margin:0"><strong>${escapeHtml(name)}</strong> · ${num(o.shipping_phone || '')}</p>
+      <p style="margin:4px 0 0;color:#555">${escapeHtml([o.shipping_address, o.shipping_city, o.shipping_state, o.shipping_pincode].filter(Boolean).join(', '))}</p>
+      <p style="margin:22px 0 0"><a href="${SITE_URL}/admin" style="background:#c9a24b;color:#1a1408;padding:12px 22px;text-decoration:none;border-radius:6px;display:inline-block;font-weight:bold">Open admin panel</a></p>
+    </td></tr>
+  </table></td></tr></table></body></html>`;
+
+  try {
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: FROM_EMAIL, to: [to], subject, html })
+    });
+    const data = await r.json().catch(() => ({}));
+    await log(r.ok ? { status: 'sent', detail: data.id || '' } : { status: 'failed', detail: JSON.stringify(data).slice(0, 500) });
+  } catch (err) {
+    await log({ status: 'failed', detail: err.message });
+  }
+}
+
 // event: 'confirmed' | 'shipped' | 'delivered'
 async function notifyOrder(supabaseAdmin, orderId, event) {
+  if (event === 'confirmed') { try { await alertAdminNewOrder(supabaseAdmin, orderId); } catch (_) {} }
+  if (event === 'confirmed') { try { await sendMetaPurchase(supabaseAdmin, orderId); } catch (_) {} }
   const { data: order } = await supabaseAdmin
     .from('orders')
     .select('id, user_id, order_number, total, customer_name, customer_email, shipping_full_name, shipping_phone, awb_code, courier_name, tracking_url')
