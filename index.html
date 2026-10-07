@@ -7695,6 +7695,51 @@
     showDashboard(); setTimeout(() => document.getElementById('dashOrders')?.scrollIntoView({ behavior: 'smooth' }), 300);
   }
   (function(){ const _h = hideAllViews; hideAllViews = function(){ document.getElementById('tyView')?.classList.remove('show'); return _h.apply(this, arguments); }; })();
+  /* ---------- Order discount breakdown: online offer / coupon / reward points ---------- */
+  const lzPtsCache = {};
+  function lzRup(n){ return '₹' + Number(n || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 }); }
+  function lzDiscRowsInner(o, pts, isAdmin){
+    const g = 'class="order-cost-row" style="color:#3f7d4f;"';
+    const total = Number(o.discount_amount || 0), offer = Number(o.offer_discount || 0);
+    const used = pts ? pts.used : 0;
+    const coupon = Math.max(0, Math.round(total - offer - used));
+    let h = '';
+    if(offer > 0) h += `<div ${g}><span>Online payment offer${Number(o.offer_percent) ? ' (' + Number(o.offer_percent) + '%)' : ''}</span><span>-${lzRup(offer)}</span></div>`;
+    if(coupon > 0) h += `<div ${g}><span>Coupon${o.coupon_code ? ' (' + o.coupon_code + ')' : ''}</span><span>-${lzRup(coupon)}</span></div>`;
+    if(used > 0) h += `<div ${g}><span>Reward points used (${used} pts)</span><span>-${lzRup(used)}</span></div>`;
+    if(pts && pts.earned > 0) h += `<div class="order-cost-row" style="color:#9c7a3c;font-size:12px;"><span>Reward points earned</span><span>+${pts.earned} pts</span></div>`;
+    if(isAdmin && pts && pts.balance != null) h += `<div class="order-cost-row" style="color:#9c8f74;font-size:12px;"><span>Customer's points balance now</span><span>${pts.balance} pts (${lzRup(pts.balance)})</span></div>`;
+    return h;
+  }
+  function lzDiscRowsHtml(o, isAdmin){
+    if(!o || !o.id) return '';
+    setTimeout(lzFillDiscRows, 30); setTimeout(lzFillDiscRows, 600);
+    return `<div class="lz-disc-rows" data-lzdisc="${o.id}" data-admin="${isAdmin ? 1 : 0}" data-o='${JSON.stringify({ id: o.id, user_id: o.user_id || null, discount_amount: o.discount_amount, offer_discount: o.offer_discount, offer_percent: o.offer_percent, coupon_code: o.coupon_code || null }).replace(/'/g, '&#39;')}'>${lzDiscRowsInner(o, lzPtsCache[o.id + (isAdmin ? 'a' : '')], isAdmin)}</div>`;
+  }
+  async function lzFillDiscRows(){
+    const els = document.querySelectorAll('.lz-disc-rows:not([data-done])');
+    for(const el of els){
+      el.setAttribute('data-done', '1');
+      let o; try { o = JSON.parse(el.getAttribute('data-o')); } catch(e){ continue; }
+      const isAdmin = el.getAttribute('data-admin') === '1';
+      const key = o.id + (isAdmin ? 'a' : '');
+      let pts = lzPtsCache[key];
+      if(!pts && o.user_id){
+        try {
+          const { data } = await supabaseClient.from('reward_points_log').select('points').eq('order_id', o.id);
+          pts = { used: 0, earned: 0, balance: null };
+          (data || []).forEach(r => { const p = Number(r.points || 0); if(p < 0) pts.used += -p; else pts.earned += p; });
+          if(isAdmin){
+            const { data: all } = await supabaseClient.from('reward_points_log').select('points').eq('user_id', o.user_id);
+            if(all) pts.balance = Math.round(all.reduce((s, r) => s + Number(r.points || 0), 0));
+          }
+          lzPtsCache[key] = pts;
+        } catch(e){ pts = null; }
+      }
+      el.innerHTML = lzDiscRowsInner(o, pts, isAdmin);
+    }
+  }
+
   /* ---------- Photo card decks: swipe the top card to the back of the pile ---------- */
   function initLzDeck(root){
     const stack = root.querySelector('.lzd-stack');
@@ -11376,7 +11421,7 @@
         <div class="order-inline-label">Items</div>
         ${itemsHtml || '<p style="color:#9c8f74;font-size:12.5px;">No item details recorded.</p>'}
         <div class="order-cost-row" style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);"><span>Subtotal</span><span>₹${subtotal.toLocaleString('en-IN')}</span></div>
-        ${o.discount_amount > 0 ? `<div class="order-cost-row" style="color:#3f7d4f;"><span>Discount${o.coupon_code ? ' (' + o.coupon_code + ')' : ''}</span><span>-₹${Number(o.discount_amount).toLocaleString('en-IN')}</span></div>` : ''}
+        ${lzDiscRowsHtml(o, !isCustomerView)}
         ${o.gst_amount > 0 ? `<div class="order-cost-row"><span>GST</span><span>₹${Number(o.gst_amount).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span></div>` : ''}
         <div class="order-cost-row"><span>Shipping</span><span>${(!o.shipping_amount || o.shipping_amount == 0) ? 'FREE' : '₹' + Number(o.shipping_amount).toLocaleString('en-IN')}</span></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -12189,7 +12234,7 @@
       <div class="order-modal-section">
         <h5>Payment Summary</h5>
         <div class="order-cost-row"><span>Subtotal</span><span>₹${subtotal.toLocaleString('en-IN')}</span></div>
-        ${o.discount_amount > 0 ? `<div class="order-cost-row" style="color:#3f7d4f;"><span>Discount${o.coupon_code ? ' (' + o.coupon_code + ')' : ''}</span><span>-₹${Number(o.discount_amount).toLocaleString('en-IN')}</span></div>` : ''}
+        ${lzDiscRowsHtml(o, true)}
         ${o.gst_amount > 0 ? `<div class="order-cost-row"><span>GST</span><span>₹${Number(o.gst_amount).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span></div>` : ''}
         <div class="order-cost-row"><span>Shipping</span><span>${(!o.shipping_amount || o.shipping_amount == 0) ? 'FREE' : '₹' + Number(o.shipping_amount).toLocaleString('en-IN')}</span></div>
         <div class="order-total-row"><span>Total</span><span>${money(o.total)}</span></div>
