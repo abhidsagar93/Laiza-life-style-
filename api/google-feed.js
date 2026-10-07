@@ -104,7 +104,7 @@ module.exports = async (req, res) => {
     '  <channel>',
     '    <title>Laiza Lifestyle</title>',
     `    <link>${SITE}</link>`,
-    '    <description>Premium handcrafted leather wallets, card holders and accessories.</description>',
+    '    <description>Premium leather wallets, card holders and accessories.</description>',
     ...items,
     '  </channel>',
     '</rss>'
@@ -114,4 +114,3 @@ module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
   res.status(200).end(body);
 };
-        
