@@ -13,6 +13,16 @@
 // META_TEST_EVENT_CODE (optional, only while testing).
 
 const crypto = require('crypto');
+const IN_STATES = {
+  AN: 'Andaman & Nicobar', AP: 'Andhra Pradesh', AR: 'Arunachal Pradesh', AS: 'Assam', BR: 'Bihar',
+  CH: 'Chandigarh', CT: 'Chhattisgarh', CG: 'Chhattisgarh', DN: 'Dadra & Nagar Haveli and Daman & Diu',
+  DH: 'Dadra & Nagar Haveli and Daman & Diu', DD: 'Daman & Diu', DL: 'Delhi', GA: 'Goa', GJ: 'Gujarat',
+  HR: 'Haryana', HP: 'Himachal Pradesh', JK: 'Jammu & Kashmir', JH: 'Jharkhand', KA: 'Karnataka',
+  KL: 'Kerala', LA: 'Ladakh', LD: 'Lakshadweep', MP: 'Madhya Pradesh', MH: 'Maharashtra', MN: 'Manipur',
+  ML: 'Meghalaya', MZ: 'Mizoram', NL: 'Nagaland', OR: 'Odisha', OD: 'Odisha', PY: 'Puducherry', PB: 'Punjab',
+  RJ: 'Rajasthan', SK: 'Sikkim', TN: 'Tamil Nadu', TG: 'Telangana', TS: 'Telangana', TR: 'Tripura',
+  UP: 'Uttar Pradesh', UT: 'Uttarakhand', UK: 'Uttarakhand', WB: 'West Bengal'
+};
 const DEFAULT_PIXEL_ID = '2180019866727441';
 const sha = v => crypto.createHash('sha256').update(String(v)).digest('hex');
 const low = v => (typeof v === 'string' ? v.trim().toLowerCase().slice(0, 120) : '');
@@ -68,7 +78,14 @@ module.exports = async (req, res) => {
   const u = body.u && typeof body.u === 'object' ? body.u : {};
   const em = low(u.em); const ph = phoneE164(u.ph);
   const fn = low(u.fn).replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean);
-  const ct = low(u.ct).replace(/[^a-z]/g, ''); const st = low(u.st).replace(/[^a-z]/g, ''); const zp = String(u.zp || '').replace(/\D/g, '').slice(0, 6);
+  // If the visitor has not typed an address yet, use the city / state / pincode of their
+  // internet connection (Vercel adds these headers) so every event has at least one
+  // location key, as Meta asks.
+  const hdr = n => { try { return decodeURIComponent(String(req.headers[n] || '')); } catch (_) { return String(req.headers[n] || ''); } };
+  const inIndia = String(req.headers['x-vercel-ip-country'] || '').toUpperCase() === 'IN';
+  const ct = (low(u.ct) || (inIndia ? low(hdr('x-vercel-ip-city')) : '')).replace(/[^a-z]/g, '');
+  const st = (low(u.st) || (inIndia ? low(IN_STATES[hdr('x-vercel-ip-country-region').toUpperCase()] || '') : '')).replace(/[^a-z]/g, '');
+  const zp = (String(u.zp || '') || (inIndia ? hdr('x-vercel-ip-postal-code') : '')).replace(/\D/g, '').slice(0, 6);
   const ext = [];
   if (typeof u.uid === 'string' && u.uid) ext.push(sha(u.uid.slice(0, 64)));          // same as Purchase for logged-in customers
   if (ph) ext.push(sha('ph' + ph));                                                     // same as Purchase for guests
