@@ -276,7 +276,7 @@ module.exports = async (req, res) => {
                 transaction_charges: '0',
                 total_discount: String(order.discount_amount || 0),
                 first_attemp_discount: '0',
-                cod_charges: '0',
+                cod_charges: String(isCod ? Number(order.cod_fee || 0) : 0),
                 advance_amount: '0',
                 cod_amount: isCod ? String(order.total) : '0',
                 payment_mode: isCod ? 'COD' : 'Prepaid',
