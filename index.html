@@ -2232,6 +2232,49 @@
   #lzBuyToast p{margin:0;font:13px/1.35 Arial,sans-serif;} #lzBuyToast small{color:#7a6d58;font:11.5px Arial,sans-serif;}
   #lzBuyToast .x{position:absolute;right:6px;top:4px;border:none;background:none;font-size:18px;color:#8a7a5f;cursor:pointer;}
   @media (min-width:900px){ #lzBuyToast{bottom:24px;} }
+  /* ===== Accounts: shop bills, dues, vouchers, books, to-do ===== */
+  .lzx-muted{color:#8a7e6a;font-size:12.5px;}
+  .lzx-h4{font-size:13.5px;margin:18px 0 8px;color:var(--gold-deep,#8A6A22);letter-spacing:.3px;}
+  .lzx-pill{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.3px;padding:3px 9px;border-radius:20px;background:rgba(201,162,75,.18);color:#8A6A22;white-space:nowrap;vertical-align:middle;}
+  .lzx-pill.g{background:rgba(63,125,79,.15);color:#2f7a47;} .lzx-pill.o{background:rgba(214,140,30,.18);color:#9a5a00;} .lzx-pill.r{background:rgba(179,70,47,.15);color:#b4321f;}
+  .lzx-tabs{display:flex;gap:6px;flex-wrap:wrap;}
+  .lzx-tabs button{border:1px solid #d8c39a;background:#fffaf1;color:#5c5346;border-radius:999px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px;}
+  .lzx-tabs button.on{background:linear-gradient(90deg,#c9a24b,#f1dca4);color:#1a1408;border-color:#c9a24b;}
+  .lzx-btn{display:inline-flex;align-items:center;gap:6px;border:none;background:#c9a24b;color:#1a1408;font-weight:700;font-size:12.5px;padding:8px 14px;border-radius:8px;cursor:pointer;margin:2px 4px 2px 0;}
+  .lzx-btn.ghost{background:#fffaf1;border:1px solid #c9a24b;color:#8A6A22;}
+  .lzx-btn.wa{background:#25D366;color:#fff;}
+  .lzx-btn.sm{padding:5px 10px;font-size:11.5px;}
+  .lzx-btn:hover{filter:brightness(1.06);}
+  #adminView .lzx-btn,#adminView .lzx-tabs button{width:auto;min-width:0;flex:none;}
+  #adminView .lzx-tact{flex-direction:row;align-items:center;}
+  .lzx-bill td{vertical-align:top;}
+  .lzx-bill select{min-width:200px;max-width:100%;}
+  .lzx-bill input{padding:7px 8px;border:1px solid #d8c39a;border-radius:6px;background:#fff;}
+  .lzx-totals{margin:14px 0 0 auto;max-width:360px;font-size:13.5px;}
+  .lzx-totals > div{display:flex;justify-content:space-between;gap:12px;padding:4px 0;}
+  .lzx-totals .gt{border-top:2px solid #241E17;margin-top:6px;padding-top:8px;font-size:17px;}
+  .lzx-box{border-top:1px dashed #d8c39a;margin-top:14px;padding-top:14px;}
+  .lzx-ok{background:rgba(63,125,79,.10);border:1px solid rgba(63,125,79,.35);border-radius:10px;padding:12px 14px;margin-top:12px;font-size:13.5px;}
+  .lzx-todo{display:flex;flex-direction:column;gap:8px;}
+  .lzx-ti{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:#fffaf1;border:1px solid #eadcc0;border-left:5px solid #c9a24b;}
+  .lzx-ti.overdue{border-left-color:#b4321f;background:#fff4f1;} .lzx-ti.soon{border-left-color:#d68c1e;} .lzx-ti.later{border-left-color:#bdb39f;} .lzx-ti.done{border-left-color:#2f7a47;opacity:.75;}
+  .lzx-ti.overdue .lzx-when{color:#b4321f;font-weight:700;}
+  .lzx-tcat{flex:none;width:78px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#8A6A22;}
+  .lzx-tmain{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+  .lzx-tmain b{font-size:13.5px;color:#241E17;} .lzx-tmain small{font-size:12px;color:#7a7061;}
+  .lzx-tact{flex:none;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;}
+  .lzx-pl{font-size:13.5px;max-width:520px;}
+  .lzx-pl > div{display:flex;justify-content:space-between;gap:14px;padding:5px 0;border-bottom:1px dotted #e3d6bb;}
+  .lzx-pl .sub{font-weight:700;border-bottom:1px solid #c9b48a;}
+  .lzx-pl .gt{font-weight:700;font-size:15.5px;border-top:2px solid #241E17;border-bottom:none;margin-top:4px;}
+  .lzx-two{display:grid;grid-template-columns:1fr 1fr;gap:26px;}
+  @media (max-width:760px){
+    .lzx-two{grid-template-columns:1fr;}
+    .lzx-ti{flex-wrap:wrap;} .lzx-tcat{width:auto;} .lzx-tact{width:100%;justify-content:flex-start;}
+    .lzx-bill select{min-width:150px;}
+    .lzx-bill td{flex-wrap:wrap;} .lzx-bill td > .lzx-muted{flex-basis:100%;text-align:right;}
+  }
+
   /* ===== Photo card decks (About + Know Your Leather): swipe-able stacked cards ===== */
   .leather-strip{background:var(--cream-deep) !important;}
   .leather-strip .section-title{color:var(--ink);}
@@ -3910,30 +3953,36 @@
     <span class="lzw-snap lz-bigsnap" style="width:40px;height:40px" aria-hidden="true"><svg viewBox="0 0 58 58"><defs><path id="lzRingAdmM" d="M29,29 m-23,0 a23,23 0 1,1 46,0 a23,23 0 1,1 -46,0"/></defs><text font-family="Arial" font-weight="700" font-size="5" fill="#4a3608" fill-opacity=".85" textLength="142" lengthAdjust="spacing"><textPath href="#lzRingAdmM">LAIZA · LAIZA · LAIZA · LAIZA ·</textPath></text></svg><i></i><img data-lzw-mark alt=""></span>
     <select class="admin-mobile-nav" id="adminMobileNav" onchange="showAdminPanel(this.value)">
       <option value="dashboard">Dashboard</option>
-      <option value="analytics">Sales Analytics</option>
-      <option value="finance">Bank & Cash Management</option>
-      <option value="purchases">Purchases</option>
-      <option value="statement">Financial Statement</option>
-      <option value="gst">GST Reporting</option>
-      <option value="notifications">Notifications</option>
-      <option value="orders">Orders</option>
-      <option value="orderReport">Order Report</option>
+      <option value="todo">To-Do &amp; Reminders</option>
+      <option value="orders">Website Orders</option>
+      <option value="delivery">Delivery &amp; Tracking</option>
+      <option value="shopBill">Shop Sales — New Bill</option>
+      <option value="parties">Shops &amp; Dues</option>
+      <option value="vouchers">Vouchers &amp; Returns</option>
+      <option value="products">Products</option>
+      <option value="inventory">Inventory</option>
+      <option value="categories">Categories</option>
       <option value="customers">Customers</option>
       <option value="visitors">Visitor Activity</option>
-      <option value="products">Products & Inventory</option>
-      <option value="inventory">Inventory Management</option>
-      <option value="categories">Categories</option>
       <option value="advertisements">Advertisements</option>
       <option value="banners">Banners</option>
-      <option value="allInvoices">All Invoices</option>
-      <option value="delivery">Delivery</option>
+      <option value="coupons">Coupons</option>
+      <option value="discounts">Discounts</option>
       <option value="video">Video Section</option>
       <option value="heroImg">Hero Image</option>
-      <option value="coupons">Discount Coupons</option>
-      <option value="discounts">Automatic Discounts</option>
       <option value="reviews">Customer Reviews</option>
+      <option value="analytics">Sales, Profit &amp; Expenses</option>
+      <option value="purchases">Purchases</option>
+      <option value="finance">Bank &amp; Cash</option>
+      <option value="statement">Statements</option>
+      <option value="gst">GST Reports</option>
+      <option value="allInvoices">All Invoices</option>
+      <option value="books">Monthly Accounts Book</option>
+      <option value="orderReport">Order Report</option>
       <option value="settings">Settings</option>
-      <option value="roles">Manage Admins</option>
+      <option value="notifications">Notifications</option>
+      <option value="roles">Admin Users</option>
+      <option value="tools">Backup &amp; Tools</option>
     </select>
   </div>
 
@@ -3944,8 +3993,10 @@
       <nav class="side-nav nav-tree">
         <a href="javascript:void(0)" class="active" data-panel="dashboard" onclick="showAdminPanel('dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
 
+        <a href="javascript:void(0)" data-panel="todo" onclick="showAdminPanel('todo')"><i class="fa-solid fa-list-check"></i> To-Do &amp; Reminders</a>
+
         <div class="nav-group">
-          <div class="nav-group-header" onclick="toggleNavGroup('navOrders')"><span><i class="fa-solid fa-bag-shopping"></i> Orders</span><i class="fa-solid fa-chevron-right chevron"></i></div>
+          <div class="nav-group-header" onclick="toggleNavGroup('navOrders')"><span><i class="fa-solid fa-bag-shopping"></i> Website Orders</span><i class="fa-solid fa-chevron-right chevron"></i></div>
           <div class="nav-group-items" id="navOrders">
             <a href="javascript:void(0)" data-panel="orders" onclick="showAdminPanel('orders','all')">All Orders</a>
             <a href="javascript:void(0)" data-panel="orders" onclick="showAdminPanel('orders', null, 'pending')">Pending</a>
@@ -3955,6 +4006,16 @@
             <a href="javascript:void(0)" data-panel="orders" onclick="showAdminPanel('orders', null, 'cancelled')">Cancelled</a>
             <a href="javascript:void(0)" data-panel="orders" onclick="showAdminPanel('orders', null, 'returned')">Returns</a>
             <a href="javascript:void(0)" data-panel="orders" onclick="showAdminPanel('orders', null, 'refunds')">Refunds</a>
+            <a href="javascript:void(0)" data-panel="delivery" onclick="showAdminPanel('delivery')">Delivery &amp; Tracking</a>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <div class="nav-group-header" onclick="toggleNavGroup('navShop')"><span><i class="fa-solid fa-store"></i> Shop Sales</span><i class="fa-solid fa-chevron-right chevron"></i></div>
+          <div class="nav-group-items" id="navShop">
+            <a href="javascript:void(0)" data-panel="shopBill" onclick="showAdminPanel('shopBill')">New Bill</a>
+            <a href="javascript:void(0)" data-panel="parties" onclick="showAdminPanel('parties')">Shops &amp; Dues</a>
+            <a href="javascript:void(0)" data-panel="vouchers" onclick="showAdminPanel('vouchers')">Vouchers &amp; Returns</a>
           </div>
         </div>
 
@@ -3989,50 +4050,31 @@
         <div class="nav-group">
           <div class="nav-group-header" onclick="toggleNavGroup('navFinance')"><span><i class="fa-solid fa-building-columns"></i> Finance</span><i class="fa-solid fa-chevron-right chevron"></i></div>
           <div class="nav-group-items" id="navFinance">
-            <a href="javascript:void(0)" data-panel="analytics" onclick="goToFinanceSection('analytics', 'anTodayOrders')">Revenue</a>
             <a href="javascript:void(0)" data-panel="analytics" onclick="goToFinanceSection('analytics', 'expenseAmount')">Expenses</a>
-            <a href="javascript:void(0)" data-panel="analytics" onclick="goToFinanceSection('analytics', 'profitReport')">Profit &amp; Margin</a>
             <a href="javascript:void(0)" data-panel="purchases" onclick="showAdminPanel('purchases')">Purchases</a>
-            <a href="javascript:void(0)" data-panel="finance" onclick="goToFinanceSection('finance', 'bankDeposits')">Bank</a>
-            <a href="javascript:void(0)" data-panel="finance" onclick="goToFinanceSection('finance', 'cashReceived')">Cash</a>
+            <a href="javascript:void(0)" data-panel="finance" onclick="showAdminPanel('finance')">Bank &amp; Cash</a>
             <a href="javascript:void(0)" data-panel="statement" onclick="showAdminPanel('statement')">Statements</a>
-            <a href="javascript:void(0)" data-panel="finance" onclick="showAdminPanel('finance')">Transactions</a>
           </div>
         </div>
 
         <div class="nav-group">
-          <div class="nav-group-header" onclick="toggleNavGroup('navGst')"><span><i class="fa-solid fa-landmark"></i> GST</span><i class="fa-solid fa-chevron-right chevron"></i></div>
+          <div class="nav-group-header" onclick="toggleNavGroup('navGst')"><span><i class="fa-solid fa-landmark"></i> GST &amp; Invoices</span><i class="fa-solid fa-chevron-right chevron"></i></div>
           <div class="nav-group-items" id="navGst">
             <a href="javascript:void(0)" data-panel="gst" onclick="showAdminPanel('gst')">GST Dashboard</a>
             <a href="javascript:void(0)" data-panel="gst" onclick="goToGstReport('gst_transactions')">All Transactions</a>
             <a href="javascript:void(0)" data-panel="gst" onclick="goToGstReport('sales_register')">Sales Register</a>
             <a href="javascript:void(0)" data-panel="gst" onclick="goToGstReport('hsn_summary')">HSN Summary</a>
-          </div>
-        </div>
-
-        <div class="nav-group">
-          <div class="nav-group-header" onclick="toggleNavGroup('navInvoices')"><span><i class="fa-solid fa-file-invoice"></i> Invoices</span><i class="fa-solid fa-chevron-right chevron"></i></div>
-          <div class="nav-group-items" id="navInvoices">
             <a href="javascript:void(0)" data-panel="allInvoices" onclick="showAdminPanel('allInvoices')">All Invoices</a>
-            <a href="javascript:void(0)" data-panel="orders" onclick="goToGenerateInvoice()">Generate Invoice</a>
-          </div>
-        </div>
-
-        <div class="nav-group">
-          <div class="nav-group-header" onclick="toggleNavGroup('navDelivery')"><span><i class="fa-solid fa-truck"></i> Delivery</span><i class="fa-solid fa-chevron-right chevron"></i></div>
-          <div class="nav-group-items" id="navDelivery">
-            <a href="javascript:void(0)" data-panel="delivery" onclick="showAdminPanel('delivery')">Delivery Orders</a>
-            <a href="javascript:void(0)" data-panel="orders" onclick="goToGenerateInvoice()">Shipping Labels</a>
           </div>
         </div>
 
         <div class="nav-group">
           <div class="nav-group-header" onclick="toggleNavGroup('navReports')"><span><i class="fa-solid fa-chart-column"></i> Reports</span><i class="fa-solid fa-chevron-right chevron"></i></div>
           <div class="nav-group-items" id="navReports">
-            <a href="javascript:void(0)" data-panel="analytics" onclick="showAdminPanel('analytics')">Sales</a>
+            <a href="javascript:void(0)" data-panel="books" onclick="showAdminPanel('books')"><b>Monthly Accounts Book</b></a>
+            <a href="javascript:void(0)" data-panel="analytics" onclick="showAdminPanel('analytics')">Sales &amp; Profit</a>
             <a href="javascript:void(0)" data-panel="orderReport" onclick="showAdminPanel('orderReport')">Orders</a>
             <a href="javascript:void(0)" data-panel="analytics" onclick="goToFinanceSection('analytics', 'chartProductPerformance')">Products</a>
-            <a href="javascript:void(0)" data-panel="analytics" onclick="goToFinanceSection('analytics', 'profitReport')">Profit &amp; Margin</a>
           </div>
         </div>
 
@@ -4042,12 +4084,13 @@
             <a href="javascript:void(0)" data-panel="settings" onclick="goToSettingsSection('Brand Identity')">Store Settings</a>
             <a href="javascript:void(0)" data-panel="settings" onclick="goToSettingsSection('Payment Gateway')">Payment Gateway</a>
             <a href="javascript:void(0)" data-panel="settings" onclick="goToSettingsSection('iThink Logistics')">Delivery Integration</a>
-            <a href="javascript:void(0)" data-panel="settings" onclick="goToSettingsSection('Tax / GST')">Tax / GST</a>
-            <a href="javascript:void(0)" data-panel="settings" onclick="goToSettingsSection('Tax / GST', 'shipping charge')">Shipping</a>
+            <a href="javascript:void(0)" data-panel="settings" onclick="goToSettingsSection('Tax / GST')">Tax / GST &amp; Shipping</a>
             <a href="javascript:void(0)" data-panel="notifications" onclick="showAdminPanel('notifications')">Notifications</a>
             <a href="javascript:void(0)" data-panel="roles" onclick="showAdminPanel('roles')">Admin Users</a>
+            <a href="javascript:void(0)" data-panel="tools" onclick="showAdminPanel('tools')">Backup &amp; Tools</a>
           </div>
         </div>
+
       </nav>
     </aside>
 
@@ -4154,6 +4197,7 @@
             <div class="field"><label>Amount (₹)</label><input type="number" id="expenseAmount" min="0" required></div>
             <div class="field"><label>Category</label><select id="expenseCategory" class="admin-select"></select></div>
             <div class="field"><label>Date</label><input type="date" id="expenseDate" required></div>
+            <div class="field"><label>Paid from</label><select id="expensePayMode" class="admin-select"><option value="cash">Cash</option><option value="upi">UPI</option><option value="bank">Bank transfer / card</option><option value="credit">Not paid yet</option></select></div>
             <div class="field" style="grid-column:1/-1;"><label>Description — optional</label><input type="text" id="expenseDescription"></div>
             <div style="grid-column:1/-1;"><button type="submit" id="expenseSubmitBtn" class="submit-btn" style="width:auto;padding:10px 20px;">Log Expense</button></div>
           </form>
@@ -4164,7 +4208,7 @@
           <div class="panel-head"><h3>Expense History</h3></div>
           <div class="table-wrap">
             <table class="admin-table">
-              <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th></th></tr></thead>
+              <thead><tr><th>Voucher</th><th>Date</th><th>Category</th><th>Description</th><th>Paid from</th><th>Amount</th><th></th></tr></thead>
               <tbody id="expenseHistoryTableBody"></tbody>
             </table>
           </div>
@@ -4243,8 +4287,8 @@
           <form class="admin-form-grid" onsubmit="submitCashTransaction(event)" style="margin-bottom:20px;">
             <div class="field"><label>Direction</label>
               <select id="cashDirection" class="admin-select">
-                <option value="in">Cash In (Received)</option>
-                <option value="out">Cash Out (Paid)</option>
+                <option value="credit">Cash In (Received)</option>
+                <option value="debit">Cash Out (Paid)</option>
               </select>
             </div>
             <div class="field"><label>Amount (₹)</label><input type="number" id="cashAmount" min="0" required></div>
@@ -4273,8 +4317,8 @@
           <form class="admin-form-grid" onsubmit="submitBankTransaction(event)" style="margin-bottom:20px;">
             <div class="field"><label>Direction</label>
               <select id="bankDirection" class="admin-select">
-                <option value="in">Deposit</option>
-                <option value="out">Withdrawal</option>
+                <option value="credit">Deposit</option>
+                <option value="debit">Withdrawal</option>
               </select>
             </div>
             <div class="field"><label>Amount (₹)</label><input type="number" id="bankAmount" min="0" required></div>
@@ -5435,6 +5479,227 @@
       </div>
 
       <!-- Manage Admins (Super Admin only) -->
+
+      <!-- ===== To-Do & Reminders ===== -->
+      <div class="admin-panel-section" id="adminPanelTodo">
+        <div class="welcome-row"><div><h1>To-Do &amp; Reminders</h1><p>GST dates, money to collect, bills to pay and your own tasks — in one list. Tick when done.</p></div></div>
+        <div class="dash-panel">
+          <div class="panel-head"><h3>Pending now</h3><span id="todoCount" class="lzx-pill"></span></div>
+          <div id="todoList" class="lzx-todo"><p class="lzx-muted">Loading…</p></div>
+        </div>
+        <div class="dash-panel">
+          <div class="panel-head"><h3>Add your own task</h3></div>
+          <form class="admin-form-grid" onsubmit="lzTaskSave(event)">
+            <div class="field" style="grid-column:1/-1;"><label>Task</label><input type="text" id="taskTitle" maxlength="120" required placeholder="e.g. Call Sri Ganesh Bags for new order"></div>
+            <div class="field"><label>Due date</label><input type="date" id="taskDue"></div>
+            <div class="field"><label>Repeat</label><select id="taskRepeat" class="admin-select"><option value="none">Once</option><option value="weekly">Every week</option><option value="monthly">Every month</option><option value="quarterly">Every 3 months</option><option value="yearly">Every year</option></select></div>
+            <div class="field" style="grid-column:1/-1;"><label>Notes (optional)</label><input type="text" id="taskNotes" maxlength="300"></div>
+            <div style="grid-column:1/-1;"><button type="submit" class="submit-btn" style="width:auto;padding:10px 20px;">Add task</button></div>
+          </form>
+        </div>
+        <div class="dash-panel">
+          <div class="panel-head"><h3>Recently completed</h3></div>
+          <div id="todoDone" class="lzx-todo"></div>
+        </div>
+      </div>
+
+      <!-- ===== New Bill: Shop (B2B) / Counter (B2C) ===== -->
+      <div class="admin-panel-section" id="adminPanelShopBill">
+        <div class="welcome-row"><div><h1>New Bill</h1><p>Sell to a shop / wholesaler (B2B, with their GSTIN) or a walk-in customer (counter sale). Stock, invoice number, GST and dues update automatically.</p></div></div>
+        <div class="dash-panel">
+          <div class="lzx-tabs" id="sbType">
+            <button type="button" class="on" data-v="shop" onclick="lzSbType('shop')"><i class="fa-solid fa-store"></i> Shop / Wholesale (B2B)</button>
+            <button type="button" data-v="counter" onclick="lzSbType('counter')"><i class="fa-solid fa-user"></i> Counter sale (B2C)</button>
+          </div>
+          <div class="admin-form-grid" style="margin-top:14px;">
+            <div class="field" id="sbPartyWrap"><label>Shop</label><select id="sbParty" class="admin-select" onchange="lzSbPartyChanged()"></select>
+              <small id="sbPartyInfo" class="lzx-muted"></small></div>
+            <div class="field" id="sbPriceWrap"><label>Price list</label><select id="sbPriceList" class="admin-select" onchange="lzSbReprice()"><option value="wholesale">Wholesale (10–49 · 50–99 −5% · 100+ −10%)</option><option value="retail">Retail shop (3–6 pcs)</option></select></div>
+            <div class="field" id="sbCustWrap" style="display:none;"><label>Customer name (optional)</label><input type="text" id="sbCustName" maxlength="60" placeholder="Walk-in customer"></div>
+            <div class="field" id="sbCustPhoneWrap" style="display:none;"><label>Phone (optional)</label><input type="tel" id="sbCustPhone" maxlength="14"></div>
+            <div class="field"><label>Bill date</label><input type="date" id="sbDate"></div>
+          </div>
+          <div class="table-wrap" style="margin-top:6px;">
+            <table class="admin-table lzx-bill">
+              <thead><tr><th style="min-width:200px;">Product</th><th>Stock</th><th>Qty</th><th id="sbRateHead">Rate (before GST)</th><th>Amount</th><th></th></tr></thead>
+              <tbody id="sbRows"></tbody>
+            </table>
+          </div>
+          <button type="button" class="lzx-btn ghost" onclick="lzSbAddRow()"><i class="fa-solid fa-plus"></i> Add product</button>
+          <div class="lzx-totals" id="sbTotals"></div>
+          <div class="admin-form-grid" style="margin-top:10px;">
+            <div class="field"><label>Received now (₹)</label><input type="number" id="sbReceived" min="0" step="0.01" placeholder="0 = full amount on credit" oninput="lzSbCalc()"></div>
+            <div class="field"><label>Payment mode</label><select id="sbMode" class="admin-select"><option value="cash">Cash</option><option value="upi">UPI</option><option value="bank">Bank transfer</option><option value="cheque">Cheque</option></select></div>
+            <div class="field"><label>Reference (UTR / cheque no.)</label><input type="text" id="sbRef" maxlength="40"></div>
+            <div class="field"><label>Note on bill (optional)</label><input type="text" id="sbNote" maxlength="120"></div>
+          </div>
+          <p class="lzx-muted" id="sbDueLine"></p>
+          <button type="button" class="submit-btn" id="sbSave" style="width:auto;padding:12px 26px;" onclick="lzSbSave()">Save bill &amp; create invoice</button>
+          <div id="sbResult"></div>
+        </div>
+        <div class="dash-panel">
+          <div class="panel-head"><h3>Recent shop &amp; counter bills</h3></div>
+          <div class="table-wrap"><table class="admin-table"><thead><tr><th>Date</th><th>Invoice</th><th>Bill</th><th>Customer</th><th>Type</th><th>Total</th><th>Payment</th><th></th></tr></thead><tbody id="sbRecent"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ===== Shops & Dues ===== -->
+      <div class="admin-panel-section" id="adminPanelParties">
+        <div class="welcome-row"><div><h1>Shops &amp; Dues</h1><p>Your retail shops and wholesalers, what they owe you, and each shop's ledger (khata).</p></div></div>
+        <div class="stat-grid" id="ptStats"></div>
+        <div class="dash-panel">
+          <div class="panel-head"><h3>All shops</h3><button type="button" class="lzx-btn" onclick="lzPtForm()"><i class="fa-solid fa-plus"></i> Add shop</button></div>
+          <div class="shop-toolbar" style="margin-bottom:10px;"><input type="search" id="ptSearch" placeholder="Search name, city, phone…" oninput="lzPtRender()"><select id="ptFilter" onchange="lzPtRender()"><option value="all">All shops</option><option value="due">With dues</option><option value="overdue">Overdue (30+ days)</option></select></div>
+          <div class="table-wrap"><table class="admin-table"><thead><tr><th>Shop</th><th>City</th><th>Type</th><th>GSTIN</th><th>Billed</th><th>Received</th><th>Due</th><th></th></tr></thead><tbody id="ptRows"></tbody></table></div>
+        </div>
+        <div class="dash-panel" id="ptFormPanel" style="display:none;">
+          <div class="panel-head"><h3 id="ptFormTitle">Add shop</h3><a href="javascript:void(0)" onclick="lzPtFormClose()" class="lzx-muted">Close</a></div>
+          <form class="admin-form-grid" onsubmit="lzPtSave(event)">
+            <input type="hidden" id="ptId">
+            <div class="field"><label>Shop / business name</label><input type="text" id="ptName" required maxlength="80"></div>
+            <div class="field"><label>Owner name</label><input type="text" id="ptOwner" maxlength="60"></div>
+            <div class="field"><label>Phone / WhatsApp</label><input type="tel" id="ptPhone" maxlength="14"></div>
+            <div class="field"><label>Type</label><select id="ptType" class="admin-select"><option value="retail">Retail shop (3–6 pcs per model)</option><option value="wholesale">Wholesale (10+ pcs per model)</option></select></div>
+            <div class="field"><label>GSTIN (leave empty if not registered)</label><input type="text" id="ptGstin" maxlength="15" style="text-transform:uppercase;" oninput="lzPtGstinState()"></div>
+            <div class="field"><label>State</label><select id="ptState" class="admin-select"></select></div>
+            <div class="field" style="grid-column:1/-1;"><label>Address</label><input type="text" id="ptAddress" maxlength="160"></div>
+            <div class="field"><label>City</label><input type="text" id="ptCity" maxlength="60"></div>
+            <div class="field"><label>Pincode</label><input type="text" id="ptPin" maxlength="6"></div>
+            <div class="field"><label>Credit limit (₹, 0 = no credit)</label><input type="number" id="ptLimit" min="0" step="1"></div>
+            <div class="field"><label>Opening balance they owe (₹)</label><input type="number" id="ptOpening" step="0.01"></div>
+            <div class="field" style="grid-column:1/-1;"><label>Notes</label><input type="text" id="ptNotes" maxlength="200"></div>
+            <div style="grid-column:1/-1;"><button type="submit" class="submit-btn" style="width:auto;padding:10px 20px;">Save shop</button></div>
+          </form>
+        </div>
+        <div class="dash-panel" id="ptLedgerPanel" style="display:none;">
+          <div class="panel-head"><h3 id="ptLedgerTitle">Ledger</h3><a href="javascript:void(0)" onclick="document.getElementById('ptLedgerPanel').style.display='none'" class="lzx-muted">Close</a></div>
+          <div id="ptLedgerTop"></div>
+          <div class="table-wrap"><table class="admin-table"><thead><tr><th>Date</th><th>Details</th><th>Bill (Dr)</th><th>Paid / Return (Cr)</th><th>Balance</th></tr></thead><tbody id="ptLedgerRows"></tbody></table></div>
+          <form class="admin-form-grid lzx-box" onsubmit="lzPtReceive(event)" style="margin-top:14px;">
+            <div class="field" style="grid-column:1/-1;"><b>Record payment received (Receipt voucher)</b></div>
+            <div class="field"><label>Amount (₹)</label><input type="number" id="ptRcAmt" min="1" step="0.01" required></div>
+            <div class="field"><label>Mode</label><select id="ptRcMode" class="admin-select"><option value="cash">Cash</option><option value="upi">UPI</option><option value="bank">Bank transfer</option><option value="cheque">Cheque</option></select></div>
+            <div class="field"><label>Date</label><input type="date" id="ptRcDate"></div>
+            <div class="field"><label>Reference (UTR / cheque no.)</label><input type="text" id="ptRcRef" maxlength="40"></div>
+            <div style="grid-column:1/-1;"><button type="submit" class="submit-btn" style="width:auto;padding:10px 20px;">Save receipt</button></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ===== Vouchers ===== -->
+      <div class="admin-panel-section" id="adminPanelVouchers">
+        <div class="welcome-row"><div><h1>Vouchers</h1><p>Receipts (RV), Payments (PV), Contra (CV) and Credit notes (CN). Every voucher also updates your Cash / Bank book automatically.</p></div></div>
+        <div class="lzx-tabs" id="vcTabs">
+          <button type="button" class="on" data-v="rv" onclick="lzVcTab('rv')">Receipts</button>
+          <button type="button" data-v="pv" onclick="lzVcTab('pv')">Payments</button>
+          <button type="button" data-v="cv" onclick="lzVcTab('cv')">Contra (cash ↔ bank)</button>
+          <button type="button" data-v="cn" onclick="lzVcTab('cn')">Credit notes (returns)</button>
+        </div>
+        <div class="dash-panel lzx-vc" id="vc_rv">
+          <div class="panel-head"><h3>Receipt voucher — money received</h3></div>
+          <form class="admin-form-grid" onsubmit="lzVcReceipt(event)">
+            <div class="field"><label>From shop</label><select id="vcRcParty" class="admin-select"></select></div>
+            <div class="field"><label>Amount (₹)</label><input type="number" id="vcRcAmt" min="1" step="0.01" required></div>
+            <div class="field"><label>Mode</label><select id="vcRcMode" class="admin-select"><option value="cash">Cash</option><option value="upi">UPI</option><option value="bank">Bank transfer</option><option value="cheque">Cheque</option></select></div>
+            <div class="field"><label>Date</label><input type="date" id="vcRcDate"></div>
+            <div class="field"><label>Reference</label><input type="text" id="vcRcRef" maxlength="40"></div>
+            <div class="field"><label>Notes</label><input type="text" id="vcRcNotes" maxlength="120"></div>
+            <div style="grid-column:1/-1;"><button type="submit" class="submit-btn" style="width:auto;padding:10px 20px;">Save receipt</button></div>
+          </form>
+          <div class="table-wrap"><table class="admin-table"><thead><tr><th>Voucher</th><th>Date</th><th>From</th><th>Mode</th><th>Amount</th><th>Reference</th></tr></thead><tbody id="vcRcRows"></tbody></table></div>
+        </div>
+        <div class="dash-panel lzx-vc" id="vc_pv" style="display:none;">
+          <div class="panel-head"><h3>Payment voucher — pay a supplier bill</h3></div>
+          <form class="admin-form-grid" onsubmit="lzVcPay(event)">
+            <div class="field" style="grid-column:1/-1;"><label>Supplier bill with balance</label><select id="vcPyPurchase" class="admin-select" onchange="lzVcPayPick()"></select></div>
+            <div class="field"><label>Amount (₹)</label><input type="number" id="vcPyAmt" min="1" step="0.01" required></div>
+            <div class="field"><label>Mode</label><select id="vcPyMode" class="admin-select"><option value="bank">Bank transfer</option><option value="upi">UPI</option><option value="cash">Cash</option><option value="cheque">Cheque</option></select></div>
+            <div class="field"><label>Date</label><input type="date" id="vcPyDate"></div>
+            <div class="field"><label>Reference</label><input type="text" id="vcPyRef" maxlength="40"></div>
+            <div style="grid-column:1/-1;"><button type="submit" class="submit-btn" style="width:auto;padding:10px 20px;">Save payment</button>
+              <span class="lzx-muted" style="margin-left:10px;">Other payments (courier, ads, rent…) → <a href="javascript:void(0)" onclick="goToFinanceSection('analytics','expenseAmount')">Finance → Expenses</a>. They get a PV number too.</span></div>
+          </form>
+          <div class="table-wrap"><table class="admin-table"><thead><tr><th>Voucher</th><th>Date</th><th>Paid to</th><th>For</th><th>Mode</th><th>Amount</th></tr></thead><tbody id="vcPyRows"></tbody></table></div>
+        </div>
+        <div class="dash-panel lzx-vc" id="vc_cv" style="display:none;">
+          <div class="panel-head"><h3>Contra voucher — cash ↔ bank</h3></div>
+          <form class="admin-form-grid" onsubmit="lzVcContra(event)">
+            <div class="field"><label>Type</label><select id="vcCvKind" class="admin-select"><option value="deposit">Cash deposited into bank</option><option value="withdraw">Cash withdrawn from bank / ATM</option></select></div>
+            <div class="field"><label>Amount (₹)</label><input type="number" id="vcCvAmt" min="1" step="0.01" required></div>
+            <div class="field"><label>Date</label><input type="date" id="vcCvDate"></div>
+            <div class="field"><label>Reference / notes</label><input type="text" id="vcCvRef" maxlength="60"></div>
+            <div style="grid-column:1/-1;"><button type="submit" class="submit-btn" style="width:auto;padding:10px 20px;">Save contra</button></div>
+          </form>
+          <div class="table-wrap"><table class="admin-table"><thead><tr><th>Voucher</th><th>Date</th><th>Details</th><th>Amount</th></tr></thead><tbody id="vcCvRows"></tbody></table></div>
+        </div>
+        <div class="dash-panel lzx-vc" id="vc_cn" style="display:none;">
+          <div class="panel-head"><h3>Credit note — goods returned / bill reduced</h3></div>
+          <div class="admin-form-grid">
+            <div class="field" style="grid-column:1/-1;"><label>Bill (invoice)</label><select id="vcCnBill" class="admin-select" onchange="lzVcCnPick()"></select></div>
+          </div>
+          <div id="vcCnItems"></div>
+          <div class="admin-form-grid" id="vcCnMore" style="display:none;">
+            <div class="field"><label>Reason</label><input type="text" id="vcCnReason" maxlength="120" placeholder="Damaged / wrong model / not sold"></div>
+            <div class="field"><label>Money</label><select id="vcCnRefund" class="admin-select"><option value="">Reduce from shop's dues (no cash back)</option><option value="cash">Refund in cash</option><option value="upi">Refund by UPI</option><option value="bank">Refund by bank</option></select></div>
+            <div class="field"><label><input type="checkbox" id="vcCnRestock" checked> Put items back in stock</label></div>
+            <div style="grid-column:1/-1;"><button type="button" class="submit-btn" style="width:auto;padding:10px 20px;" onclick="lzVcCnSave()">Create credit note</button></div>
+          </div>
+          <div class="table-wrap"><table class="admin-table"><thead><tr><th>Credit note</th><th>Date</th><th>Against invoice</th><th>Customer</th><th>Amount</th><th>Money</th><th></th></tr></thead><tbody id="vcCnRows"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ===== Monthly Accounts Book ===== -->
+      <div class="admin-panel-section" id="adminPanelBooks">
+        <div class="welcome-row"><div><h1>Monthly Accounts Book</h1><p>Sales (website + shops + counter), purchases, expenses, GST (GSTR-1 / GSTR-3B), Profit &amp; Loss and Balance Sheet for any month — and one Excel file per month for your CA.</p></div></div>
+        <div class="dash-panel">
+          <div class="shop-toolbar" style="margin-bottom:0;flex-wrap:wrap;gap:8px;">
+            <input type="month" id="bkMonth" onchange="lzBooksLoad()">
+            <button type="button" class="lzx-btn" onclick="lzBooksExcel()"><i class="fa-solid fa-file-excel"></i> Download month Excel</button>
+            <button type="button" class="lzx-btn ghost" onclick="lzBooksSave()"><i class="fa-solid fa-lock"></i> Save / close this month</button>
+            <button type="button" class="lzx-btn ghost" onclick="lzBooksExcel(true)"><i class="fa-solid fa-calendar"></i> Full year (Apr–Mar) Excel</button>
+          </div>
+          <p class="lzx-muted" id="bkSaved" style="margin-top:8px;"></p>
+        </div>
+        <div id="bkBody"><p class="lzx-muted" style="padding:10px;">Choose a month.</p></div>
+        <div class="dash-panel">
+          <div class="panel-head"><h3>Books settings</h3></div>
+          <form class="admin-form-grid" onsubmit="lzBooksSettings(event)">
+            <div class="field"><label>GST return type</label><select id="bkGstType" class="admin-select"><option value="monthly">Monthly (GSTR-1 by 11th, GSTR-3B by 20th)</option><option value="qrmp">Quarterly QRMP (GSTR-1 by 13th, 3B by 22nd after quarter)</option></select></div>
+            <div class="field"><label>Books start date</label><input type="date" id="bkStart"></div>
+            <div class="field"><label>Opening cash in hand (₹)</label><input type="number" id="bkOpenCash" step="0.01"></div>
+            <div class="field"><label>Opening bank balance (₹)</label><input type="number" id="bkOpenBank" step="0.01"></div>
+            <div style="grid-column:1/-1;"><button type="submit" class="submit-btn" style="width:auto;padding:10px 20px;">Save settings</button></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ===== Backup & Tools ===== -->
+      <div class="admin-panel-section" id="adminPanelTools">
+        <div class="welcome-row"><div><h1>Backup &amp; Tools</h1><p>Keep your data safe and your website fast.</p></div></div>
+        <div class="dash-panel">
+          <div class="panel-head"><h3>Backup of all business data</h3></div>
+          <p class="lzx-muted">Downloads orders, invoices, shops, vouchers, purchases, expenses, cash &amp; bank, products and customers in one file. Do this on the 1st of every month and keep it in Google Drive. GST records must be kept for 6 years.</p>
+          <button type="button" class="lzx-btn" onclick="lzBackup(this)"><i class="fa-solid fa-download"></i> Download backup now</button>
+          <p class="lzx-muted" id="bkpLast"></p>
+        </div>
+        <div class="dash-panel">
+          <div class="panel-head"><h3>Make product photos smaller (faster website, saves data)</h3></div>
+          <p class="lzx-muted">Compresses large photos already uploaded (keeps the same address, so nothing breaks). New photos you upload are compressed automatically.</p>
+          <button type="button" class="lzx-btn" onclick="lzOptimizeImages(this)"><i class="fa-solid fa-wand-magic-sparkles"></i> Check &amp; compress photos</button>
+          <div id="imgOptLog" class="lzx-muted" style="margin-top:8px;"></div>
+        </div>
+        <div class="dash-panel">
+          <div class="panel-head"><h3>Clean old visitor data</h3></div>
+          <p class="lzx-muted">Removes visitor tracking older than 120 days (orders and customers are never touched).</p>
+          <button type="button" class="lzx-btn ghost" onclick="lzPrune(this)"><i class="fa-solid fa-broom"></i> Clean now</button>
+          <span class="lzx-muted" id="pruneLog"></span>
+        </div>
+        <div class="dash-panel">
+          <div class="panel-head"><h3>Storage used</h3></div>
+          <div id="toolUsage" class="lzx-muted">—</div>
+        </div>
+      </div>
+
       <div class="admin-panel-section" id="adminPanelRoles">
         <div class="welcome-row"><div><h1>Manage Admins</h1><p>Grant or change staff roles. Only Super Admin can do this.</p></div></div>
         <div class="dash-panel">
@@ -8481,6 +8746,932 @@
   setTimeout(lzLoadLiveStats, 2500);
   setInterval(() => { if(!document.hidden) lzLoadLiveStats(); }, 60000);
 
+  /* =====================================================================
+     ACCOUNTS: shop / counter bills, shops & dues, vouchers, credit notes,
+     monthly accounts book, to-do & reminders, backup & tools
+     ===================================================================== */
+  const LZ_STATES = [['Jammu and Kashmir','01'],['Himachal Pradesh','02'],['Punjab','03'],['Chandigarh','04'],['Uttarakhand','05'],['Haryana','06'],['Delhi','07'],['Rajasthan','08'],['Uttar Pradesh','09'],['Bihar','10'],['Sikkim','11'],['Arunachal Pradesh','12'],['Nagaland','13'],['Manipur','14'],['Mizoram','15'],['Tripura','16'],['Meghalaya','17'],['Assam','18'],['West Bengal','19'],['Jharkhand','20'],['Odisha','21'],['Chhattisgarh','22'],['Madhya Pradesh','23'],['Gujarat','24'],['Dadra and Nagar Haveli and Daman and Diu','26'],['Maharashtra','27'],['Karnataka','29'],['Goa','30'],['Lakshadweep','31'],['Kerala','32'],['Tamil Nadu','33'],['Puducherry','34'],['Andaman and Nicobar Islands','35'],['Telangana','36'],['Andhra Pradesh','37'],['Ladakh','38']];
+  function lzStateCode(name){ const n = String(name || '').trim().toLowerCase(); const f = LZ_STATES.find(s => s[0].toLowerCase() === n); return f ? f[1] : ''; }
+  const lzR2 = n => Math.round((Number(n) || 0) * 100) / 100;
+  const lzMoney2 = n => '₹' + lzR2(n).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const lzMoney0 = n => '₹' + Math.round(Number(n) || 0).toLocaleString('en-IN');
+  function lzTodayIST(){ return new Date(Date.now() + 5.5 * 3600e3).toISOString().slice(0, 10); }
+  function lzFmtDate(d){ if(!d) return '—'; const x = new Date(String(d).length === 10 ? d + 'T00:00:00' : d); return x.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }); }
+  function lzEsc(t){ return String(t ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+  function lzBizState(){ return (storeSettings && storeSettings.business_state) || 'Karnataka'; }
+  function lzIntra(state){ return String(state || lzBizState()).trim().toLowerCase() === String(lzBizState()).trim().toLowerCase(); }
+  function lzShortName(n){ return String(n || '').replace(/^LAIZA\s+/i, '').split(/[,|]/)[0].trim(); }
+  function lzModel(sku){ const m = String(sku || '').toUpperCase().replace(/^LAIZA-/, '').replace(/O(?=\d)|(?<=-)O/g, '0'); return m.replace(/LW-OO/, 'LW-00'); }
+  function lzWords(num){
+    num = Math.round(Number(num) || 0);
+    if(num === 0) return 'Zero';
+    const a = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+    const b = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+    const two = n => n < 20 ? a[n] : b[Math.floor(n / 10)] + (n % 10 ? ' ' + a[n % 10] : '');
+    const three = n => (n >= 100 ? a[Math.floor(n / 100)] + ' Hundred' + (n % 100 ? ' ' : '') : '') + (n % 100 ? two(n % 100) : '');
+    let out = [], cr = Math.floor(num / 1e7), lk = Math.floor(num / 1e5) % 100, th = Math.floor(num / 1e3) % 100, rest = num % 1000;
+    if(cr) out.push(three(cr) + ' Crore'); if(lk) out.push(two(lk) + ' Lakh'); if(th) out.push(two(th) + ' Thousand'); if(rest) out.push(three(rest));
+    return out.join(' ');
+  }
+  async function lzFetchAll(table, select, build){
+    let all = [], from = 0;
+    for(;;){
+      let q = supabaseClient.from(table).select(select || '*').range(from, from + 999);
+      if(build) q = build(q);
+      const { data, error } = await q;
+      if(error) throw error;
+      all = all.concat(data || []);
+      if(!data || data.length < 1000) break;
+      from += 1000;
+    }
+    return all;
+  }
+  async function lzInChunks(table, col, ids, select){
+    let out = [];
+    for(let i = 0; i < ids.length; i += 150){
+      const { data } = await supabaseClient.from(table).select(select || '*').in(col, ids.slice(i, i + 150));
+      out = out.concat(data || []);
+    }
+    return out;
+  }
+  function lzWa(phone, text){
+    const d = String(phone || '').replace(/\D/g, '').slice(-10);
+    window.open('https://wa.me/' + (d.length === 10 ? '91' + d : '') + '?text=' + encodeURIComponent(text), '_blank');
+  }
+  function lzPrintWindow(title, bodyHtml){
+    const w = window.open('', '_blank');
+    w.document.write(`<html><head><title>${lzEsc(title)}</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>
+      body{font-family:Arial,Helvetica,sans-serif;color:#241E17;max-width:800px;margin:30px auto;padding:0 18px;}
+      .hd{display:flex;align-items:center;gap:14px;border-bottom:2px solid #8A6A22;padding-bottom:10px;margin-bottom:14px}
+      .hd img{height:52px} .hd h1{margin:0;font-size:20px;letter-spacing:3px} .hd small{color:#555}
+      table{border-collapse:collapse;width:100%;font-size:13px;margin:10px 0} th{background:#f3ead9;text-align:left;padding:7px;border-bottom:1px solid #d8c39a} td{padding:7px;border-bottom:1px solid #eee}
+      .r{text-align:right} .tot{font-weight:700;border-top:2px solid #241E17} .muted{color:#666;font-size:12px}
+      .sign{margin-top:40px;text-align:right} .sign img{height:52px;display:block;margin-left:auto}
+      .bar{text-align:center;margin:22px 0} .bar button{padding:10px 18px;border:none;background:#c9a24b;border-radius:6px;font-weight:700;cursor:pointer}
+      @media print{.bar{display:none}}</style></head><body>
+      <div class="hd"><img src="${typeof LAIZA_LOGO_DATA_URI !== 'undefined' ? LAIZA_LOGO_DATA_URI : ''}" alt=""><div><h1>${lzEsc((storeSettings.invoice_business_name || 'LAIZA INTERNATIONAL').toUpperCase())}</h1>
+      <small>${lzEsc(storeSettings.business_address || '')}${storeSettings.business_gstin ? ' · GSTIN ' + lzEsc(storeSettings.business_gstin) : ''}${storeSettings.business_phone ? ' · ' + lzEsc(storeSettings.business_phone) : ''}</small></div></div>
+      ${bodyHtml}
+      <div class="sign">For ${lzEsc(storeSettings.invoice_business_name || 'LAIZA INTERNATIONAL')}<img src="${storeSettings.signature_url || (typeof LZ_DEFAULT_SIGNATURE !== 'undefined' ? LZ_DEFAULT_SIGNATURE : '')}" alt="">Proprietor</div>
+      <div class="bar"><button onclick="window.print()">Print / Save PDF</button></div></body></html>`);
+    w.document.close();
+  }
+  async function lzOpenInvoiceForOrder(orderId, btn){
+    const { data: o } = await supabaseClient.from('orders').select('*').eq('id', orderId).single();
+    if(o) downloadInvoice(o, btn || document.createElement('button'));
+  }
+
+  /* ---------------- shared caches ---------------- */
+  window.lzAcc = { products: [], parties: [], balances: {} };
+  async function lzAccLoadBase(){
+    const [{ data: prods }, { data: parties }, { data: bals }] = await Promise.all([
+      supabaseClient.from('products').select('id, name, sku, price, compare_price, cost_price, stock_qty, gst_rate, hsn_code, retail_shop_price, wholesale_price, floor_price, is_active').order('price', { ascending: false }),
+      supabaseClient.from('parties').select('*').order('name'),
+      supabaseClient.rpc('party_balances')
+    ]);
+    lzAcc.products = (prods || []).filter(p => p.is_active !== false);
+    lzAcc.parties = parties || [];
+    lzAcc.balances = {}; (bals || []).forEach(b => { lzAcc.balances[b.party_id] = b; });
+  }
+  function lzPartyOptions(includeBlank, blankLabel){
+    return (includeBlank ? `<option value="">${blankLabel || '— choose —'}</option>` : '') + lzAcc.parties.filter(p => p.is_active !== false)
+      .map(p => `<option value="${p.id}">${lzEsc(p.name)}${p.city ? ' · ' + lzEsc(p.city) : ''}${lzAcc.balances[p.id] && Number(lzAcc.balances[p.id].due) > 0.5 ? ' (due ' + lzMoney0(lzAcc.balances[p.id].due) + ')' : ''}</option>`).join('');
+  }
+
+  /* ================= NEW BILL ================= */
+  window.lzSb = { type: 'shop', rows: [] };
+  async function lzSbInit(preParty){
+    await lzAccLoadBase();
+    const sel = document.getElementById('sbParty');
+    sel.innerHTML = lzPartyOptions(true, lzAcc.parties.length ? '— choose shop —' : '— no shops yet: add one in Shops & Dues —');
+    if(preParty) sel.value = preParty;
+    if(!document.getElementById('sbDate').value) document.getElementById('sbDate').value = lzTodayIST();
+    if(!lzSb.rows.length) lzSb.rows.push({ pid: '', qty: 1, rate: 0, manual: false });
+    lzSbType(preParty ? 'shop' : lzSb.type, true);
+    lzSbPartyChanged();
+    lzSbRecent();
+  }
+  function lzSbType(t, keep){
+    lzSb.type = t;
+    document.querySelectorAll('#sbType button').forEach(b => b.classList.toggle('on', b.dataset.v === t));
+    const shop = t === 'shop';
+    document.getElementById('sbPartyWrap').style.display = shop ? '' : 'none';
+    document.getElementById('sbPriceWrap').style.display = shop ? '' : 'none';
+    document.getElementById('sbCustWrap').style.display = shop ? 'none' : '';
+    document.getElementById('sbCustPhoneWrap').style.display = shop ? 'none' : '';
+    document.getElementById('sbRateHead').textContent = shop ? 'Rate (before GST)' : 'Price (incl. GST)';
+    if(!keep) lzSb.rows.forEach(r => r.manual = false);
+    lzSbReprice();
+  }
+  function lzSbPartyChanged(){
+    const p = lzAcc.parties.find(x => x.id === document.getElementById('sbParty').value);
+    const info = document.getElementById('sbPartyInfo');
+    if(p){
+      document.getElementById('sbPriceList').value = p.party_type === 'wholesale' ? 'wholesale' : 'retail';
+      const b = lzAcc.balances[p.id] || {};
+      info.innerHTML = `${p.gstin ? 'GSTIN ' + lzEsc(p.gstin) : 'No GSTIN (unregistered)'} · ${lzEsc(p.state || '')}${Number(b.due) > 0.5 ? ` · <b style="color:#b4321f">Due ${lzMoney0(b.due)}</b>` : ''}${Number(p.credit_limit) > 0 ? ' · Credit limit ' + lzMoney0(p.credit_limit) : ''}`;
+    } else info.textContent = '';
+    lzSb.rows.forEach(r => r.manual = false);
+    lzSbReprice();
+  }
+  function lzSbAutoRate(r){
+    const p = lzAcc.products.find(x => x.id === r.pid); if(!p) return 0;
+    const g = Number(p.gst_rate ?? storeSettings.gst_percent ?? 18);
+    if(lzSb.type === 'counter') return Number(p.price) || 0; // incl. GST
+    const list = document.getElementById('sbPriceList').value;
+    if(list === 'retail') return Number(p.retail_shop_price) || Math.round(Number(p.price) / (1 + g / 100) * 0.6);
+    const base = Number(p.wholesale_price) || Math.round(Number(p.price) / (1 + g / 100) * 0.55);
+    return r.qty >= 100 ? Math.round(base * 0.90) : r.qty >= 50 ? Math.round(base * 0.95) : base;
+  }
+  function lzSbReprice(){ lzSb.rows.forEach(r => { if(!r.manual) r.rate = lzSbAutoRate(r); }); lzSbRender(); }
+  function lzSbAddRow(){ lzSb.rows.push({ pid: '', qty: 1, rate: 0, manual: false }); lzSbRender(); }
+  function lzSbDelRow(i){ lzSb.rows.splice(i, 1); if(!lzSb.rows.length) lzSb.rows.push({ pid: '', qty: 1, rate: 0, manual: false }); lzSbRender(); }
+  function lzSbSet(i, field, val){
+    const r = lzSb.rows[i]; if(!r) return;
+    if(field === 'pid'){ r.pid = val; r.manual = false; r.rate = lzSbAutoRate(r); lzSbRender(); return; }
+    if(field === 'qty'){ r.qty = Math.max(0, parseInt(val, 10) || 0); if(!r.manual) r.rate = lzSbAutoRate(r); lzSbRender(true); return; }
+    if(field === 'rate'){ r.rate = Number(val) || 0; r.manual = true; lzSbCalc(); return; }
+  }
+  function lzSbRender(keepFocus){
+    const opts = lzAcc.products.map(p => `<option value="${p.id}">${lzEsc(lzModel(p.sku))} · ${lzEsc(lzShortName(p.name))}</option>`).join('');
+    const focusId = keepFocus && document.activeElement ? document.activeElement.id : null;
+    document.getElementById('sbRows').innerHTML = lzSb.rows.map((r, i) => {
+      const p = lzAcc.products.find(x => x.id === r.pid);
+      return `<tr><td><select class="admin-select" onchange="lzSbSet(${i},'pid',this.value)"><option value="">— product —</option>${opts}</select></td>
+        <td>${p ? (p.stock_qty < r.qty ? `<b style="color:#b4321f">${p.stock_qty}</b>` : p.stock_qty) : '—'}</td>
+        <td><input type="number" id="sbQ${i}" min="1" step="1" value="${r.qty}" style="width:80px" oninput="lzSbSet(${i},'qty',this.value)"></td>
+        <td><input type="number" id="sbR${i}" min="0" step="0.01" value="${r.rate}" style="width:110px" oninput="lzSbSet(${i},'rate',this.value)"><div class="lzx-muted" id="sbW${i}"></div></td>
+        <td id="sbA${i}">—</td><td><button type="button" class="icon-action danger" onclick="lzSbDelRow(${i})" title="Remove"><i class="fa-solid fa-xmark"></i></button></td></tr>`;
+    }).join('');
+    document.querySelectorAll('#sbRows select').forEach((s, i) => s.value = lzSb.rows[i].pid);
+    if(focusId){ const el = document.getElementById(focusId); if(el){ el.focus(); try{ const v = el.value; el.value = ''; el.value = v; }catch(_){} } }
+    lzSbCalc();
+  }
+  function lzSbCalc(){
+    const party = lzAcc.parties.find(x => x.id === document.getElementById('sbParty').value);
+    const intra = lzSb.type === 'counter' ? true : lzIntra(party ? party.state : lzBizState());
+    let taxable = 0, gst = 0, total = 0, warn = 0;
+    lzSb.rows.forEach((r, i) => {
+      const p = lzAcc.products.find(x => x.id === r.pid);
+      const g = p ? Number(p.gst_rate ?? storeSettings.gst_percent ?? 18) : 18;
+      const rateEx = lzSb.type === 'counter' ? lzR2(r.rate / (1 + g / 100)) : lzR2(r.rate);
+      const unit = lzR2(rateEx * (1 + g / 100)); const line = lzR2(unit * r.qty);
+      const tx = line / (1 + g / 100);
+      if(p && r.qty > 0){ taxable += tx; gst += line - tx; total += line; }
+      const a = document.getElementById('sbA' + i); if(a) a.textContent = p && r.qty > 0 ? lzMoney2(line) : '—';
+      const w = document.getElementById('sbW' + i);
+      if(w){
+        const cost = p ? Number(p.cost_price) || 0 : 0;
+        if(p && cost && rateEx < cost){ w.innerHTML = '<span style="color:#b4321f">Below your cost ₹' + cost + '</span>'; warn++; }
+        else w.textContent = p && lzSb.type === 'counter' ? 'before GST ' + lzMoney2(rateEx) : '';
+      }
+    });
+    const half = gst / 2;
+    document.getElementById('sbTotals').innerHTML = `<div><span>Taxable value</span><b>${lzMoney2(taxable)}</b></div>
+      ${intra ? `<div><span>CGST</span><b>${lzMoney2(half)}</b></div><div><span>SGST</span><b>${lzMoney2(half)}</b></div>` : `<div><span>IGST</span><b>${lzMoney2(gst)}</b></div>`}
+      <div class="gt"><span>Bill total</span><b>${lzMoney2(total)}</b></div><div class="lzx-muted" style="text-align:right">${lzWords(total)} Rupees only</div>`;
+    const rec = Number(document.getElementById('sbReceived').value) || 0;
+    const due = Math.max(0, total - rec);
+    const b = party ? lzAcc.balances[party.id] || {} : {};
+    const after = (Number(b.due) || 0) + due;
+    let line = total > 0 ? (rec >= total - 0.5 ? 'Fully paid now.' : `Balance on this bill: <b>${lzMoney2(due)}</b>${party ? ` · Shop's total due after this bill: <b>${lzMoney0(after)}</b>` : ''}`) : '';
+    if(party && Number(party.credit_limit) > 0 && after > Number(party.credit_limit)) line += ` <span style="color:#b4321f">— above credit limit ${lzMoney0(party.credit_limit)}</span>`;
+    if(lzSb.type === 'counter' && due > 0.5 && total > 0) line += ' <span style="color:#b4321f">— counter sales are usually paid in full</span>';
+    document.getElementById('sbDueLine').innerHTML = line;
+    window.lzSbTotal = total;
+  }
+  async function lzSbSave(){
+    const btn = document.getElementById('sbSave');
+    const items = lzSb.rows.filter(r => r.pid && r.qty > 0).map(r => {
+      const p = lzAcc.products.find(x => x.id === r.pid); const g = Number(p.gst_rate ?? storeSettings.gst_percent ?? 18);
+      return { product_id: r.pid, qty: r.qty, rate: lzSb.type === 'counter' ? lzR2(r.rate / (1 + g / 100)) : lzR2(r.rate) };
+    });
+    if(!items.length){ showToast('Add at least one product.', 'error'); return; }
+    const party = document.getElementById('sbParty').value || null;
+    if(lzSb.type === 'shop' && !party){ showToast('Choose the shop first.', 'error'); return; }
+    setButtonLoading(btn, true, 'Saving…');
+    const { data, error } = await supabaseClient.rpc('create_shop_bill', {
+      p_channel: lzSb.type, p_party_id: lzSb.type === 'shop' ? party : null, p_items: items,
+      p_bill_date: document.getElementById('sbDate').value || null,
+      p_customer_name: document.getElementById('sbCustName').value.trim() || null,
+      p_customer_phone: document.getElementById('sbCustPhone').value.trim() || null,
+      p_received: Number(document.getElementById('sbReceived').value) || 0,
+      p_mode: document.getElementById('sbMode').value, p_reference: document.getElementById('sbRef').value.trim() || null,
+      p_note: document.getElementById('sbNote').value.trim() || null
+    });
+    setButtonLoading(btn, false);
+    if(error){ showToast('Could not save bill: ' + error.message, 'error', 6000); return; }
+    const p = lzAcc.parties.find(x => x.id === party);
+    const phone = p ? p.phone : document.getElementById('sbCustPhone').value;
+    const due = lzR2(Number(data.total) - Number(data.received || 0));
+    const msg = `Thank you for your order from LAIZA International.\nInvoice ${data.invoice_number} · ${lzFmtDate(document.getElementById('sbDate').value)}\nBill amount: ${lzMoney2(data.total)}${Number(data.received) ? `\nReceived: ${lzMoney2(data.received)}` : ''}${due > 0.5 ? `\nBalance due: ${lzMoney2(due)}` : ''}\n\nLAIZA International · ${storeSettings.business_phone || ''}`;
+    window.lzSbLastMsg = msg; window.lzSbLastPhone = phone;
+    document.getElementById('sbResult').innerHTML = `<div class="lzx-ok"><b>Saved ✓ Invoice ${lzEsc(data.invoice_number)}</b> · Bill ${lzEsc(data.order_number)} · ${lzMoney2(data.total)}${data.receipt_no ? ` · Receipt ${lzEsc(data.receipt_no)}` : ''}
+      <div style="margin-top:8px"><button type="button" class="lzx-btn" onclick="lzOpenInvoiceForOrder('${data.order_id}', this)"><i class="fa-solid fa-print"></i> Print invoice</button>
+      <button type="button" class="lzx-btn wa" onclick="lzWa(window.lzSbLastPhone, window.lzSbLastMsg)"><i class="fa-brands fa-whatsapp"></i> Send on WhatsApp</button></div></div>`;
+    lzSb.rows = [{ pid: '', qty: 1, rate: 0, manual: false }];
+    ['sbReceived','sbRef','sbNote','sbCustName','sbCustPhone'].forEach(id => document.getElementById(id).value = '');
+    await lzAccLoadBase(); lzSbPartyChanged(); lzSbRecent();
+    try{ loadStoreProducts(); }catch(_){}
+  }
+  async function lzSbRecent(){
+    const { data: orders } = await supabaseClient.from('orders').select('id, order_number, created_at, shipping_full_name, channel, total, payment_status').in('channel', ['shop','counter']).order('created_at', { ascending: false }).limit(25);
+    const ids = (orders || []).map(o => o.id);
+    const invs = ids.length ? await lzInChunks('invoices', 'order_id', ids, 'order_id, invoice_number') : [];
+    const im = {}; invs.forEach(i => im[i.order_id] = i.invoice_number);
+    document.getElementById('sbRecent').innerHTML = (orders || []).length ? orders.map(o => `<tr><td>${lzFmtDate(o.created_at)}</td><td>${lzEsc(im[o.id] || '—')}</td><td>${lzEsc(o.order_number)}</td><td>${lzEsc(o.shipping_full_name || '')}</td>
+      <td><span class="lzx-pill">${o.channel === 'shop' ? 'Shop B2B' : 'Counter'}</span></td><td>${lzMoney2(o.total)}</td><td>${lzPayPill(o.payment_status)}</td>
+      <td><button type="button" class="icon-action" title="Invoice" onclick="lzOpenInvoiceForOrder('${o.id}', this)"><i class="fa-solid fa-file-invoice"></i></button></td></tr>`).join('') : '<tr><td colspan="8" class="lzx-muted">No shop or counter bills yet.</td></tr>';
+  }
+  function lzPayPill(s){ s = s || 'pending'; return `<span class="lzx-pill ${s === 'paid' ? 'g' : s === 'partial' ? 'o' : 'r'}">${s === 'paid' ? 'Paid' : s === 'partial' ? 'Part paid' : 'Due'}</span>`; }
+
+  /* ================= SHOPS & DUES ================= */
+  async function lzPtLoad(){
+    await lzAccLoadBase();
+    const sel = document.getElementById('ptState');
+    if(sel && !sel.options.length) sel.innerHTML = LZ_STATES.map(s => `<option>${s[0]}</option>`).join('');
+    const ps = lzAcc.parties, bs = lzAcc.balances;
+    const totalDue = ps.reduce((s, p) => s + Math.max(0, Number((bs[p.id] || {}).due) || 0), 0);
+    const overdue = ps.filter(p => Number((bs[p.id] || {}).due) > 0.5 && bs[p.id].oldest_unpaid && (Date.now() - new Date(bs[p.id].oldest_unpaid)) / 864e5 > 30);
+    document.getElementById('ptStats').innerHTML = `<div class="stat-card"><i class="fa-solid fa-store"></i><b>${ps.length}</b><span>Shops</span></div>
+      <div class="stat-card"><i class="fa-solid fa-hand-holding-dollar"></i><b style="color:#b4321f">${lzMoney0(totalDue)}</b><span>To collect (all dues)</span></div>
+      <div class="stat-card"><i class="fa-solid fa-triangle-exclamation"></i><b>${overdue.length}</b><span>Overdue 30+ days</span></div>`;
+    lzPtRender();
+  }
+  function lzPtRender(){
+    const q = (document.getElementById('ptSearch').value || '').toLowerCase(), f = document.getElementById('ptFilter').value, bs = lzAcc.balances;
+    const rows = lzAcc.parties.filter(p => !q || [p.name, p.city, p.phone, p.owner_name, p.gstin].join(' ').toLowerCase().includes(q)).filter(p => {
+      const b = bs[p.id] || {}; const due = Number(b.due) || 0;
+      if(f === 'due') return due > 0.5;
+      if(f === 'overdue') return due > 0.5 && b.oldest_unpaid && (Date.now() - new Date(b.oldest_unpaid)) / 864e5 > 30;
+      return true;
+    });
+    document.getElementById('ptRows').innerHTML = rows.length ? rows.map(p => { const b = bs[p.id] || {}; const due = Number(b.due) || 0;
+      const days = b.oldest_unpaid ? Math.floor((Date.now() - new Date(b.oldest_unpaid)) / 864e5) : 0;
+      return `<tr><td><b>${lzEsc(p.name)}</b>${p.owner_name ? `<br><small class="lzx-muted">${lzEsc(p.owner_name)}</small>` : ''}${p.phone ? `<br><small class="lzx-muted">${lzEsc(p.phone)}</small>` : ''}</td>
+        <td>${lzEsc(p.city || '')}</td><td><span class="lzx-pill">${p.party_type === 'wholesale' ? 'Wholesale' : 'Retail shop'}</span></td><td>${lzEsc(p.gstin || '—')}</td>
+        <td>${lzMoney0(b.billed)}</td><td>${lzMoney0(b.received)}</td>
+        <td>${due > 0.5 ? `<b style="color:#b4321f">${lzMoney0(due)}</b>${days > 0 ? `<br><small class="lzx-muted">${days} days</small>` : ''}` : due < -0.5 ? `<b style="color:#2f7a47">Advance ${lzMoney0(-due)}</b>` : '<span style="color:#2f7a47">Nil</span>'}</td>
+        <td style="white-space:nowrap"><button type="button" class="icon-action" title="Ledger" onclick="lzPtLedger('${p.id}')"><i class="fa-solid fa-book"></i></button>
+        <button type="button" class="icon-action" title="New bill" onclick="lzGoBill('${p.id}')"><i class="fa-solid fa-file-circle-plus"></i></button>
+        ${due > 0.5 && p.phone ? `<button type="button" class="icon-action" title="WhatsApp reminder" onclick="lzPtRemind('${p.id}')"><i class="fa-brands fa-whatsapp"></i></button>` : ''}
+        <button type="button" class="icon-action" title="Edit" onclick="lzPtForm('${p.id}')"><i class="fa-solid fa-pen"></i></button></td></tr>`; }).join('')
+      : `<tr><td colspan="8" class="lzx-muted">${lzAcc.parties.length ? 'No shops match.' : 'No shops yet — click “Add shop”.'}</td></tr>`;
+  }
+  function lzGoBill(pid){ showAdminPanel('shopBill'); setTimeout(() => lzSbInit(pid), 50); }
+  function lzPtGstinState(){
+    const g = document.getElementById('ptGstin').value.trim().toUpperCase();
+    if(/^\d{2}/.test(g)){ const s = LZ_STATES.find(x => x[1] === g.slice(0, 2)); if(s) document.getElementById('ptState').value = s[0]; }
+  }
+  function lzPtForm(id){
+    const p = lzAcc.parties.find(x => x.id === id) || {};
+    document.getElementById('ptFormPanel').style.display = 'block';
+    document.getElementById('ptFormTitle').textContent = id ? 'Edit shop' : 'Add shop';
+    const set = (k, v) => document.getElementById(k).value = v ?? '';
+    set('ptId', p.id); set('ptName', p.name); set('ptOwner', p.owner_name); set('ptPhone', p.phone); set('ptType', p.party_type || 'retail');
+    set('ptGstin', p.gstin); set('ptState', p.state || lzBizState()); set('ptAddress', p.address); set('ptCity', p.city); set('ptPin', p.pincode);
+    set('ptLimit', p.credit_limit ?? 0); set('ptOpening', p.opening_balance ?? 0); set('ptNotes', p.notes);
+    document.getElementById('ptFormPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function lzPtFormClose(){ document.getElementById('ptFormPanel').style.display = 'none'; }
+  async function lzPtSave(e){
+    e.preventDefault();
+    const g = document.getElementById('ptGstin').value.trim().toUpperCase();
+    if(g && !/^\d{2}[A-Z]{5}\d{4}[A-Z][A-Z\d]Z[A-Z\d]$/.test(g)){ showToast('GSTIN looks wrong — it should be 15 characters like 29ABCDE1234F1Z5.', 'error', 5000); return; }
+    const v = id => document.getElementById(id).value.trim();
+    const row = { name: v('ptName'), owner_name: v('ptOwner') || null, phone: v('ptPhone') || null, party_type: v('ptType'), gstin: g || null, state: v('ptState'),
+      address: v('ptAddress') || null, city: v('ptCity') || null, pincode: v('ptPin') || null, credit_limit: Number(v('ptLimit')) || 0, opening_balance: Number(v('ptOpening')) || 0, notes: v('ptNotes') || null };
+    const id = v('ptId');
+    const { error } = id ? await supabaseClient.from('parties').update(row).eq('id', id) : await supabaseClient.from('parties').insert(row);
+    if(error){ showToast('Could not save: ' + error.message, 'error'); return; }
+    showToast('Shop saved.', 'success'); lzPtFormClose(); lzPtLoad();
+  }
+  function lzPtRemind(pid){
+    const p = lzAcc.parties.find(x => x.id === pid); const b = lzAcc.balances[pid] || {};
+    lzWa(p.phone, `Namaste ${p.owner_name || p.name},\nThis is a friendly reminder from LAIZA International.\nYour pending balance is ${lzMoney2(b.due)} as on ${lzFmtDate(lzTodayIST())}.\nKindly pay by UPI / bank transfer. Please ignore if already paid.\nThank you 🙏\nLAIZA International · ${storeSettings.business_phone || ''}`);
+  }
+  async function lzPartyLedgerRows(pid){
+    const p = lzAcc.parties.find(x => x.id === pid);
+    const [{ data: bills }, { data: rcs }, { data: cns }] = await Promise.all([
+      supabaseClient.from('orders').select('id, order_number, created_at, total, status').eq('party_id', pid).neq('status', 'cancelled'),
+      supabaseClient.from('receipts').select('*').eq('party_id', pid),
+      supabaseClient.from('credit_notes').select('*').eq('party_id', pid)
+    ]);
+    const invs = (bills || []).length ? await lzInChunks('invoices', 'order_id', bills.map(b => b.id), 'order_id, invoice_number, invoice_date') : [];
+    const im = {}; invs.forEach(i => im[i.order_id] = i);
+    const rows = [];
+    if(Number(p.opening_balance)) rows.push({ d: '0000', date: null, txt: 'Opening balance', dr: Math.max(0, Number(p.opening_balance)), cr: Math.max(0, -Number(p.opening_balance)) });
+    (bills || []).forEach(b => rows.push({ d: (im[b.id] && im[b.id].invoice_date) || b.created_at.slice(0, 10), date: (im[b.id] && im[b.id].invoice_date) || b.created_at, txt: `Bill ${im[b.id] ? im[b.id].invoice_number : b.order_number}`, dr: Number(b.total), cr: 0, oid: b.id }));
+    (rcs || []).forEach(r => rows.push({ d: r.receipt_date, date: r.receipt_date, txt: `Payment ${r.voucher_no} · ${r.mode.toUpperCase()}${r.reference ? ' · ' + r.reference : ''}`, dr: 0, cr: Number(r.amount) }));
+    (cns || []).filter(c => !c.refund_mode).forEach(c => rows.push({ d: c.note_date, date: c.note_date, txt: `Return ${c.note_no}${c.reason ? ' · ' + c.reason : ''}`, dr: 0, cr: Number(c.total_amount) }));
+    rows.sort((a, b) => a.d < b.d ? -1 : a.d > b.d ? 1 : (b.dr - a.dr));
+    let bal = 0; rows.forEach(r => { bal += r.dr - r.cr; r.bal = bal; });
+    return { p, rows, bal };
+  }
+  async function lzPtLedger(pid){
+    const { p, rows, bal } = await lzPartyLedgerRows(pid);
+    window.lzPtCurrent = pid;
+    document.getElementById('ptLedgerPanel').style.display = 'block';
+    document.getElementById('ptLedgerTitle').textContent = 'Ledger — ' + p.name;
+    document.getElementById('ptLedgerTop').innerHTML = `<p style="margin:0 0 8px">Balance: <b style="color:${bal > 0.5 ? '#b4321f' : '#2f7a47'}">${bal > 0.5 ? lzMoney2(bal) + ' due' : bal < -0.5 ? lzMoney2(-bal) + ' advance' : 'Nil'}</b>
+      <button type="button" class="lzx-btn ghost" onclick="lzPtStatement('${pid}')"><i class="fa-solid fa-print"></i> Statement PDF</button>
+      ${p.phone && bal > 0.5 ? `<button type="button" class="lzx-btn wa" onclick="lzPtRemind('${pid}')"><i class="fa-brands fa-whatsapp"></i> Reminder</button>` : ''}</p>`;
+    document.getElementById('ptLedgerRows').innerHTML = rows.length ? rows.map(r => `<tr><td>${r.date ? lzFmtDate(r.date) : '—'}</td><td>${lzEsc(r.txt)}${r.oid ? ` <a href="javascript:void(0)" onclick="lzOpenInvoiceForOrder('${r.oid}')">view</a>` : ''}</td><td>${r.dr ? lzMoney2(r.dr) : ''}</td><td>${r.cr ? lzMoney2(r.cr) : ''}</td><td><b>${lzMoney2(r.bal)}</b></td></tr>`).join('') : '<tr><td colspan="5" class="lzx-muted">No entries yet.</td></tr>';
+    document.getElementById('ptRcDate').value = lzTodayIST();
+    document.getElementById('ptLedgerPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  async function lzPtStatement(pid){
+    const { p, rows, bal } = await lzPartyLedgerRows(pid);
+    lzPrintWindow('Statement ' + p.name, `<h2 style="margin:0">Statement of account</h2><p class="muted">${lzEsc(p.name)}${p.gstin ? ' · GSTIN ' + lzEsc(p.gstin) : ''}${p.city ? ' · ' + lzEsc(p.city) : ''} · as on ${lzFmtDate(lzTodayIST())}</p>
+      <table><tr><th>Date</th><th>Details</th><th class="r">Debit</th><th class="r">Credit</th><th class="r">Balance</th></tr>
+      ${rows.map(r => `<tr><td>${r.date ? lzFmtDate(r.date) : '—'}</td><td>${lzEsc(r.txt)}</td><td class="r">${r.dr ? lzMoney2(r.dr) : ''}</td><td class="r">${r.cr ? lzMoney2(r.cr) : ''}</td><td class="r">${lzMoney2(r.bal)}</td></tr>`).join('')}
+      <tr class="tot"><td colspan="4">${bal >= 0 ? 'Balance due' : 'Advance with us'}</td><td class="r">${lzMoney2(Math.abs(bal))}</td></tr></table>
+      <p class="muted">Kindly pay by UPI / bank transfer${storeSettings.bank_account_number ? ` — ${lzEsc(storeSettings.bank_name || '')} A/c ${lzEsc(storeSettings.bank_account_number)} IFSC ${lzEsc(storeSettings.bank_ifsc || '')}` : ''}.</p>`);
+  }
+  async function lzPtReceive(e){
+    e.preventDefault();
+    const pid = window.lzPtCurrent;
+    const { data, error } = await supabaseClient.rpc('record_receipt', { p_party_id: pid, p_order_id: null, p_amount: Number(document.getElementById('ptRcAmt').value), p_mode: document.getElementById('ptRcMode').value,
+      p_date: document.getElementById('ptRcDate').value || null, p_reference: document.getElementById('ptRcRef').value.trim() || null, p_notes: null });
+    if(error){ showToast('Could not save receipt: ' + error.message, 'error'); return; }
+    showToast('Receipt ' + data.voucher_no + ' saved.', 'success');
+    document.getElementById('ptRcAmt').value = ''; document.getElementById('ptRcRef').value = '';
+    await lzPtLoad(); lzPtLedger(pid);
+  }
+
+  /* ================= VOUCHERS ================= */
+  function lzVcTab(t){
+    document.querySelectorAll('#vcTabs button').forEach(b => b.classList.toggle('on', b.dataset.v === t));
+    document.querySelectorAll('.lzx-vc').forEach(d => d.style.display = d.id === 'vc_' + t ? 'block' : 'none');
+    window.lzVcCurrent = t; lzVcLoad(t);
+  }
+  async function lzVcLoad(t){
+    t = t || window.lzVcCurrent || 'rv';
+    await lzAccLoadBase();
+    const today = lzTodayIST();
+    ['vcRcDate','vcPyDate','vcCvDate'].forEach(id => { const el = document.getElementById(id); if(el && !el.value) el.value = today; });
+    const pm = {}; lzAcc.parties.forEach(p => pm[p.id] = p.name);
+    if(t === 'rv'){
+      document.getElementById('vcRcParty').innerHTML = lzPartyOptions(true);
+      const { data } = await supabaseClient.from('receipts').select('*').order('receipt_date', { ascending: false }).order('created_at', { ascending: false }).limit(100);
+      const ords = (data || []).filter(r => !r.party_id && r.order_id).map(r => r.order_id);
+      const om = {}; (ords.length ? await lzInChunks('orders', 'id', ords, 'id, shipping_full_name') : []).forEach(o => om[o.id] = o.shipping_full_name);
+      document.getElementById('vcRcRows').innerHTML = (data || []).length ? data.map(r => `<tr><td><b>${lzEsc(r.voucher_no)}</b></td><td>${lzFmtDate(r.receipt_date)}</td><td>${lzEsc(pm[r.party_id] || om[r.order_id] || 'Customer')}</td><td>${r.mode.toUpperCase()}</td><td>${lzMoney2(r.amount)}</td><td>${lzEsc(r.reference || r.notes || '')}</td></tr>`).join('') : '<tr><td colspan="6" class="lzx-muted">No receipts yet.</td></tr>';
+    }
+    if(t === 'pv'){
+      const [purch, { data: sp }, { data: ex }, { data: cats }] = await Promise.all([
+        lzFetchAll('purchases', 'id, purchase_number, purchase_date, supplier_name_snapshot, invoice_number, total_amount, amount_paid, status'),
+        supabaseClient.from('supplier_payments').select('*').order('payment_date', { ascending: false }).limit(100),
+        supabaseClient.from('expenses').select('*').order('expense_date', { ascending: false }).limit(100),
+        supabaseClient.from('expense_categories').select('id, name')
+      ]);
+      const due = purch.filter(p => p.status !== 'cancelled' && Number(p.total_amount) - Number(p.amount_paid || 0) > 0.5);
+      window.lzVcPurch = due;
+      document.getElementById('vcPyPurchase').innerHTML = due.length ? '<option value="">— choose bill —</option>' + due.map(p => `<option value="${p.id}">${lzEsc(p.supplier_name_snapshot || 'Supplier')} · bill ${lzEsc(p.invoice_number || p.purchase_number || '')} · ${lzFmtDate(p.purchase_date)} · balance ${lzMoney0(Number(p.total_amount) - Number(p.amount_paid || 0))}</option>`).join('') : '<option value="">No unpaid supplier bills 🎉</option>';
+      const cm = {}; (cats || []).forEach(c => cm[c.id] = c.name);
+      const pmap = {}; purch.forEach(p => pmap[p.id] = p);
+      const rows = [...(sp || []).map(s => ({ v: s.voucher_no, d: s.payment_date, to: (pmap[s.purchase_id] || {}).supplier_name_snapshot || 'Supplier', f: 'Supplier bill ' + ((pmap[s.purchase_id] || {}).invoice_number || ''), m: s.mode, a: s.amount })),
+        ...(ex || []).map(e => ({ v: e.voucher_no || '—', d: e.expense_date, to: cm[e.category_id] || 'Expense', f: e.description || 'Expense', m: e.payment_mode, a: e.amount }))].sort((a, b) => a.d < b.d ? 1 : -1);
+      document.getElementById('vcPyRows').innerHTML = rows.length ? rows.map(r => `<tr><td><b>${lzEsc(r.v)}</b></td><td>${lzFmtDate(r.d)}</td><td>${lzEsc(r.to)}</td><td>${lzEsc(r.f)}</td><td>${lzEsc(String(r.m || '').toUpperCase())}</td><td>${lzMoney2(r.a)}</td></tr>`).join('') : '<tr><td colspan="6" class="lzx-muted">No payments yet.</td></tr>';
+    }
+    if(t === 'cv'){
+      const { data } = await supabaseClient.from('cash_transactions').select('*').eq('source', 'contra').order('transaction_date', { ascending: false }).limit(100);
+      document.getElementById('vcCvRows').innerHTML = (data || []).length ? data.map(r => `<tr><td><b>${lzEsc(r.voucher_no)}</b></td><td>${lzFmtDate(r.transaction_date)}</td><td>${lzEsc(r.description || '')}</td><td>${lzMoney2(r.amount)}</td></tr>`).join('') : '<tr><td colspan="4" class="lzx-muted">No contra entries yet.</td></tr>';
+    }
+    if(t === 'cn'){
+      const { data: ords } = await supabaseClient.from('orders').select('id, order_number, shipping_full_name, total, created_at, channel, status').in('status', ['delivered','shipped','returned']).order('created_at', { ascending: false }).limit(200);
+      const ids = (ords || []).map(o => o.id);
+      const invs = ids.length ? await lzInChunks('invoices', 'order_id', ids, 'order_id, invoice_number') : [];
+      const im = {}; invs.forEach(i => im[i.order_id] = i.invoice_number);
+      window.lzVcBills = (ords || []).filter(o => im[o.id]).map(o => ({ ...o, invoice_number: im[o.id] }));
+      document.getElementById('vcCnBill').innerHTML = '<option value="">— choose bill —</option>' + lzVcBills.map(o => `<option value="${o.id}">${lzEsc(o.invoice_number)} · ${lzEsc(o.shipping_full_name || '')} · ${lzFmtDate(o.created_at)} · ${lzMoney0(o.total)}</option>`).join('');
+      const { data: cns } = await supabaseClient.from('credit_notes').select('*').order('note_date', { ascending: false }).limit(100);
+      const om = {}; (cns || []).length && (await lzInChunks('orders', 'id', [...new Set(cns.map(c => c.order_id).filter(Boolean))], 'id, shipping_full_name')).forEach(o => om[o.id] = o.shipping_full_name);
+      document.getElementById('vcCnRows').innerHTML = (cns || []).length ? cns.map(c => `<tr><td><b>${lzEsc(c.note_no)}</b></td><td>${lzFmtDate(c.note_date)}</td><td>${lzEsc(c.invoice_number || '')}</td><td>${lzEsc(pm[c.party_id] || om[c.order_id] || '')}</td><td>${lzMoney2(c.total_amount)}</td><td>${c.refund_mode ? 'Refunded · ' + c.refund_mode.toUpperCase() : 'Adjusted in dues'}</td>
+        <td><button type="button" class="icon-action" title="Print" onclick="lzCnPrint('${c.id}')"><i class="fa-solid fa-print"></i></button></td></tr>`).join('') : '<tr><td colspan="7" class="lzx-muted">No credit notes yet.</td></tr>';
+    }
+  }
+  async function lzVcReceipt(e){
+    e.preventDefault();
+    const pid = document.getElementById('vcRcParty').value || null;
+    if(!pid){ showToast('Choose the shop. (Counter / website money is recorded with the bill.)', 'error'); return; }
+    const { data, error } = await supabaseClient.rpc('record_receipt', { p_party_id: pid, p_order_id: null, p_amount: Number(document.getElementById('vcRcAmt').value), p_mode: document.getElementById('vcRcMode').value,
+      p_date: document.getElementById('vcRcDate').value || null, p_reference: document.getElementById('vcRcRef').value.trim() || null, p_notes: document.getElementById('vcRcNotes').value.trim() || null });
+    if(error){ showToast('Could not save: ' + error.message, 'error'); return; }
+    showToast('Receipt ' + data.voucher_no + ' saved.', 'success');
+    ['vcRcAmt','vcRcRef','vcRcNotes'].forEach(id => document.getElementById(id).value = '');
+    lzVcLoad('rv');
+  }
+  function lzVcPayPick(){
+    const p = (window.lzVcPurch || []).find(x => x.id === document.getElementById('vcPyPurchase').value);
+    if(p) document.getElementById('vcPyAmt').value = lzR2(Number(p.total_amount) - Number(p.amount_paid || 0));
+  }
+  async function lzVcPay(e){
+    e.preventDefault();
+    const pid = document.getElementById('vcPyPurchase').value;
+    if(!pid){ showToast('Choose the supplier bill.', 'error'); return; }
+    const { data, error } = await supabaseClient.rpc('record_supplier_payment', { p_purchase_id: pid, p_amount: Number(document.getElementById('vcPyAmt').value), p_mode: document.getElementById('vcPyMode').value,
+      p_date: document.getElementById('vcPyDate').value || null, p_reference: document.getElementById('vcPyRef').value.trim() || null, p_notes: null });
+    if(error){ showToast('Could not save: ' + error.message, 'error'); return; }
+    showToast('Payment ' + data.voucher_no + ' saved.', 'success');
+    ['vcPyAmt','vcPyRef'].forEach(id => document.getElementById(id).value = '');
+    lzVcLoad('pv');
+  }
+  async function lzVcContra(e){
+    e.preventDefault();
+    const { data, error } = await supabaseClient.rpc('record_contra', { p_kind: document.getElementById('vcCvKind').value, p_amount: Number(document.getElementById('vcCvAmt').value),
+      p_date: document.getElementById('vcCvDate').value || null, p_reference: document.getElementById('vcCvRef').value.trim() || null, p_notes: document.getElementById('vcCvRef').value.trim() || null });
+    if(error){ showToast('Could not save: ' + error.message, 'error'); return; }
+    showToast('Contra ' + data.voucher_no + ' saved.', 'success');
+    ['vcCvAmt','vcCvRef'].forEach(id => document.getElementById(id).value = '');
+    lzVcLoad('cv');
+  }
+  async function lzVcCnPick(){
+    const oid = document.getElementById('vcCnBill').value;
+    const box = document.getElementById('vcCnItems'), more = document.getElementById('vcCnMore');
+    if(!oid){ box.innerHTML = ''; more.style.display = 'none'; return; }
+    const [{ data: items }, { data: prev }] = await Promise.all([
+      supabaseClient.from('order_items').select('*').eq('order_id', oid),
+      supabaseClient.from('credit_notes').select('id').eq('order_id', oid)
+    ]);
+    const prevIds = (prev || []).map(p => p.id);
+    const done = {}; (prevIds.length ? await lzInChunks('credit_note_items', 'credit_note_id', prevIds) : []).forEach(i => done[i.product_id] = (done[i.product_id] || 0) + Number(i.quantity));
+    const bill = (window.lzVcBills || []).find(b => b.id === oid);
+    document.getElementById('vcCnRefund').value = bill && bill.channel === 'shop' ? '' : 'cash';
+    box.innerHTML = `<table class="admin-table"><thead><tr><th>Product</th><th>Sold</th><th>Already returned</th><th>Return now</th><th>Price (incl. GST)</th></tr></thead><tbody>${(items || []).map(i => `<tr><td>${lzEsc(i.product_name)}</td><td>${i.quantity}</td><td>${done[i.product_id] || 0}</td>
+      <td><input type="number" class="vcCnQ" data-pid="${i.product_id}" min="0" max="${i.quantity - (done[i.product_id] || 0)}" value="0" style="width:80px"></td><td>${lzMoney2(i.unit_price)}</td></tr>`).join('')}</tbody></table>`;
+    more.style.display = '';
+  }
+  async function lzVcCnSave(){
+    const items = [...document.querySelectorAll('.vcCnQ')].map(i => ({ product_id: i.dataset.pid, qty: parseInt(i.value, 10) || 0 })).filter(i => i.qty > 0);
+    if(!items.length){ showToast('Enter how many pieces came back.', 'error'); return; }
+    const { data, error } = await supabaseClient.rpc('create_credit_note', { p_order_id: document.getElementById('vcCnBill').value, p_items: items, p_reason: document.getElementById('vcCnReason').value.trim() || null,
+      p_restock: document.getElementById('vcCnRestock').checked, p_refund_mode: document.getElementById('vcCnRefund').value || null, p_date: null });
+    if(error){ showToast('Could not create credit note: ' + error.message, 'error', 6000); return; }
+    showToast('Credit note ' + data.note_no + ' created (' + lzMoney2(data.total) + ').', 'success');
+    document.getElementById('vcCnBill').value = ''; lzVcCnPick(); lzVcLoad('cn');
+  }
+  async function lzCnPrint(id){
+    const { data: c } = await supabaseClient.from('credit_notes').select('*').eq('id', id).single();
+    const { data: items } = await supabaseClient.from('credit_note_items').select('*').eq('credit_note_id', id);
+    const { data: o } = await supabaseClient.from('orders').select('shipping_full_name, buyer_gstin, place_of_supply, shipping_state').eq('id', c.order_id).single();
+    const intra = lzIntra((o && (o.place_of_supply || o.shipping_state)) || lzBizState());
+    const gst = Number(c.gst_amount);
+    lzPrintWindow('Credit note ' + c.note_no, `<h2 style="margin:0">CREDIT NOTE</h2><p class="muted">No. <b>${lzEsc(c.note_no)}</b> · Date ${lzFmtDate(c.note_date)} · Against invoice <b>${lzEsc(c.invoice_number || '')}</b></p>
+      <p>To: <b>${lzEsc((o && o.shipping_full_name) || '')}</b>${o && o.buyer_gstin ? ' · GSTIN ' + lzEsc(o.buyer_gstin) : ''}${c.reason ? '<br>Reason: ' + lzEsc(c.reason) : ''}</p>
+      <table><tr><th>Item</th><th class="r">Qty</th><th class="r">Rate</th><th class="r">Taxable</th><th class="r">GST</th><th class="r">Total</th></tr>
+      ${(items || []).map(i => `<tr><td>${lzEsc(i.product_name)}</td><td class="r">${i.quantity}</td><td class="r">${lzMoney2(i.unit_price / (1 + Number(i.gst_rate) / 100))}</td><td class="r">${lzMoney2(i.taxable_amount)}</td><td class="r">${lzMoney2(i.gst_amount)}</td><td class="r">${lzMoney2(i.line_total)}</td></tr>`).join('')}
+      <tr><td colspan="5">${intra ? `CGST ${lzMoney2(gst / 2)} + SGST ${lzMoney2(gst / 2)}` : `IGST ${lzMoney2(gst)}`}</td><td></td></tr>
+      <tr class="tot"><td colspan="5">Total credit</td><td class="r">${lzMoney2(c.total_amount)}</td></tr></table>
+      <p class="muted">${lzWords(c.total_amount)} Rupees only · ${c.refund_mode ? 'Refunded by ' + c.refund_mode.toUpperCase() : 'Adjusted against your account balance'}</p>`);
+  }
+
+  /* ================= MONTHLY ACCOUNTS BOOK ================= */
+  function lzMonthRange(ym){ const [y, m] = ym.split('-').map(Number); const s = `${y}-${String(m).padStart(2, '0')}-01`; const e = new Date(Date.UTC(y, m, 0)).toISOString().slice(0, 10); return [s, e]; }
+  function lzFyRange(ym){ const [y, m] = ym.split('-').map(Number); const fy = m >= 4 ? y : y - 1; return [`${fy}-04-01`, `${fy + 1}-03-31`, fy]; }
+  async function lzBooksData(from, to){
+    const s = storeSettings || {};
+    const [invs, cns, purch, exps, cats, rcs, sps, cash, bank, setl, prods, parties, allPurch] = await Promise.all([
+      lzFetchAll('invoices', '*', q => q.gte('invoice_date', from).lte('invoice_date', to).order('invoice_number')),
+      lzFetchAll('credit_notes', '*', q => q.gte('note_date', from).lte('note_date', to)),
+      lzFetchAll('purchases', '*', q => q.gte('purchase_date', from).lte('purchase_date', to)),
+      lzFetchAll('expenses', '*', q => q.gte('expense_date', from).lte('expense_date', to)),
+      supabaseClient.from('expense_categories').select('id, name').then(r => r.data || []),
+      lzFetchAll('receipts', '*', q => q.gte('receipt_date', from).lte('receipt_date', to)),
+      lzFetchAll('supplier_payments', '*', q => q.gte('payment_date', from).lte('payment_date', to)),
+      lzFetchAll('cash_transactions', '*', q => q.lte('transaction_date', to)),
+      lzFetchAll('bank_transactions', '*', q => q.lte('transaction_date', to)),
+      lzFetchAll('settlements', '*', q => q.lte('settlement_date', to)),
+      supabaseClient.from('products').select('id, name, sku, cost_price, stock_qty, hsn_code, gst_rate').then(r => r.data || []),
+      supabaseClient.from('parties').select('*').then(r => r.data || []),
+      lzFetchAll('purchases', 'id, purchase_date, total_amount, amount_paid, status, supplier_name_snapshot, invoice_number', q => q.lte('purchase_date', to))
+    ]);
+    const invItems = invs.length ? await lzInChunks('invoice_items', 'invoice_id', invs.map(i => i.id)) : [];
+    const orders = invs.length ? await lzInChunks('orders', 'id', [...new Set(invs.map(i => i.order_id))], 'id, order_number, status, payment_status, payment_method, channel, party_id, shipping_state, place_of_supply, buyer_gstin') : [];
+    const cnItems = cns.length ? await lzInChunks('credit_note_items', 'credit_note_id', cns.map(c => c.id)) : [];
+    const purItems = purch.length ? await lzInChunks('purchase_items', 'purchase_id', purch.map(p => p.id)) : [];
+    const om = {}; orders.forEach(o => om[o.id] = o);
+    const pBySku = {}, pById = {}; prods.forEach(p => { pBySku[p.sku] = p; pById[p.id] = p; });
+    const catM = {}; cats.forEach(c => catM[c.id] = c.name);
+    const itemsBy = {}; invItems.forEach(i => (itemsBy[i.invoice_id] = itemsBy[i.invoice_id] || []).push(i));
+    const chLabel = c => c === 'shop' ? 'Shop (B2B)' : c === 'counter' ? 'Counter' : 'Website';
+
+    // ---- sales register
+    const sales = [], cancelled = [];
+    invs.forEach(inv => {
+      const o = om[inv.order_id] || {};
+      const items = itemsBy[inv.id] || [];
+      const taxable = items.reduce((a, i) => a + Number(i.taxable_amount || 0), 0);
+      const gst = items.reduce((a, i) => a + Number(i.gst_amount || 0), 0);
+      const pos = inv.place_of_supply || o.place_of_supply || o.shipping_state || s.business_state || 'Karnataka';
+      let cg = Number(inv.cgst) || 0, sg = Number(inv.sgst) || 0, ig = Number(inv.igst) || 0;
+      if(cg + sg + ig === 0 && gst > 0){ if(lzIntra(pos)) { cg = gst / 2; sg = gst / 2; } else ig = gst; }
+      const row = { no: inv.invoice_number, date: inv.invoice_date, channel: o.channel || inv.channel || 'website', name: inv.customer_name, gstin: inv.buyer_gstin || o.buyer_gstin || '', pos, posCode: lzStateCode(pos),
+        taxable: lzR2(taxable), cgst: lzR2(cg), sgst: lzR2(sg), igst: lzR2(ig), total: lzR2(inv.total_amount), status: o.status, items, rate: taxable ? Math.round(gst / taxable * 100) : 0, order: o.order_number, pay: o.payment_method };
+      if(['cancelled','returned'].includes(o.status) || o.payment_status === 'refunded') cancelled.push(row); else sales.push(row);
+    });
+    // ---- credit notes
+    const cnRows = cns.map(c => { const o = om[c.order_id] || {}; const pos = o.place_of_supply || o.shipping_state || s.business_state; const g = Number(c.gst_amount);
+      return { no: c.note_no, date: c.note_date, inv: c.invoice_number, name: '', gstin: o.buyer_gstin || '', taxable: Number(c.taxable_amount), cgst: lzIntra(pos) ? g / 2 : 0, sgst: lzIntra(pos) ? g / 2 : 0, igst: lzIntra(pos) ? 0 : g, total: Number(c.total_amount), refund: c.refund_mode || 'Adjusted', items: cnItems.filter(i => i.credit_note_id === c.id), restock: c.restock }; });
+    // ---- totals
+    const sum = (arr, k) => lzR2(arr.reduce((a, r) => a + Number(r[k] || 0), 0));
+    const byCh = {}; sales.forEach(r => { const k = chLabel(r.channel); byCh[k] = byCh[k] || { n: 0, taxable: 0, gst: 0, total: 0 }; byCh[k].n++; byCh[k].taxable += r.taxable; byCh[k].gst += r.cgst + r.sgst + r.igst; byCh[k].total += r.total; });
+    const out = { taxable: sum(sales, 'taxable') - sum(cnRows, 'taxable'), cgst: sum(sales, 'cgst') - sum(cnRows, 'cgst'), sgst: sum(sales, 'sgst') - sum(cnRows, 'sgst'), igst: sum(sales, 'igst') - sum(cnRows, 'igst') };
+    const purOk = purch.filter(p => p.status !== 'cancelled');
+    const inp = { taxable: sum(purOk, 'taxable_amount'), cgst: sum(purOk, 'cgst_amount'), sgst: sum(purOk, 'sgst_amount'), igst: sum(purOk, 'igst_amount') };
+    // ---- B2C summary & HSN
+    const b2c = {}; sales.filter(r => !r.gstin).forEach(r => { const k = r.pos + '|' + r.rate; b2c[k] = b2c[k] || { pos: r.pos, code: r.posCode, rate: r.rate, taxable: 0, cgst: 0, sgst: 0, igst: 0 }; ['taxable','cgst','sgst','igst'].forEach(f => b2c[k][f] += r[f]); });
+    const hsn = {}; sales.forEach(r => r.items.forEach(i => { const p = pBySku[i.sku] || {}; const h = i.hsn_code || p.hsn_code || (i.sku === 'COD' ? '9985' : ''); const rate = Number(i.taxable_amount) ? Math.round(Number(i.gst_amount) / Number(i.taxable_amount) * 100) : 0; const k = h + '|' + rate;
+      hsn[k] = hsn[k] || { hsn: h || '(missing)', desc: i.sku === 'COD' ? 'COD handling service' : 'Leather wallets & accessories', uqc: i.sku === 'COD' ? 'OTH' : 'NOS', qty: 0, rate, taxable: 0, gst: 0, total: 0 };
+      hsn[k].qty += Number(i.quantity); hsn[k].taxable += Number(i.taxable_amount); hsn[k].gst += Number(i.gst_amount); hsn[k].total += Number(i.line_total); }));
+    // ---- P&L
+    let cogs = 0, otherInc = 0; const missingCost = new Set();
+    sales.forEach(r => r.items.forEach(i => { if(i.sku === 'COD'){ otherInc += Number(i.taxable_amount); return; } const p = pBySku[i.sku]; const c = p ? Number(p.cost_price) || 0 : 0; if(!c) missingCost.add(i.product_name); cogs += c * Number(i.quantity); }));
+    cnRows.forEach(c => c.items.forEach(i => { const p = pById[i.product_id]; if(c.restock && p) cogs -= (Number(p.cost_price) || 0) * Number(i.quantity); }));
+    const expByCat = {}; exps.forEach(e => { const k = catM[e.category_id] || 'Other expenses'; expByCat[k] = (expByCat[k] || 0) + Number(e.amount); });
+    const expTotal = lzR2(exps.reduce((a, e) => a + Number(e.amount), 0));
+    const salesNoCod = lzR2(out.taxable - otherInc);
+    const gross = lzR2(salesNoCod - cogs);
+    const net = lzR2(gross + otherInc - expTotal);
+    // ---- balance sheet (as at "to")
+    const cr = t => t.direction === 'in' || t.direction === 'credit';
+    const cashBal = lzR2(Number(s.opening_cash || 0) + cash.reduce((a, t) => a + (cr(t) ? 1 : -1) * Number(t.amount), 0));
+    const bankBal = lzR2(Number(s.opening_bank || 0) + bank.reduce((a, t) => a + (cr(t) ? 1 : -1) * Number(t.amount), 0) + setl.filter(x => x.status === 'settled').reduce((a, x) => a + Number(x.amount), 0));
+    const [pb, prc, pcn] = await Promise.all([
+      lzFetchAll('orders', 'party_id, total, created_at, status', q => q.not('party_id', 'is', null).lte('created_at', to + 'T23:59:59+05:30')),
+      lzFetchAll('receipts', 'party_id, amount', q => q.not('party_id', 'is', null).lte('receipt_date', to)),
+      lzFetchAll('credit_notes', 'party_id, total_amount, refund_mode', q => q.not('party_id', 'is', null).lte('note_date', to))
+    ]);
+    const dues = parties.map(p => { const d = Number(p.opening_balance || 0) + pb.filter(o => o.party_id === p.id && o.status !== 'cancelled').reduce((a, o) => a + Number(o.total), 0)
+      - prc.filter(r => r.party_id === p.id).reduce((a, r) => a + Number(r.amount), 0) - pcn.filter(c => c.party_id === p.id && !c.refund_mode).reduce((a, c) => a + Number(c.total_amount), 0);
+      return { name: p.name, city: p.city, gstin: p.gstin, phone: p.phone, due: lzR2(d) }; }).filter(d => Math.abs(d.due) > 0.5);
+    const debtors = lzR2(dues.reduce((a, d) => a + Math.max(0, d.due), 0));
+    const stockVal = lzR2(prods.reduce((a, p) => a + Math.max(0, Number(p.stock_qty) || 0) * (Number(p.cost_price) || 0), 0));
+    const creditors = lzR2(allPurch.filter(p => p.status !== 'cancelled').reduce((a, p) => a + Math.max(0, Number(p.total_amount) - Number(p.amount_paid || 0)), 0));
+    const assets = lzR2(cashBal + bankBal + debtors + stockVal);
+    const docsNos = invs.map(i => i.invoice_number).sort();
+    return { from, to, s, sales, cancelled, cnRows, byCh, out, inp, b2c: Object.values(b2c), hsn: Object.values(hsn), cogs: lzR2(cogs), otherInc: lzR2(otherInc), salesNoCod, gross, net, expByCat, expTotal, exps, catM,
+      purch: purOk, purItems, rcs, sps, cash, bank, cashBal, bankBal, debtors, stockVal, creditors, assets, dues, docs: { first: docsNos[0] || '', last: docsNos[docsNos.length - 1] || '', total: invs.length, cancelled: cancelled.length },
+      missingCost: [...missingCost], missingHsn: Object.values(hsn).some(h => h.hsn === '(missing)'), parties };
+  }
+  function lzGstDue(ym){
+    const [y, m] = ym.split('-').map(Number); const nm = m === 12 ? [y + 1, 1] : [y, m + 1];
+    const d = (yy, mm, dd) => `${yy}-${String(mm).padStart(2, '0')}-${String(dd).padStart(2, '0')}`;
+    if((storeSettings.gst_filing || 'monthly') === 'qrmp'){
+      const qEnd = [3, 6, 9, 12].find(q => q >= m); const after = qEnd === 12 ? [y + 1, 1] : [y, qEnd + 1];
+      return { r1: m === qEnd ? d(after[0], after[1], 13) : null, b3: m === qEnd ? d(after[0], after[1], 22) : null, pmt: m !== qEnd ? d(nm[0], nm[1], 25) : null };
+    }
+    return { r1: d(nm[0], nm[1], 11), b3: d(nm[0], nm[1], 20), pmt: null };
+  }
+  async function lzBooksLoad(){
+    const mEl = document.getElementById('bkMonth');
+    if(!mEl.value){ const t = lzTodayIST(); mEl.value = t.slice(0, 7); }
+    const s = storeSettings || {};
+    document.getElementById('bkGstType').value = s.gst_filing || 'monthly';
+    document.getElementById('bkStart').value = s.books_start_date || '2026-04-01';
+    document.getElementById('bkOpenCash').value = s.opening_cash ?? 0;
+    document.getElementById('bkOpenBank').value = s.opening_bank ?? 0;
+    const body = document.getElementById('bkBody');
+    body.innerHTML = '<p class="lzx-muted" style="padding:10px;">Loading the month…</p>';
+    const [from, to] = lzMonthRange(mEl.value);
+    let D;
+    try{ D = await lzBooksData(from, to); }catch(err){ body.innerHTML = '<p style="color:#b4321f;padding:10px;">Could not load: ' + lzEsc(err.message) + '</p>'; return; }
+    window.lzBooksD = D;
+    const { data: saved } = await supabaseClient.from('gst_reports').select('generated_at').eq('report_period', mEl.value).maybeSingle();
+    document.getElementById('bkSaved').textContent = saved ? 'This month was saved/closed on ' + new Date(saved.generated_at).toLocaleString('en-IN') + '. You can still download it again any time.' : 'Not closed yet. When the month is complete and checked, click “Save / close this month”.';
+    const due = lzGstDue(mEl.value);
+    const netC = lzR2(D.out.cgst - D.inp.cgst), netS = lzR2(D.out.sgst - D.inp.sgst), netI = lzR2(D.out.igst - D.inp.igst);
+    const netTotal = lzR2(netC + netS + netI);
+    const t = (rows, head) => `<div class="table-wrap"><table class="admin-table"><thead><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.length ? rows.join('') : `<tr><td colspan="${head.length}" class="lzx-muted">Nothing this month.</td></tr>`}</tbody></table></div>`;
+    const m2 = lzMoney2;
+    body.innerHTML = `
+      <div class="stat-grid">
+        <div class="stat-card"><i class="fa-solid fa-indian-rupee-sign"></i><b>${lzMoney0(D.sales.reduce((a, r) => a + r.total, 0) - D.cnRows.reduce((a, r) => a + r.total, 0))}</b><span>Sales incl. GST (after returns)</span></div>
+        <div class="stat-card"><i class="fa-solid fa-cart-flatbed"></i><b>${lzMoney0(D.purch.reduce((a, p) => a + Number(p.total_amount), 0))}</b><span>Purchases</span></div>
+        <div class="stat-card"><i class="fa-solid fa-receipt"></i><b>${lzMoney0(D.expTotal)}</b><span>Expenses</span></div>
+        <div class="stat-card"><i class="fa-solid fa-sack-dollar"></i><b style="color:${D.net >= 0 ? '#2f7a47' : '#b4321f'}">${lzMoney0(D.net)}</b><span>Net profit (estimate)</span></div>
+        <div class="stat-card"><i class="fa-solid fa-landmark"></i><b>${lzMoney0(Math.max(0, netTotal))}</b><span>GST to pay (approx.)</span></div>
+      </div>
+      <div class="dash-panel"><div class="panel-head"><h3>Sales by channel</h3></div>
+        ${t(Object.entries(D.byCh).map(([k, v]) => `<tr><td><b>${k}</b></td><td>${v.n}</td><td>${m2(v.taxable)}</td><td>${m2(v.gst)}</td><td>${m2(v.total)}</td></tr>`), ['Channel','Invoices','Taxable','GST','Total'])}
+        <p class="lzx-muted">Amazon sales are invoiced by Amazon — add them from your Amazon “Tax report” when you send this file to your CA. Invoices ${lzEsc(D.docs.first)} to ${lzEsc(D.docs.last)} · ${D.docs.total} issued · ${D.docs.cancelled} cancelled/returned.</p></div>
+      <div class="dash-panel"><div class="panel-head"><h3>GST summary (GSTR-3B style)</h3></div>
+        ${t([`<tr><td><b>Output tax</b> (sales − returns)</td><td>${m2(D.out.taxable)}</td><td>${m2(D.out.cgst)}</td><td>${m2(D.out.sgst)}</td><td>${m2(D.out.igst)}</td></tr>`,
+             `<tr><td><b>Input tax credit</b> (purchases)</td><td>${m2(D.inp.taxable)}</td><td>${m2(D.inp.cgst)}</td><td>${m2(D.inp.sgst)}</td><td>${m2(D.inp.igst)}</td></tr>`,
+             `<tr style="font-weight:700"><td>Net (output − input)</td><td></td><td>${m2(netC)}</td><td>${m2(netS)}</td><td>${m2(netI)}</td></tr>`], ['', 'Taxable', 'CGST', 'SGST', 'IGST'])}
+        <p class="lzx-muted">Approx. GST payable: <b>${m2(Math.max(0, netTotal))}</b>${netTotal < 0 ? ' (credit carried forward ' + m2(-netTotal) + ')' : ''}. ${due.r1 ? 'GSTR-1 due <b>' + lzFmtDate(due.r1) + '</b>. ' : ''}${due.b3 ? 'GSTR-3B due <b>' + lzFmtDate(due.b3) + '</b>. ' : ''}${due.pmt ? 'Pay monthly GST (PMT-06) by <b>' + lzFmtDate(due.pmt) + '</b>. ' : ''}Input credit is allowed only if the supplier's bill appears in your GSTR-2B — your CA checks this before filing.</p></div>
+      <div class="dash-panel"><div class="panel-head"><h3>GSTR-1 data</h3></div>
+        <h4 class="lzx-h4">B2B invoices (shops with GSTIN)</h4>
+        ${t(D.sales.filter(r => r.gstin).map(r => `<tr><td>${lzEsc(r.gstin)}</td><td>${lzEsc(r.name)}</td><td>${lzEsc(r.no)}</td><td>${lzFmtDate(r.date)}</td><td>${m2(r.total)}</td><td>${r.posCode}-${lzEsc(r.pos)}</td><td>${r.rate}%</td><td>${m2(r.taxable)}</td><td>${m2(r.cgst + r.sgst + r.igst)}</td></tr>`), ['GSTIN','Name','Invoice','Date','Value','Place of supply','Rate','Taxable','Tax'])}
+        <h4 class="lzx-h4">B2C summary (customers without GSTIN)</h4>
+        ${t(D.b2c.map(r => `<tr><td>${r.code}-${lzEsc(r.pos)}</td><td>${r.rate}%</td><td>${m2(r.taxable)}</td><td>${m2(r.cgst)}</td><td>${m2(r.sgst)}</td><td>${m2(r.igst)}</td></tr>`), ['Place of supply','Rate','Taxable','CGST','SGST','IGST'])}
+        <h4 class="lzx-h4">HSN summary</h4>
+        ${t(D.hsn.map(h => `<tr><td>${lzEsc(h.hsn)}</td><td>${lzEsc(h.desc)}</td><td>${h.uqc}</td><td>${h.qty}</td><td>${h.rate}%</td><td>${m2(h.taxable)}</td><td>${m2(h.gst)}</td></tr>`), ['HSN','Description','UQC','Qty','Rate','Taxable','Tax'])}
+        ${D.missingHsn ? '<p style="color:#b4321f">Some products have no HSN code — add it in Products → Edit (wallets: 4202).</p>' : ''}
+        <h4 class="lzx-h4">Credit notes</h4>
+        ${t(D.cnRows.map(c => `<tr><td>${lzEsc(c.no)}</td><td>${lzFmtDate(c.date)}</td><td>${lzEsc(c.inv || '')}</td><td>${lzEsc(c.gstin || 'B2C')}</td><td>${m2(c.taxable)}</td><td>${m2(c.cgst + c.sgst + c.igst)}</td><td>${m2(c.total)}</td></tr>`), ['Credit note','Date','Against','GSTIN','Taxable','Tax','Total'])}</div>
+      <div class="dash-panel"><div class="panel-head"><h3>Profit &amp; Loss — ${lzFmtDate(from)} to ${lzFmtDate(to)}</h3></div>
+        <div class="lzx-pl">
+          <div><span>Sales (taxable, after returns)</span><b>${m2(D.salesNoCod)}</b></div>
+          <div><span>− Cost of goods sold (product cost price × qty)</span><b>${m2(D.cogs)}</b></div>
+          <div class="sub"><span>Gross profit</span><b>${m2(D.gross)}</b></div>
+          <div><span>+ COD handling fee income</span><b>${m2(D.otherInc)}</b></div>
+          ${Object.entries(D.expByCat).map(([k, v]) => `<div><span>− ${lzEsc(k)}</span><b>${m2(v)}</b></div>`).join('')}
+          <div class="gt"><span>Net profit</span><b style="color:${D.net >= 0 ? '#2f7a47' : '#b4321f'}">${m2(D.net)}</b></div>
+        </div>
+        ${D.missingCost.length ? `<p style="color:#b4321f">No cost price for: ${lzEsc(D.missingCost.join(', '))} — add it in Products so profit is correct.</p>` : ''}
+        <p class="lzx-muted">Courier, ads, packing and gateway charges count only if you log them in Finance → Expenses.</p></div>
+      <div class="dash-panel"><div class="panel-head"><h3>Balance Sheet — as on ${lzFmtDate(to)} (working)</h3></div>
+        <div class="lzx-two">
+          <div class="lzx-pl"><h4 class="lzx-h4">What you own</h4>
+            <div><span>Cash in hand</span><b>${m2(D.cashBal)}</b></div><div><span>Bank</span><b>${m2(D.bankBal)}</b></div>
+            <div><span>Shops owe you (debtors)</span><b>${m2(D.debtors)}</b></div><div><span>Stock (today's qty × cost)</span><b>${m2(D.stockVal)}</b></div>
+            <div class="gt"><span>Total</span><b>${m2(D.assets)}</b></div></div>
+          <div class="lzx-pl"><h4 class="lzx-h4">What you owe</h4>
+            <div><span>Suppliers (unpaid bills)</span><b>${m2(D.creditors)}</b></div>
+            <div><span>Owner's capital + profit (balancing)</span><b>${m2(D.assets - D.creditors)}</b></div>
+            <div class="gt"><span>Total</span><b>${m2(D.assets)}</b></div></div>
+        </div>
+        <p class="lzx-muted">Cash and bank use your opening balances (Books settings below) + every receipt, payment, expense and contra. Website online payments reach the bank when you log PayU settlements in Bank &amp; Cash. Your CA prepares the final year-end balance sheet.</p></div>
+      <div class="dash-panel"><div class="panel-head"><h3>Registers this month</h3></div>
+        <h4 class="lzx-h4">Sales register</h4>
+        ${t(D.sales.map(r => `<tr><td>${lzEsc(r.no)}</td><td>${lzFmtDate(r.date)}</td><td>${lzEsc(r.name)}</td><td>${r.channel === 'shop' ? 'Shop' : r.channel === 'counter' ? 'Counter' : 'Website'}</td><td>${m2(r.taxable)}</td><td>${m2(r.cgst + r.sgst + r.igst)}</td><td>${m2(r.total)}</td></tr>`), ['Invoice','Date','Customer','Source','Taxable','GST','Total'])}
+        <h4 class="lzx-h4">Purchase register</h4>
+        ${t(D.purch.map(p => `<tr><td>${lzEsc(p.supplier_name_snapshot || '')}</td><td>${lzEsc(p.invoice_number || p.purchase_number || '')}</td><td>${lzFmtDate(p.purchase_date)}</td><td>${m2(p.taxable_amount)}</td><td>${m2(Number(p.cgst_amount) + Number(p.sgst_amount) + Number(p.igst_amount))}</td><td>${m2(p.total_amount)}</td><td>${m2(Number(p.total_amount) - Number(p.amount_paid || 0))}</td></tr>`), ['Supplier','Bill no.','Date','Taxable','GST','Total','Unpaid'])}
+        <h4 class="lzx-h4">Shop dues on ${lzFmtDate(to)}</h4>
+        ${t(D.dues.map(d => `<tr><td>${lzEsc(d.name)}</td><td>${lzEsc(d.city || '')}</td><td>${m2(d.due)}</td></tr>`), ['Shop','City','Due'])}</div>`;
+  }
+  async function lzBooksSettings(e){
+    e.preventDefault();
+    const row = { gst_filing: document.getElementById('bkGstType').value, books_start_date: document.getElementById('bkStart').value || '2026-04-01',
+      opening_cash: Number(document.getElementById('bkOpenCash').value) || 0, opening_bank: Number(document.getElementById('bkOpenBank').value) || 0 };
+    const { error } = await supabaseClient.from('store_settings').update(row).eq('id', true);
+    if(error){ showToast('Could not save: ' + error.message, 'error'); return; }
+    Object.assign(storeSettings, row); showToast('Books settings saved.', 'success'); lzBooksLoad();
+  }
+  function lzBooksSheets(D, label){
+    const n = v => lzR2(v);
+    const S = {};
+    S['Summary'] = [['LAIZA INTERNATIONAL — Accounts ' + label], ['GSTIN', storeSettings.business_gstin || ''], ['Period', D.from + ' to ' + D.to], [],
+      ['Sales incl. GST (after returns)', n(D.sales.reduce((a, r) => a + r.total, 0) - D.cnRows.reduce((a, r) => a + r.total, 0))], ['Taxable sales (after returns)', n(D.out.taxable)],
+      ['Output CGST', n(D.out.cgst)], ['Output SGST', n(D.out.sgst)], ['Output IGST', n(D.out.igst)], [],
+      ['Purchases (incl. GST)', n(D.purch.reduce((a, p) => a + Number(p.total_amount), 0))], ['Input CGST', n(D.inp.cgst)], ['Input SGST', n(D.inp.sgst)], ['Input IGST', n(D.inp.igst)], [],
+      ['Net GST (output − input)', n(D.out.cgst + D.out.sgst + D.out.igst - D.inp.cgst - D.inp.sgst - D.inp.igst)], ['Expenses', n(D.expTotal)], ['Net profit (estimate)', n(D.net)], [],
+      ['Invoices issued', `${D.docs.first} to ${D.docs.last}`, D.docs.total, 'cancelled/returned', D.docs.cancelled], [], ['Sales by channel', 'Invoices', 'Taxable', 'GST', 'Total'],
+      ...Object.entries(D.byCh).map(([k, v]) => [k, v.n, n(v.taxable), n(v.gst), n(v.total)])];
+    S['Sales Register'] = [['Invoice No','Date','Customer','GSTIN','Source','Place of supply','State code','Taxable','CGST','SGST','IGST','Invoice value','Order no','Payment'], ...D.sales.map(r => [r.no, r.date, r.name, r.gstin, r.channel, r.pos, r.posCode, r.taxable, r.cgst, r.sgst, r.igst, r.total, r.order, r.pay])];
+    S['Sales Items'] = [['Invoice No','Date','Item','SKU','HSN','Qty','Unit price (incl GST)','Taxable','GST','Line total'], ...D.sales.flatMap(r => r.items.map(i => [r.no, r.date, i.product_name, i.sku, i.hsn_code, Number(i.quantity), n(i.unit_price), n(i.taxable_amount), n(i.gst_amount), n(i.line_total)]))];
+    S['GSTR-1 B2B'] = [['GSTIN of recipient','Receiver name','Invoice number','Invoice date','Invoice value','Place of supply','Reverse charge','Invoice type','Rate','Taxable value','Cess'], ...D.sales.filter(r => r.gstin).map(r => [r.gstin, r.name, r.no, r.date, r.total, `${r.posCode}-${r.pos}`, 'N', 'Regular B2B', r.rate, r.taxable, 0])];
+    S['GSTR-1 B2C'] = [['Type','Place of supply','Rate','Taxable value','CGST','SGST','IGST','Cess'], ...D.b2c.map(r => ['OE', `${r.code}-${r.pos}`, r.rate, n(r.taxable), n(r.cgst), n(r.sgst), n(r.igst), 0])];
+    S['HSN Summary'] = [['HSN','Description','UQC','Total quantity','Rate','Taxable value','Total tax','Total value'], ...D.hsn.map(h => [h.hsn, h.desc, h.uqc, h.qty, h.rate, n(h.taxable), n(h.gst), n(h.total)])];
+    S['Documents Issued'] = [['Nature of document','Sr. No. From','Sr. No. To','Total number','Cancelled'], ['Invoices for outward supply', D.docs.first, D.docs.last, D.docs.total, D.docs.cancelled],
+      ['Credit notes', (D.cnRows[0] || {}).no || '', (D.cnRows[D.cnRows.length - 1] || {}).no || '', D.cnRows.length, 0]];
+    S['Cancelled-Returned'] = [['Invoice No','Date','Customer','Status','Value'], ...D.cancelled.map(r => [r.no, r.date, r.name, r.status, r.total])];
+    S['Credit Notes'] = [['Credit note','Date','Against invoice','GSTIN','Taxable','CGST','SGST','IGST','Total','Money'], ...D.cnRows.map(c => [c.no, c.date, c.inv, c.gstin, n(c.taxable), n(c.cgst), n(c.sgst), n(c.igst), n(c.total), c.refund])];
+    S['Purchase Register'] = [['Supplier','Bill no','Bill date','Our ref','Taxable','CGST','SGST','IGST','Total','Paid','Unpaid'], ...D.purch.map(p => [p.supplier_name_snapshot, p.invoice_number, p.supplier_invoice_date || p.purchase_date, p.purchase_number, n(p.taxable_amount), n(p.cgst_amount), n(p.sgst_amount), n(p.igst_amount), n(p.total_amount), n(p.amount_paid), n(Number(p.total_amount) - Number(p.amount_paid || 0))])];
+    S['Expenses'] = [['Voucher','Date','Category','Description','Paid by','Amount'], ...D.exps.map(e => [e.voucher_no, e.expense_date, D.catM[e.category_id] || '', e.description, e.payment_mode, n(e.amount)])];
+    S['Receipts'] = [['Voucher','Date','From','Mode','Reference','Amount'], ...D.rcs.map(r => [r.voucher_no, r.receipt_date, ((D.parties.find(p => p.id === r.party_id) || {}).name) || 'Customer', r.mode, r.reference, n(r.amount)])];
+    S['Payments'] = [['Voucher','Date','To','Mode','Reference','Amount'], ...D.sps.map(p => [p.voucher_no, p.payment_date, 'Supplier', p.mode, p.reference, n(p.amount)]), ...D.exps.map(e => [e.voucher_no, e.expense_date, D.catM[e.category_id] || 'Expense', e.payment_mode, e.description, n(e.amount)])];
+    const inM = t => t.transaction_date >= D.from && t.transaction_date <= D.to;
+    S['Cash Book'] = [['Date','Voucher','Details','In','Out'], ...D.cash.filter(inM).map(t => [t.transaction_date, t.voucher_no, t.description, (t.direction === 'in' || t.direction === 'credit') ? n(t.amount) : '', (t.direction === 'out' || t.direction === 'debit') ? n(t.amount) : '']), [], ['Closing cash', '', '', D.cashBal]];
+    S['Bank Book'] = [['Date','Voucher','Details','Reference','In','Out'], ...D.bank.filter(inM).map(t => [t.transaction_date, t.voucher_no, t.description, t.bank_reference, (t.direction === 'in' || t.direction === 'credit') ? n(t.amount) : '', (t.direction === 'out' || t.direction === 'debit') ? n(t.amount) : '']), [], ['Closing bank', '', '', '', D.bankBal]];
+    S['Profit & Loss'] = [['Profit & Loss', D.from + ' to ' + D.to], ['Sales (taxable, after returns)', D.salesNoCod], ['Cost of goods sold', D.cogs], ['Gross profit', D.gross], ['COD fee income', D.otherInc],
+      ...Object.entries(D.expByCat).map(([k, v]) => ['Expense: ' + k, n(v)]), ['Net profit', D.net], [], ['Note', 'Cost of goods = product cost price × quantity sold. Working figure; CA finalises.']];
+    S['Balance Sheet'] = [['Balance sheet as on', D.to], [], ['ASSETS', ''], ['Cash in hand', D.cashBal], ['Bank', D.bankBal], ['Debtors (shops)', D.debtors], ["Stock (today's qty × cost)", D.stockVal], ['Total assets', D.assets], [],
+      ['LIABILITIES', ''], ['Creditors (suppliers)', D.creditors], ["Owner's capital + profit (balancing)", lzR2(D.assets - D.creditors)], ['Total', D.assets], [], ['Note', 'Working balance sheet from the admin. CA prepares the final one.']];
+    S['Shop Dues'] = [['Shop','City','GSTIN','Phone','Due on ' + D.to], ...D.dues.map(d => [d.name, d.city, d.gstin, d.phone, d.due])];
+    return S;
+  }
+  async function lzBooksExcel(fullYear){
+    await (window.lzLoadAdminLibs ? window.lzLoadAdminLibs() : 0);
+    if(!window.XLSX){ showToast('Excel tool could not load — check internet and try again.', 'error'); return; }
+    const ym = document.getElementById('bkMonth').value || lzTodayIST().slice(0, 7);
+    const toast = showToast('Preparing Excel…', 'loading');
+    try{
+      let D, label, fname;
+      if(fullYear){ const [f, t, fy] = lzFyRange(ym); D = await lzBooksData(f, t); label = `FY ${fy}-${String(fy + 1).slice(2)}`; fname = `LAIZA_Accounts_FY${fy}-${String(fy + 1).slice(2)}.xlsx`; }
+      else { const [f, t] = lzMonthRange(ym); D = (window.lzBooksD && window.lzBooksD.from === f) ? window.lzBooksD : await lzBooksData(f, t); const mn = new Date(f + 'T00:00:00').toLocaleString('en-IN', { month: 'short' }); label = `${mn} ${ym.slice(0, 4)}`; fname = `LAIZA_Accounts_${ym}_${mn}.xlsx`; }
+      const S = lzBooksSheets(D, label);
+      const wb = XLSX.utils.book_new();
+      Object.entries(S).forEach(([name, rows]) => { const ws = XLSX.utils.aoa_to_sheet(rows); ws['!cols'] = (rows[0] || []).map((_, i) => ({ wch: i === 0 ? 30 : 16 })); XLSX.utils.book_append_sheet(wb, ws, name.slice(0, 31)); });
+      XLSX.writeFile(wb, fname);
+      updateToast(toast, 'Downloaded ' + fname, 'success');
+    }catch(err){ updateToast(toast, 'Could not make Excel: ' + err.message, 'error', 6000); }
+  }
+  async function lzBooksSave(){
+    const ym = document.getElementById('bkMonth').value; const D = window.lzBooksD;
+    if(!D){ showToast('Load the month first.', 'error'); return; }
+    if(!confirm('Save / close ' + ym + '? This stores a summary of the month (you can still download it later).')) return;
+    const data = { saved_at: new Date().toISOString(), sales_total: lzR2(D.sales.reduce((a, r) => a + r.total, 0)), out: D.out, inp: D.inp, net_profit: D.net, expenses: D.expTotal, by_channel: D.byCh, docs: D.docs, cash: D.cashBal, bank: D.bankBal, debtors: D.debtors, creditors: D.creditors, stock: D.stockVal };
+    const { data: ex } = await supabaseClient.from('gst_reports').select('id').eq('report_period', ym).maybeSingle();
+    const { error } = ex ? await supabaseClient.from('gst_reports').update({ data, generated_at: new Date().toISOString() }).eq('id', ex.id)
+                         : await supabaseClient.from('gst_reports').insert({ report_period: ym, data, generated_at: new Date().toISOString() });
+    if(error){ showToast('Could not save: ' + error.message, 'error'); return; }
+    await supabaseClient.from('admin_tasks').upsert({ title: 'Closed books for ' + ym, auto_key: 'books-' + ym, done_at: new Date().toISOString(), category: 'accounts' }, { onConflict: 'auto_key' });
+    showToast('Month ' + ym + ' saved.', 'success'); lzBooksLoad(); lzBooksExcel();
+  }
+
+  /* ================= TO-DO & REMINDERS ================= */
+  function lzIso(d){ return d.toISOString().slice(0, 10); }
+  function lzWeekKey(d){ const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day); const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); return t.getUTCFullYear() + '-W' + String(Math.ceil(((t - y0) / 864e5 + 1) / 7)).padStart(2, '0'); }
+  async function lzTodoCompute(){
+    const today = lzTodayIST(), now = new Date(today + 'T00:00:00');
+    const [{ data: tasks }, { data: bals }, { data: parties }, purch, { data: pendOrders }, { data: revs }, { data: prods }] = await Promise.all([
+      supabaseClient.from('admin_tasks').select('*').order('due_date', { ascending: true, nullsFirst: false }).limit(500),
+      supabaseClient.rpc('party_balances'), supabaseClient.from('parties').select('id, name, phone, owner_name'),
+      lzFetchAll('purchases', 'id, supplier_name_snapshot, invoice_number, purchase_date, total_amount, amount_paid, status'),
+      supabaseClient.from('orders').select('id, status, channel, payment_method, payment_status').in('status', ['pending','processing','confirmed']),
+      supabaseClient.from('reviews').select('id').eq('is_approved', false),
+      supabaseClient.from('products').select('id, stock_qty, low_stock_threshold, is_active')
+    ]);
+    const doneKeys = new Set((tasks || []).filter(t => t.auto_key && t.done_at).map(t => t.auto_key));
+    const items = [];
+    const add = (o) => { if(o.key && doneKeys.has(o.key)) return; items.push(o); };
+    const monthName = ym => new Date(ym + '-01T00:00:00').toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+    for(let back = 1; back <= 2; back++){
+      const d = new Date(now.getFullYear(), now.getMonth() - back, 1); const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const due = lzGstDue(ym);
+      if(due.r1) add({ key: 'gstr1-' + ym, title: `File GSTR-1 for ${monthName(ym)}`, sub: 'Send the month Excel to your CA', due: due.r1, cat: 'GST', action: `lzOpenBooks('${ym}')`, auto: true });
+      if(due.b3) add({ key: 'gstr3b-' + ym, title: `File GSTR-3B & pay GST for ${monthName(ym)}`, sub: 'Net GST is in Monthly Accounts Book', due: due.b3, cat: 'GST', action: `lzOpenBooks('${ym}')`, auto: true });
+      if(due.pmt) add({ key: 'pmt06-' + ym, title: `Pay GST for ${monthName(ym)} (PMT-06)`, sub: 'Quarterly filer — monthly tax payment', due: due.pmt, cat: 'GST', action: `lzOpenBooks('${ym}')`, auto: true });
+      add({ key: 'books-' + ym, title: `Close books for ${monthName(ym)} & send Excel to CA`, sub: 'Reports → Monthly Accounts Book', due: (() => { const [yy, mm] = ym.split('-').map(Number); return mm === 12 ? `${yy + 1}-01-05` : `${yy}-${String(mm + 1).padStart(2, '0')}-05`; })(), cat: 'Accounts', action: `lzOpenBooks('${ym}')`, auto: true });
+    }
+    add({ key: 'backup-' + today.slice(0, 7), title: 'Download monthly backup', sub: 'Settings → Backup & Tools', due: today.slice(0, 7) + '-01', cat: 'Backup', action: "showAdminPanel('tools')", auto: true });
+    const wk = lzWeekKey(now); const mon = new Date(now); mon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+    add({ key: 'ads-' + wk, title: 'Check Meta ads report', sub: 'Cost per purchase, add-to-carts, pause weak ads', due: lzIso(new Date(Date.UTC(mon.getFullYear(), mon.getMonth(), mon.getDate()))), cat: 'Marketing', action: "window.open('https://adsmanager.facebook.com','_blank')", auto: true });
+    if(now.getMonth() >= 5 && now.getMonth() <= 6) add({ key: 'itr-' + now.getFullYear(), title: 'File income tax return (ITR)', sub: 'Usually due 31 July — confirm with your CA', due: `${now.getFullYear()}-07-31`, cat: 'Tax', action: '', auto: true });
+    const pm = {}; (parties || []).forEach(p => pm[p.id] = p);
+    (bals || []).filter(b => Number(b.due) > 0.5).forEach(b => { const days = b.oldest_unpaid ? Math.floor((Date.now() - new Date(b.oldest_unpaid)) / 864e5) : 0; const p = pm[b.party_id] || {};
+      items.push({ title: `Collect ${lzMoney0(b.due)} from ${p.name || 'shop'}`, sub: days ? `Oldest unpaid bill ${days} days old` : 'Payment due', due: b.oldest_unpaid ? lzIso(new Date(new Date(b.oldest_unpaid).getTime() + 15 * 864e5)) : today, cat: 'Money in', action: `showAdminPanel('parties');setTimeout(()=>lzPtLedger('${b.party_id}'),400)`, extra: p.phone ? `lzPtRemindFromTodo('${b.party_id}')` : '' }); });
+    purch.filter(p => p.status !== 'cancelled' && Number(p.total_amount) - Number(p.amount_paid || 0) > 0.5).forEach(p => items.push({ title: `Pay ${lzMoney0(Number(p.total_amount) - Number(p.amount_paid || 0))} to ${p.supplier_name_snapshot || 'supplier'}`, sub: 'Bill ' + (p.invoice_number || '') + ' · ' + lzFmtDate(p.purchase_date), due: lzIso(new Date(new Date(p.purchase_date + 'T00:00:00').getTime() + 30 * 864e5)), cat: 'Money out', action: "showAdminPanel('vouchers');setTimeout(()=>lzVcTab('pv'),200)" }));
+    const ship = (pendOrders || []).filter(o => (o.channel || 'website') === 'website' && !(/payu/i.test(o.payment_method || '') && o.payment_status !== 'paid'));
+    if(ship.length) items.push({ title: `Pack & ship ${ship.length} website order${ship.length > 1 ? 's' : ''}`, sub: 'Orders → Pending / Processing', due: today, cat: 'Orders', action: "showAdminPanel('orders',null,'pending')" });
+    if((revs || []).length) items.push({ title: `Approve ${(revs || []).length} customer review${revs.length > 1 ? 's' : ''}`, sub: 'Marketing → Customer Reviews', due: today, cat: 'Reviews', action: "showAdminPanel('reviews')" });
+    const low = (prods || []).filter(p => p.is_active !== false && Number(p.stock_qty) <= Number(p.low_stock_threshold ?? 5));
+    if(low.length) items.push({ title: `${low.length} product${low.length > 1 ? 's' : ''} low on stock — reorder`, sub: 'Products → Low Stock', due: today, cat: 'Stock', action: "showAdminPanel('inventory', true)" });
+    (tasks || []).filter(t => !t.auto_key && !t.done_at).forEach(t => items.push({ id: t.id, title: t.title, sub: (t.notes || '') + (t.repeat !== 'none' ? ' · repeats ' + t.repeat : ''), due: t.due_date || today, cat: 'My task', action: '' }));
+    items.forEach(i => { const diff = Math.round((new Date(i.due + 'T00:00:00') - now) / 864e5); i.diff = diff; i.level = diff < 0 ? 'overdue' : diff <= 3 ? 'soon' : 'later'; });
+    const visible = items.filter(i => i.diff <= 20 || !i.auto).sort((a, b) => a.diff - b.diff);
+    return { items: visible, done: (tasks || []).filter(t => t.done_at).sort((a, b) => a.done_at < b.done_at ? 1 : -1).slice(0, 15) };
+  }
+  function lzTodoRow(i){
+    const when = i.diff < 0 ? `${-i.diff} day${i.diff < -1 ? 's' : ''} late` : i.diff === 0 ? 'Today' : i.diff === 1 ? 'Tomorrow' : 'in ' + i.diff + ' days';
+    const doneBtn = i.key ? `<button type="button" class="lzx-btn ghost sm" onclick="lzTodoDone('${i.key}', ${JSON.stringify(i.title).replace(/"/g, '&quot;')})">✓ Done</button>` : i.id ? `<button type="button" class="lzx-btn ghost sm" onclick="lzTaskDone('${i.id}')">✓ Done</button>` : '';
+    return `<div class="lzx-ti ${i.level}"><div class="lzx-tcat">${lzEsc(i.cat)}</div><div class="lzx-tmain"><b>${lzEsc(i.title)}</b><small>${i.sub ? lzEsc(i.sub) + ' · ' : ''}<span class="lzx-when">${lzFmtDate(i.due)} (${when})</span></small></div>
+      <div class="lzx-tact">${i.action ? `<button type="button" class="lzx-btn sm" onclick="${i.action.replace(/"/g, '&quot;')}">Open</button>` : ''}${i.extra ? `<button type="button" class="lzx-btn wa sm" onclick="${i.extra}"><i class="fa-brands fa-whatsapp"></i> Remind</button>` : ''}${doneBtn}</div></div>`;
+  }
+  async function lzTodoLoad(){
+    const box = document.getElementById('todoList'); if(!box) return;
+    try{
+      const r = await lzTodoCompute();
+      box.innerHTML = r.items.length ? r.items.map(lzTodoRow).join('') : '<p class="lzx-muted">All clear 🎉 Nothing pending.</p>';
+      document.getElementById('todoCount').textContent = r.items.filter(i => i.level !== 'later').length + ' due soon';
+      document.getElementById('todoDone').innerHTML = r.done.length ? r.done.map(t => `<div class="lzx-ti done"><div class="lzx-tmain"><b>${lzEsc(t.title)}</b><small>Done ${new Date(t.done_at).toLocaleDateString('en-IN')}</small></div></div>`).join('') : '<p class="lzx-muted">Nothing completed yet.</p>';
+      if(!document.getElementById('taskDue').value) document.getElementById('taskDue').value = lzTodayIST();
+    }catch(err){ box.innerHTML = '<p style="color:#b4321f">Could not load: ' + lzEsc(err.message) + '</p>'; }
+  }
+  async function lzTodoMini(){
+    const dash = document.getElementById('adminPanelDashboard'); if(!dash) return;
+    let box = document.getElementById('lzTodoMini');
+    if(!box){ box = document.createElement('div'); box.id = 'lzTodoMini'; box.className = 'dash-panel'; const wr = dash.querySelector('.welcome-row'); wr.after(box); }
+    box.innerHTML = '<div class="panel-head"><h3>To-do &amp; reminders</h3><a href="javascript:void(0)" onclick="showAdminPanel(\'todo\')">See all ›</a></div><p class="lzx-muted">Loading…</p>';
+    try{
+      const r = await lzTodoCompute();
+      const top = r.items.filter(i => i.level !== 'later').slice(0, 6);
+      box.innerHTML = `<div class="panel-head"><h3>To-do &amp; reminders</h3><a href="javascript:void(0)" onclick="showAdminPanel('todo')">See all (${r.items.length}) ›</a></div>` + (top.length ? `<div class="lzx-todo">${top.map(lzTodoRow).join('')}</div>` : '<p class="lzx-muted">All clear 🎉 Nothing due in the next 3 days.</p>');
+    }catch(_){ box.remove(); }
+  }
+  async function lzTodoDone(key, title){
+    await supabaseClient.from('admin_tasks').upsert({ title, auto_key: key, done_at: new Date().toISOString(), category: 'auto' }, { onConflict: 'auto_key' });
+    lzTodoLoad(); lzTodoMini();
+  }
+  async function lzTaskSave(e){
+    e.preventDefault();
+    const { error } = await supabaseClient.from('admin_tasks').insert({ title: document.getElementById('taskTitle').value.trim(), due_date: document.getElementById('taskDue').value || null,
+      repeat: document.getElementById('taskRepeat').value, notes: document.getElementById('taskNotes').value.trim() || null });
+    if(error){ showToast('Could not save: ' + error.message, 'error'); return; }
+    document.getElementById('taskTitle').value = ''; document.getElementById('taskNotes').value = '';
+    showToast('Task added.', 'success'); lzTodoLoad(); lzTodoMini();
+  }
+  async function lzTaskDone(id){
+    const { data: t } = await supabaseClient.from('admin_tasks').select('*').eq('id', id).single();
+    await supabaseClient.from('admin_tasks').update({ done_at: new Date().toISOString() }).eq('id', id);
+    if(t && t.repeat && t.repeat !== 'none'){
+      const d = new Date((t.due_date || lzTodayIST()) + 'T00:00:00');
+      if(t.repeat === 'weekly') d.setDate(d.getDate() + 7); if(t.repeat === 'monthly') d.setMonth(d.getMonth() + 1);
+      if(t.repeat === 'quarterly') d.setMonth(d.getMonth() + 3); if(t.repeat === 'yearly') d.setFullYear(d.getFullYear() + 1);
+      await supabaseClient.from('admin_tasks').insert({ title: t.title, notes: t.notes, category: t.category, repeat: t.repeat, due_date: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` });
+    }
+    lzTodoLoad(); lzTodoMini();
+  }
+  async function lzPtRemindFromTodo(pid){ await lzAccLoadBase(); lzPtRemind(pid); }
+  function lzOpenBooks(ym){ showAdminPanel('books'); setTimeout(() => { document.getElementById('bkMonth').value = ym; lzBooksLoad(); }, 60); }
+
+  /* ================= BACKUP & TOOLS ================= */
+  async function lzBackup(btn){
+    setButtonLoading(btn, true, 'Preparing…');
+    const tables = ['orders','order_items','invoices','invoice_items','parties','receipts','supplier_payments','credit_notes','credit_note_items','purchases','purchase_items','purchase_returns','purchase_return_items','suppliers','expenses','expense_categories','cash_transactions','bank_transactions','settlements','products','product_images','categories','coupons','reviews','customers','inventory_transactions','store_settings','admin_tasks','gst_reports','voucher_counters','invoice_counters'];
+    const out = { made_at: new Date().toISOString(), business: storeSettings.invoice_business_name || 'LAIZA', tables: {} };
+    try{
+      for(const t of tables){ try{ out.tables[t] = await lzFetchAll(t, '*'); }catch(err){ out.tables[t] = { error: err.message }; } }
+      const blob = new Blob([JSON.stringify(out)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `LAIZA_backup_${lzTodayIST()}.json`; document.body.appendChild(a); a.click(); a.remove();
+      try{ localStorage.setItem('lzLastBackup', new Date().toISOString()); }catch(_){}
+      await supabaseClient.from('admin_tasks').upsert({ title: 'Monthly backup', auto_key: 'backup-' + lzTodayIST().slice(0, 7), done_at: new Date().toISOString(), category: 'auto' }, { onConflict: 'auto_key' });
+      showToast('Backup downloaded — keep it safe (Google Drive).', 'success'); lzToolsLoad();
+    }catch(err){ showToast('Backup failed: ' + err.message, 'error'); }
+    setButtonLoading(btn, false);
+  }
+  async function lzToolsLoad(){
+    let last = null; try{ last = localStorage.getItem('lzLastBackup'); }catch(_){}
+    document.getElementById('bkpLast').textContent = last ? 'Last backup from this device: ' + new Date(last).toLocaleString('en-IN') : 'No backup downloaded from this device yet.';
+    const { data } = await supabaseClient.rpc('storage_usage');
+    if(data){ const mb = b => (Number(b) / 1048576).toFixed(1) + ' MB';
+      document.getElementById('toolUsage').innerHTML = `Database: <b>${mb(data.db_bytes)}</b> of 500 MB (free plan)<br>Photos &amp; files: <b>${mb(data.storage_bytes)}</b> of 1 GB (free plan) · ${data.files} files<br><span class="lzx-muted">Visitors' downloads (bandwidth) are limited to 5 GB a month on the free plan — smaller photos keep you inside it.</span>`; }
+  }
+  async function lzListAll(bucket, prefix){
+    let out = []; const { data } = await supabaseClient.storage.from(bucket).list(prefix || '', { limit: 1000 });
+    for(const f of (data || [])){
+      const path = (prefix ? prefix + '/' : '') + f.name;
+      if(!f.id && !f.metadata) out = out.concat(await lzListAll(bucket, path)); else out.push({ path, size: (f.metadata && f.metadata.size) || 0, type: (f.metadata && f.metadata.mimetype) || '' });
+    }
+    return out;
+  }
+  async function lzShrinkBlob(blob, maxSide, preferWebp){
+    return new Promise(res => {
+      const url = URL.createObjectURL(blob); const img = new Image(); img.crossOrigin = 'anonymous';
+      img.onload = () => { const k = Math.min(1, maxSide / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+        const type = preferWebp ? 'image/webp' : 'image/jpeg'; c.toBlob(b => res(b ? { blob: b, type } : null), type, 0.82); };
+      img.onerror = () => { URL.revokeObjectURL(url); res(null); }; img.src = url;
+    });
+  }
+  async function lzOptimizeImages(btn){
+    const log = document.getElementById('imgOptLog'); setButtonLoading(btn, true, 'Working…');
+    try{
+      const files = (await lzListAll('product-images', '')).filter(f => f.size > 350000 && /image\/(jpeg|png|webp)/.test(f.type));
+      log.innerHTML = files.length ? `Found ${files.length} large photo(s). Compressing…` : 'All photos are already small ✓';
+      let saved = 0, done = 0;
+      for(const f of files){
+        try{
+          const url = supabaseClient.storage.from('product-images').getPublicUrl(f.path).data.publicUrl + '?v=' + Date.now();
+          const blob = await (await fetch(url)).blob();
+          const r = await lzShrinkBlob(blob, 1600, f.type === 'image/png' || f.type === 'image/webp');
+          if(r && r.blob.size < f.size * 0.85){
+            const { error } = await (window.lzStorageUploadRaw || ((p, b, o) => supabaseClient.storage.from('product-images').upload(p, b, o)))(f.path, r.blob, { upsert: true, contentType: r.type, cacheControl: '31536000' });
+            if(!error){ saved += f.size - r.blob.size; done++; }
+          }
+        }catch(_){}
+        log.innerHTML = `Compressed ${done} of ${files.length} · saved ${(saved / 1048576).toFixed(1)} MB`;
+      }
+      if(files.length) log.innerHTML += ' ✓ Done. (Phones may show the old photo for up to an hour.)';
+      lzToolsLoad();
+    }catch(err){ log.textContent = 'Could not finish: ' + err.message; }
+    setButtonLoading(btn, false);
+  }
+  async function lzPrune(btn){
+    if(!confirm('Remove visitor tracking older than 120 days?')) return;
+    const { data, error } = await supabaseClient.rpc('prune_visitor_data', { p_days: 120 });
+    document.getElementById('pruneLog').textContent = error ? ' Could not clean: ' + error.message : ` Removed ${data.events} old events and ${data.sessions} old sessions.`;
+  }
+  /* compress every new photo uploaded from the admin (product, banner, category, hero…) */
+  (function(){
+    try{
+      const st = supabaseClient.storage, orig = st.from.bind(st);
+      window.lzStorageUploadRaw = (p, b, o) => orig('product-images').upload(p, b, o);
+      st.from = function(bucket){
+        const api = orig(bucket);
+        if(bucket !== 'product-images') return api;
+        const up = api.upload.bind(api);
+        api.upload = async function(path, file, opts){
+          opts = opts || {};
+          try{
+            if(file && file.size > 300000 && /^image\/(jpeg|png|webp)$/.test(file.type || '')){
+              const r = await lzShrinkBlob(file, 1600, file.type !== 'image/jpeg');
+              if(r && r.blob.size < file.size * 0.9) return up(path, r.blob, Object.assign({}, opts, { contentType: r.type, cacheControl: opts.cacheControl || '31536000' }));
+            }
+          }catch(_){}
+          return up(path, file, opts);
+        };
+        return api;
+      };
+    }catch(_){}
+  })();
+  /* phone view: give every cell of the new tables its column name (cards show "Qty", "Rate"… labels) */
+  (function(){
+    const label = root => root.querySelectorAll('table.admin-table').forEach(t => {
+      const heads = [...t.querySelectorAll('thead th')].map(th => th.textContent.trim());
+      if(!heads.length) return;
+      t.querySelectorAll('tbody tr').forEach(tr => [...tr.children].forEach((td, i) => { if(!td.hasAttribute('data-label') && heads[i] && !td.hasAttribute('colspan')) td.setAttribute('data-label', heads[i]); }));
+    });
+    const start = () => ['adminPanelTodo','adminPanelShopBill','adminPanelParties','adminPanelVouchers','adminPanelBooks','adminPanelTools'].forEach(id => {
+      const el = document.getElementById(id); if(!el) return;
+      let tmr = null; new MutationObserver(() => { clearTimeout(tmr); tmr = setTimeout(() => label(el), 30); }).observe(el, { childList: true, subtree: true });
+    });
+    if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+  })();
+
+
   /* ---------- Photo card decks: swipe the top card to the back of the pile ---------- */
   function initLzDeck(root){
     const stack = root.querySelector('.lzd-stack');
@@ -9336,11 +10527,11 @@
   }
   /* ================= Role-based access control ================= */
   const ROLE_PERMISSIONS = {
-    super_admin:       { tabs: ['dashboard','analytics','finance','purchases','statement','gst','notifications','orders','orderReport','products','inventory','categories','heroImg','video','coupons','discounts','advertisements','banners','allInvoices','delivery','reviews','customers','visitors','settings','roles'], default: 'dashboard', label: 'Super Admin' },
-    admin:             { tabs: ['dashboard','analytics','finance','purchases','statement','gst','notifications','orders','orderReport','products','inventory','categories','heroImg','video','coupons','discounts','advertisements','banners','allInvoices','delivery','reviews','customers','visitors','settings'],         default: 'dashboard', label: 'Admin' },
+    super_admin:       { tabs: ['todo','shopBill','parties','vouchers','books','tools','dashboard','analytics','finance','purchases','statement','gst','notifications','orders','orderReport','products','inventory','categories','heroImg','video','coupons','discounts','advertisements','banners','allInvoices','delivery','reviews','customers','visitors','settings','roles'], default: 'dashboard', label: 'Super Admin' },
+    admin:             { tabs: ['todo','shopBill','parties','vouchers','books','tools','dashboard','analytics','finance','purchases','statement','gst','notifications','orders','orderReport','products','inventory','categories','heroImg','video','coupons','discounts','advertisements','banners','allInvoices','delivery','reviews','customers','visitors','settings'],         default: 'dashboard', label: 'Admin' },
     inventory_manager: { tabs: ['products','inventory','categories'],                                                                              default: 'inventory', label: 'Inventory Manager' },
     order_manager:     { tabs: ['orders','orderReport','customers','delivery'],                                                                                  default: 'orders',    label: 'Order Manager' },
-    finance_manager:   { tabs: ['dashboard','analytics','finance','purchases','statement','gst','settings'],                                                                               default: 'dashboard', label: 'Finance Manager' },
+    finance_manager:   { tabs: ['todo','shopBill','parties','vouchers','books','dashboard','analytics','finance','purchases','statement','gst','settings'],                                                                               default: 'dashboard', label: 'Finance Manager' },
     marketing_manager: { tabs: ['heroImg','video','coupons','discounts','advertisements','banners','categories','reviews'],                                                    default: 'heroImg',   label: 'Marketing Manager' }
   };
 
@@ -9749,7 +10940,7 @@
             <tbody>
               ${orders.map(o => `
                 <tr>
-                  <td data-label="Order #">${o.order_number}</td>
+                  <td data-label="Order #">${o.order_number}${o.channel && o.channel !== "website" ? ` <span class="lzx-pill">${o.channel === "shop" ? "Shop" : "Counter"}</span>` : ""}</td>
                   <td data-label="Date">${new Date(o.created_at).toLocaleDateString('en-IN')}</td>
                   <td data-label="Total">${money(o.total)}</td>
                   <td data-label="Status"><span class="tag-pill gold">${ORDER_STATUS_LABEL[o.status] || o.status}</span></td>
@@ -10021,6 +11212,13 @@
     if(name === 'invoices') loadInvoicesPanel();
     if(name === 'delivery') loadDeliveryPanel();
     if(name === 'marketing') loadMarketingPanel();
+    if(name === 'dashboard') lzTodoMini();
+    if(name === 'todo') lzTodoLoad();
+    if(name === 'shopBill') lzSbInit();
+    if(name === 'parties') lzPtLoad();
+    if(name === 'vouchers') lzVcTab(window.lzVcCurrent || 'rv');
+    if(name === 'books') lzBooksLoad();
+    if(name === 'tools') lzToolsLoad();
 
     setTimeout(() => {
       if(filterParam === 'addProduct') document.getElementById('prodName')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -10067,7 +11265,7 @@
     try{ lzadRender(orders || []); }catch(err){ console.error(err); }
     const recent = (orders || []).slice(0, 6);
     document.getElementById('recentOrdersTable').querySelector('tbody').innerHTML = recent.length
-      ? recent.map(o => `<tr style="cursor:pointer;" onclick="openOrderDetail('${o.id}')"><td data-label="Order #">${o.order_number}</td><td data-label="Date">${new Date(o.created_at).toLocaleDateString('en-IN')}</td><td data-label="Total">${money(o.total)}</td><td data-label="Status"><span class="tag-pill gold">${ORDER_STATUS_LABEL[o.status] || o.status}</span></td></tr>`).join('')
+      ? recent.map(o => `<tr style="cursor:pointer;" onclick="openOrderDetail('${o.id}')"><td data-label="Order #">${o.order_number}${o.channel && o.channel !== "website" ? ` <span class="lzx-pill">${o.channel === "shop" ? "Shop" : "Counter"}</span>` : ""}</td><td data-label="Date">${new Date(o.created_at).toLocaleDateString('en-IN')}</td><td data-label="Total">${money(o.total)}</td><td data-label="Status"><span class="tag-pill gold">${ORDER_STATUS_LABEL[o.status] || o.status}</span></td></tr>`).join('')
       : `<tr><td style="color:#9c8f74;">No orders yet.</td></tr>`;
   }
 
@@ -10182,16 +11380,18 @@
     const sorted = [...expenses].sort((a, b) => new Date(b.expense_date) - new Date(a.expense_date));
     document.getElementById('expenseHistoryTableBody').innerHTML = sorted.map(e => `
       <tr>
+        <td data-label="Voucher">${e.voucher_no || '—'}</td>
         <td data-label="Date">${new Date(e.expense_date).toLocaleDateString('en-IN')}</td>
         <td data-label="Category">${catMap[e.category_id] || '—'}</td>
-        <td data-label="Description">${e.description || '—'}</td>
+        <td data-label="Description">${escapeHtml(e.description || '—')}</td>
+        <td data-label="Paid from">${({ cash: 'Cash', upi: 'UPI', bank: 'Bank', credit: 'Not paid' })[e.payment_mode] || '—'}</td>
         <td data-label="Amount">${money(e.amount)}</td>
         <td style="gap:12px;">
           <button onclick="editExpense('${e.id}')" title="Edit" style="background:none;border:none;color:var(--gold-deep);cursor:pointer;"><i class="fa-solid fa-pen"></i></button>
           <button onclick="deleteExpense('${e.id}')" title="Delete" style="background:none;border:none;color:#b3452c;cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
         </td>
       </tr>
-    `).join('') || '<tr><td colspan="5" style="color:#9c8f74;">No expenses logged yet.</td></tr>';
+    `).join('') || '<tr><td colspan="7" style="color:#9c8f74;">No expenses logged yet.</td></tr>';
   }
 
   window.editingExpenseId = null;
@@ -10209,6 +11409,7 @@
     document.getElementById('expenseCategory').value = expense.category_id || '';
     document.getElementById('expenseDate').value = expense.expense_date;
     document.getElementById('expenseDescription').value = expense.description || '';
+    document.getElementById('expensePayMode').value = expense.payment_mode || 'cash';
 
     document.getElementById('expenseFormPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -10224,7 +11425,7 @@
   }
 
   async function deleteExpense(id){
-    if(!confirm('Delete this expense? This cannot be undone.')) return;
+    if(!confirm('Delete this expense? Its cash/bank entry will be reversed automatically.')) return;
     const toast = showToast('Deleting expense…', 'loading');
     const { error } = await supabaseClient.from('expenses').delete().eq('id', id);
     if(error){ updateToast(toast, 'Could not delete: ' + error.message, 'error', 4500); return; }
@@ -10239,7 +11440,8 @@
       amount: Number(document.getElementById('expenseAmount').value),
       category_id: document.getElementById('expenseCategory').value || null,
       expense_date: document.getElementById('expenseDate').value,
-      description: document.getElementById('expenseDescription').value.trim() || null
+      description: document.getElementById('expenseDescription').value.trim() || null,
+      payment_mode: document.getElementById('expensePayMode').value || 'cash'
     };
     const toast = showToast(window.editingExpenseId ? 'Updating expense…' : 'Logging expense…', 'loading');
 
@@ -10915,8 +12117,8 @@
     ]);
 
     // ---- Cash ----
-    const cashReceived = (cashTx || []).filter(t => t.direction === 'in').reduce((s, t) => s + Number(t.amount), 0);
-    const cashPaid = (cashTx || []).filter(t => t.direction === 'out').reduce((s, t) => s + Number(t.amount), 0);
+    const cashReceived = (cashTx || []).filter(t => (t.direction === 'in' || t.direction === 'credit')).reduce((s, t) => s + Number(t.amount), 0);
+    const cashPaid = (cashTx || []).filter(t => (t.direction === 'out' || t.direction === 'debit')).reduce((s, t) => s + Number(t.amount), 0);
     document.getElementById('cashReceived').textContent = money(cashReceived);
     document.getElementById('cashPaid').textContent = money(cashPaid);
     document.getElementById('cashBalance').textContent = money(cashReceived - cashPaid);
@@ -10924,7 +12126,7 @@
     document.getElementById('cashTransactionsTableBody').innerHTML = (cashTx && cashTx.length) ? cashTx.map(t => `
       <tr>
         <td data-label="Date">${new Date(t.transaction_date).toLocaleDateString('en-IN')}</td>
-        <td data-label="Direction"><span class="tag-pill ${t.direction === 'in' ? 'green' : 'red'}">${t.direction === 'in' ? 'Received' : 'Paid'}</span></td>
+        <td data-label="Direction"><span class="tag-pill ${(t.direction === 'in' || t.direction === 'credit') ? 'green' : 'red'}">${(t.direction === 'in' || t.direction === 'credit') ? 'Received' : 'Paid'}</span></td>
         <td data-label="Amount">${money(t.amount)}</td>
         <td data-label="Description">${t.description || '—'}</td>
         <td data-label="Logged By">${t.profiles?.full_name || '—'}</td>
@@ -10932,8 +12134,8 @@
       </tr>`).join('') : `<tr><td colspan="6" style="color:#9c8f74;">No cash transactions logged yet.</td></tr>`;
 
     // ---- Bank ----
-    const bankDeposits = (bankTx || []).filter(t => t.direction === 'in').reduce((s, t) => s + Number(t.amount), 0);
-    const bankWithdrawals = (bankTx || []).filter(t => t.direction === 'out').reduce((s, t) => s + Number(t.amount), 0);
+    const bankDeposits = (bankTx || []).filter(t => (t.direction === 'in' || t.direction === 'credit')).reduce((s, t) => s + Number(t.amount), 0);
+    const bankWithdrawals = (bankTx || []).filter(t => (t.direction === 'out' || t.direction === 'debit')).reduce((s, t) => s + Number(t.amount), 0);
     document.getElementById('bankDeposits').textContent = money(bankDeposits);
     document.getElementById('bankWithdrawals').textContent = money(bankWithdrawals);
     document.getElementById('bankBalance').textContent = money(bankDeposits - bankWithdrawals);
@@ -10941,7 +12143,7 @@
     document.getElementById('bankTransactionsTableBody').innerHTML = (bankTx && bankTx.length) ? bankTx.map(t => `
       <tr>
         <td data-label="Date">${new Date(t.transaction_date).toLocaleDateString('en-IN')}</td>
-        <td data-label="Direction"><span class="tag-pill ${t.direction === 'in' ? 'green' : 'red'}">${t.direction === 'in' ? 'Deposit' : 'Withdrawal'}</span></td>
+        <td data-label="Direction"><span class="tag-pill ${(t.direction === 'in' || t.direction === 'credit') ? 'green' : 'red'}">${(t.direction === 'in' || t.direction === 'credit') ? 'Deposit' : 'Withdrawal'}</span></td>
         <td data-label="Amount">${money(t.amount)}</td>
         <td data-label="Reference">${t.bank_reference || '—'}</td>
         <td data-label="Description">${t.description || '—'}</td>
@@ -11082,15 +12284,15 @@
 
     (cashTx || []).filter(t => inRange(new Date(t.transaction_date))).forEach(t => {
       entries.push({
-        date: new Date(t.transaction_date), reference: 'Cash', description: t.description || (t.direction === 'in' ? 'Cash received' : 'Cash paid'),
-        debit: t.direction === 'out' ? Number(t.amount) : 0, credit: t.direction === 'in' ? Number(t.amount) : 0
+        date: new Date(t.transaction_date), reference: 'Cash', description: t.description || ((t.direction === 'in' || t.direction === 'credit') ? 'Cash received' : 'Cash paid'),
+        debit: (t.direction === 'out' || t.direction === 'debit') ? Number(t.amount) : 0, credit: (t.direction === 'in' || t.direction === 'credit') ? Number(t.amount) : 0
       });
     });
 
     (bankTx || []).filter(t => inRange(new Date(t.transaction_date))).forEach(t => {
       entries.push({
-        date: new Date(t.transaction_date), reference: t.bank_reference || 'Bank', description: t.description || (t.direction === 'in' ? 'Bank deposit' : 'Bank withdrawal'),
-        debit: t.direction === 'out' ? Number(t.amount) : 0, credit: t.direction === 'in' ? Number(t.amount) : 0
+        date: new Date(t.transaction_date), reference: t.bank_reference || 'Bank', description: t.description || ((t.direction === 'in' || t.direction === 'credit') ? 'Bank deposit' : 'Bank withdrawal'),
+        debit: (t.direction === 'out' || t.direction === 'debit') ? Number(t.amount) : 0, credit: (t.direction === 'in' || t.direction === 'credit') ? Number(t.amount) : 0
       });
     });
 
@@ -11294,7 +12496,7 @@
       const productNames = items.map(i => i.product_name).join(', ') || '—';
       return `
       <tr>
-        <td data-label="Order #">${o.order_number}</td>
+        <td data-label="Order #">${o.order_number}${o.channel && o.channel !== "website" ? ` <span class="lzx-pill">${o.channel === "shop" ? "Shop" : "Counter"}</span>` : ""}</td>
         <td data-label="Date">${new Date(o.created_at).toLocaleDateString('en-IN')}</td>
         <td data-label="Customer">${escapeHtml(o.profiles?.full_name) || 'Guest'}</td>
         <td data-label="Products" style="max-width:200px;white-space:normal;">${escapeHtml(productNames)}</td>
@@ -12223,6 +13425,13 @@
 
   function renderInvoiceWindow(o, invoice, lineItems){
     const shippingAmt = Number(o.shipping_amount || 0);
+    const lzCh = o.channel || invoice.channel || 'website';
+    const lzPos = invoice.place_of_supply || o.place_of_supply || o.shipping_state || storeSettings.business_state || 'Karnataka';
+    const lzGstin = invoice.buyer_gstin || o.buyer_gstin || '';
+    const lzGstSum = lineItems.reduce((s, i) => s + Number(i.gst_amount || 0), 0);
+    let lzC = Number(invoice.cgst) || 0, lzS = Number(invoice.sgst) || 0, lzI = Number(invoice.igst) || 0;
+    if(lzC + lzS + lzI === 0 && lzGstSum > 0){ if(lzIntra(lzPos)){ lzC = lzGstSum / 2; lzS = lzGstSum / 2; } else lzI = lzGstSum; }
+    const lzInvDate = invoice.invoice_date ? new Date(invoice.invoice_date + 'T00:00:00') : new Date(invoice.issued_at || invoice.created_at);
     const totalDiscount = lineItems.reduce((s, i) => s + Number(i.discount_amount || 0), 0);
     const totalTaxable = lineItems.reduce((s, i) => s + Number(i.taxable_amount || 0), 0);
     const totalGst = lineItems.reduce((s, i) => s + Number(i.gst_amount || 0), 0);
@@ -12306,12 +13515,12 @@
           <img src="${LAIZA_LOGO_DATA_URI}" alt="${storeSettings.brand_name}" style="height:56px;width:auto;display:block;margin:0 auto;transform:translateX(-20px);">
           <div class="brand-name">${(storeSettings.invoice_business_name || storeSettings.brand_name).toUpperCase()}</div>
         </div>
-        <p style="text-align:center;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#8A6A22;margin:2px 0 10px;">Sales Tax Invoice</p>
+        <p style="text-align:center;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#8A6A22;margin:2px 0 10px;">Tax Invoice${lzCh === 'shop' ? ' · B2B' : ''}</p>
 
         <div class="inv-strip">
           <div><span>Invoice No</span><b>${invoice.invoice_number}</b></div>
-          <div><span>Invoice Date</span><b>${new Date(invoice.issued_at).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })}</b></div>
-          <div><span>Order ID</span><b>${o.order_number}</b></div>
+          <div><span>Invoice Date</span><b>${lzInvDate.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })}</b></div>
+          <div><span>${lzCh === 'website' ? 'Order ID' : 'Bill No'}</span><b>${o.order_number}</b></div>
           <div><span>Payment</span><b>${escapeHtml(o.payment_method || '—')}</b></div>
         </div>
 
@@ -12326,10 +13535,11 @@
             ${storeSettings.business_gstin ? `<div class="pline"><span>GSTIN</span><b>${escapeHtml(storeSettings.business_gstin)}</b></div>` : ''}
           </div>
           <div class="party">
-            <h4>Bill To / Ship To</h4>
+            <h4>${lzCh === 'website' ? 'Bill To / Ship To' : 'Bill To'}</h4>
             <div class="pname">${escapeHtml(invoice.customer_name)}</div>
-            <div class="paddr">${escapeHtml(invoice.billing_address)}</div>
-            ${o.shipping_state ? `<div class="pline"><span>State</span>${escapeHtml(o.shipping_state)}</div>` : ''}
+            <div class="paddr">${escapeHtml(invoice.billing_address || '')}</div>
+            ${lzGstin ? `<div class="pline"><span>GSTIN</span><b>${escapeHtml(lzGstin)}</b></div>` : ''}
+            <div class="pline"><span>POS</span>${escapeHtml(lzPos)}${lzStateCode(lzPos) ? ' (' + lzStateCode(lzPos) + ')' : ''}</div>
             ${o.shipping_phone ? `<div class="pline"><span>Phone</span>${escapeHtml(o.shipping_phone)}</div>` : ''}
             ${o.customer_email ? `<div class="pline"><span>Email</span>${escapeHtml(o.customer_email)}</div>` : ''}
           </div>
@@ -12343,11 +13553,13 @@
         <div class="totals">
           <div><span>Taxable Amount</span><span>₹${totalTaxable.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span></div>
           ${totalDiscount > 0 ? `<div><span>Discount${o.coupon_code ? ' (' + o.coupon_code + ')' : ''}</span><span>-₹${totalDiscount.toLocaleString('en-IN')}</span></div>` : ''}
-          ${totalGst > 0 ? `<div><span>GST</span><span>₹${totalGst.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span></div>` : ''}
-          <div><span>Shipping</span><span>${shippingAmt === 0 ? 'FREE' : '₹' + shippingAmt.toLocaleString('en-IN')}</span></div>
-          <div class="grand"><span>Total</span><span>₹${Number(invoice.total_amount).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span></div>
+          ${lzC > 0 ? `<div><span>CGST</span><span>₹${lzC.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div><div><span>SGST</span><span>₹${lzS.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>` : ''}
+          ${lzI > 0 ? `<div><span>IGST</span><span>₹${lzI.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div>` : ''}
+          ${lzCh === 'website' ? `<div><span>Shipping</span><span>${shippingAmt === 0 ? 'FREE' : '₹' + shippingAmt.toLocaleString('en-IN')}</span></div>` : ''}
+          <div class="grand"><span>Total</span><span>₹${Number(invoice.total_amount).toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span></div>
+          <div style="display:block;font-size:12px;color:#5c5346;padding-top:4px;">Amount in words: <b>${lzWords(invoice.total_amount)} Rupees only</b></div>
           <div style="display:block;margin-top:14px;padding-top:10px;border-top:1px solid #eee;font-size:13px;">
-            <div style="display:flex;justify-content:space-between;padding:3px 0;"><span>Delivery Status</span><span>${ORDER_STATUS_LABEL[o.status] || o.status}</span></div>
+            <div style="display:${lzCh === 'website' ? 'flex' : 'none'};justify-content:space-between;padding:3px 0;"><span>Delivery Status</span><span>${ORDER_STATUS_LABEL[o.status] || o.status}</span></div>
             <div style="display:flex;justify-content:space-between;padding:3px 0;"><span>Payment Status</span><span>${(o.payment_status || 'pending').charAt(0).toUpperCase() + (o.payment_status || 'pending').slice(1)}${o.payment_method ? ' — ' + o.payment_method : ''}</span></div>
           </div>
         </div>
@@ -12961,7 +14173,7 @@
       const delivery = deliveryStatusFor(o.status);
       return `
       <tr>
-        <td data-label="Order #">${o.order_number}</td>
+        <td data-label="Order #">${o.order_number}${o.channel && o.channel !== "website" ? ` <span class="lzx-pill">${o.channel === "shop" ? "Shop" : "Counter"}</span>` : ""}</td>
         <td data-label="Date">${new Date(o.created_at).toLocaleDateString('en-IN')}</td>
         <td data-label="Customer">${escapeHtml(o.profiles?.full_name) || 'Guest'}</td>
         <td data-label="Phone">${escapeHtml(o.profiles?.phone) || '—'}</td>
@@ -13109,8 +14321,8 @@
         <h5>Shipping</h5>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <button type="button" class="icon-action" style="border:1px solid var(--gold-deep);border-radius:6px;padding:7px 14px;color:var(--gold-deep);" onclick='downloadInvoice(${JSON.stringify(o).replace(/'/g, "&apos;")}, this)'><i class="fa-solid fa-file-invoice"></i> Invoice</button>
-          <button type="button" class="icon-action" style="border:1px solid var(--gold-deep);border-radius:6px;padding:7px 14px;color:var(--gold-deep);" onclick='generateShippingLabel(${JSON.stringify(o).replace(/'/g, "&apos;")}, this)'><i class="fa-solid fa-tag"></i> Shipping Label</button>
-          ${o.awb_code
+          ${(o.channel || 'website') !== 'website' ? '<span style="color:#9c8f74;font-size:12.5px;align-self:center;">Shop / counter bill — no courier needed.</span>' : `<button type="button" class="icon-action" style="border:1px solid var(--gold-deep);border-radius:6px;padding:7px 14px;color:var(--gold-deep);" onclick='generateShippingLabel(${JSON.stringify(o).replace(/'/g, "&apos;")}, this)'><i class="fa-solid fa-tag"></i> Shipping Label</button>`}
+          ${(o.channel || 'website') !== 'website' ? '' : o.awb_code
             ? `<span style="border:1px solid #3f7d4f;border-radius:6px;padding:7px 14px;color:#3f7d4f;font-size:12.5px;display:inline-flex;align-items:center;gap:6px;"><i class="fa-solid fa-truck"></i> ${o.courier_name || 'Courier'} — AWB ${o.awb_code}</span>`
             : `<button type="button" class="icon-action" style="border:1px solid var(--gold-deep);border-radius:6px;padding:7px 14px;color:var(--gold-deep);" onclick='shipViaIthink(${JSON.stringify(o.id)}, this)'><i class="fa-solid fa-box"></i> Ship via iThink Logistics</button>`}
         </div>
