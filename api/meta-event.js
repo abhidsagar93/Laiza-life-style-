@@ -6,10 +6,22 @@
 // ad blockers / iPhone privacy no longer hide it. Purchase is NOT handled here — it is
 // sent from the order itself (api/_lib/meta-capi.js).
 //
+// user_data: IP, browser, fbp/fbc cookies, a hashed visitor ID (external_id) and — once the
+// customer types them at checkout or is logged in — hashed email, phone, name, city, state, pincode.
+//
 // Vercel env vars: META_CAPI_TOKEN (required), META_PIXEL_ID (optional),
 // META_TEST_EVENT_CODE (optional, only while testing).
 
+const crypto = require('crypto');
 const DEFAULT_PIXEL_ID = '2180019866727441';
+const sha = v => crypto.createHash('sha256').update(String(v)).digest('hex');
+const low = v => (typeof v === 'string' ? v.trim().toLowerCase().slice(0, 120) : '');
+function phoneE164(p) {
+  const d = String(p || '').replace(/\D/g, '');
+  if (d.length === 10) return '91' + d;
+  if (d.length === 12 && d.startsWith('91')) return d;
+  return '';
+}
 const ALLOWED = new Set(['ViewContent', 'AddToCart', 'InitiateCheckout', 'Search']);
 const SITE_HOST = /(^|\.)laizalifestyle\.com$/i;
 
@@ -52,7 +64,25 @@ module.exports = async (req, res) => {
   if (body.event === 'Search') { delete custom.value; delete custom.currency; }
 
   const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.headers['x-real-ip'];
+  // Customer details typed at checkout / from login (hashed here, never sent to Meta in plain text)
+  const u = body.u && typeof body.u === 'object' ? body.u : {};
+  const em = low(u.em); const ph = phoneE164(u.ph);
+  const fn = low(u.fn).replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean);
+  const ct = low(u.ct).replace(/[^a-z]/g, ''); const st = low(u.st).replace(/[^a-z]/g, ''); const zp = String(u.zp || '').replace(/\D/g, '').slice(0, 6);
+  const ext = [];
+  if (typeof u.uid === 'string' && u.uid) ext.push(sha(u.uid.slice(0, 64)));          // same as Purchase for logged-in customers
+  if (ph) ext.push(sha('ph' + ph));                                                     // same as Purchase for guests
+  if (typeof u.vid === 'string' && u.vid) ext.push(sha('v' + u.vid.slice(0, 64)));     // this browser
   const user_data = {
+    em: /^[^@\s]+@[^@\s]+\.[a-z]{2,}$/.test(em) ? [sha(em)] : undefined,
+    ph: ph ? [sha(ph)] : undefined,
+    fn: fn[0] ? [sha(fn[0])] : undefined,
+    ln: fn.length > 1 ? [sha(fn[fn.length - 1])] : undefined,
+    ct: ct ? [sha(ct)] : undefined,
+    st: st ? [sha(st)] : undefined,
+    zp: zp.length === 6 ? [sha(zp)] : undefined,
+    country: [sha('in')],
+    external_id: ext.length ? ext : undefined,
     client_ip_address: ip || undefined,
     client_user_agent: str(req.headers['user-agent'], 400),
     fbp: str(body.fbp, 200),
