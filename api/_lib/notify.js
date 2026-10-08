@@ -43,6 +43,24 @@ function money(n) {
   return '₹' + Number(n || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 });
 }
 
+// Order summary rows for the confirmation email (items, discounts, COD fee)
+function summaryTable(o) {
+  const row = (l, v, c) => `<tr><td style="padding:5px 0;${c || ''}">${l}</td><td align="right" style="padding:5px 0;${c || ''}">${v}</td></tr>`;
+  const items = (o.items || []).map(i => row(`${escapeHtml(i.product_name)} × ${num(i.quantity)}`, num(money(i.line_total)))).join('');
+  const offer = Number(o.offer_discount || 0);
+  const other = Math.max(0, Number(o.discount_amount || 0) - offer);
+  const fee = Number(o.cod_fee || 0);
+  const lines = [
+    items,
+    offer > 0 ? row(`Online payment discount${o.offer_percent ? ' ' + num(o.offer_percent) + '%' : ''}`, '− ' + num(money(offer)), 'color:#2f7a47') : '',
+    other > 0 ? row(`Coupon / points${o.coupon_code ? ' (' + escapeHtml(o.coupon_code) + ')' : ''}`, '− ' + num(money(other)), 'color:#2f7a47') : '',
+    row('Delivery', Number(o.shipping_amount || 0) > 0 ? num(money(o.shipping_amount)) : 'FREE'),
+    fee > 0 ? row('Cash on Delivery handling fee', num(money(fee))) : ''
+  ].join('');
+  return `<table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #eee;border-bottom:1px solid #eee;margin:14px 0 0;font-size:14px">${lines}</table>
+    <p style="margin:6px 0 0;color:#888;font-size:12px">Prices include GST.</p>`;
+}
+
 function buildEmail(event, o) {
   const name = escapeHtml(o.name);
   const orderNo = num(o.order_number);
@@ -54,7 +72,8 @@ function buildEmail(event, o) {
     body = `
       <p>Hi ${name},</p>
       <p>Your order <strong>${orderNo}</strong> is confirmed and being prepared.</p>
-      <p style="font-size:18px;margin:20px 0"><strong>Total: ${num(money(o.total))}</strong></p>
+      ${summaryTable(o)}
+      <p style="font-size:18px;margin:20px 0"><strong>${o.is_cod ? 'To pay on delivery' : 'Total'}: ${num(money(o.total))}</strong></p>
       <p>We'll email you again with a tracking link as soon as it ships.</p>`;
   } else if (event === 'shipped') {
     subject = `Your order ${o.order_number} has shipped — Laiza Lifestyle`;
@@ -169,7 +188,7 @@ async function alertAdminNewOrder(supabaseAdmin, orderId) {
   if (already && already.length) return;
 
   const { data: o } = await supabaseAdmin.from('orders')
-    .select('order_number, total, payment_method, payment_status, shipping_full_name, customer_name, shipping_phone, shipping_address, shipping_city, shipping_state, shipping_pincode, discount_amount, offer_discount, created_at')
+    .select('order_number, total, payment_method, payment_status, shipping_full_name, customer_name, shipping_phone, shipping_address, shipping_city, shipping_state, shipping_pincode, discount_amount, offer_discount, cod_fee, created_at')
     .eq('id', orderId).maybeSingle();
   if (!o) return;
   const { data: items } = await supabaseAdmin.from('order_items')
@@ -187,7 +206,7 @@ async function alertAdminNewOrder(supabaseAdmin, orderId) {
     <tr><td style="padding:22px 24px;font-size:15px;line-height:1.55">
       <p style="font-size:22px;margin:0 0 6px"><strong>${num(o.order_number)}</strong></p>
       <p style="font-size:20px;margin:0 0 14px;color:#2f7a47"><strong>${num(money(o.total))}</strong> · ${payLabel}</p>
-      <table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #eee;border-bottom:1px solid #eee;margin:8px 0 14px">${rows}</table>
+      <table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #eee;border-bottom:1px solid #eee;margin:8px 0 14px">${rows}${Number(o.cod_fee || 0) > 0 ? `<tr><td style="padding:6px 0">COD handling fee</td><td align="right" style="padding:6px 0">${num(money(o.cod_fee))}</td></tr>` : ''}${Number(o.offer_discount || 0) > 0 ? `<tr><td style="padding:6px 0;color:#2f7a47">Online discount</td><td align="right" style="padding:6px 0;color:#2f7a47">− ${num(money(o.offer_discount))}</td></tr>` : ''}</table>
       <p style="margin:0"><strong>${escapeHtml(name)}</strong> · ${num(o.shipping_phone || '')}</p>
       <p style="margin:4px 0 0;color:#555">${escapeHtml([o.shipping_address, o.shipping_city, o.shipping_state, o.shipping_pincode].filter(Boolean).join(', '))}</p>
       <p style="margin:22px 0 0"><a href="${SITE_URL}/admin" style="background:#c9a24b;color:#1a1408;padding:12px 22px;text-decoration:none;border-radius:6px;display:inline-block;font-weight:bold">Open admin panel</a></p>
@@ -213,7 +232,7 @@ async function notifyOrder(supabaseAdmin, orderId, event) {
   if (event === 'confirmed') { try { await sendMetaPurchase(supabaseAdmin, orderId); } catch (_) {} }
   const { data: order } = await supabaseAdmin
     .from('orders')
-    .select('id, user_id, order_number, total, customer_name, customer_email, shipping_full_name, shipping_phone, awb_code, courier_name, tracking_url')
+    .select('id, user_id, order_number, total, customer_name, customer_email, shipping_full_name, shipping_phone, awb_code, courier_name, tracking_url, payment_method, discount_amount, offer_discount, offer_percent, coupon_code, shipping_amount, cod_fee')
     .eq('id', orderId)
     .maybeSingle();
   if (!order) return;
@@ -243,6 +262,14 @@ async function notifyOrder(supabaseAdmin, orderId, event) {
     name: (order.shipping_full_name || order.customer_name || profile?.full_name || 'there').split(' ')[0],
     order_number: order.order_number,
     total: order.total,
+    is_cod: /cash on delivery|\bcod\b/i.test(order.payment_method || ''),
+    discount_amount: order.discount_amount,
+    offer_discount: order.offer_discount,
+    offer_percent: order.offer_percent,
+    coupon_code: order.coupon_code,
+    shipping_amount: order.shipping_amount,
+    cod_fee: order.cod_fee,
+    items: event === 'confirmed' ? ((await supabaseAdmin.from('order_items').select('product_name, quantity, line_total').eq('order_id', orderId)).data || []) : [],
     courier_name: order.courier_name,
     awb_code: order.awb_code,
     tracking_url: order.tracking_url
