@@ -77,6 +77,8 @@ module.exports = async (req, res) => {
   // Customer details typed at checkout / from login (hashed here, never sent to Meta in plain text)
   const u = body.u && typeof body.u === 'object' ? body.u : {};
   const em = low(u.em); const ph = phoneE164(u.ph);
+  // IPv6 seen by the browser (Meta prefers it over the IPv4 our server receives)
+  const ip6 = typeof u.ip6 === 'string' && u.ip6.length <= 45 && /^[0-9a-f:.]+$/i.test(u.ip6) && u.ip6.includes(':') ? u.ip6 : '';
   const fn = low(u.fn).replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean);
   // If the visitor has not typed an address yet, use the city / state / pincode of their
   // internet connection (Vercel adds these headers) so every event has at least one
@@ -100,7 +102,7 @@ module.exports = async (req, res) => {
     zp: zp.length === 6 ? [sha(zp)] : undefined,
     country: [sha('in')],
     external_id: ext.length ? ext : undefined,
-    client_ip_address: ip || undefined,
+    client_ip_address: ip6 || ip || undefined,
     client_user_agent: str(req.headers['user-agent'], 400),
     fbp: str(body.fbp, 200),
     fbc: str(body.fbc, 400)
