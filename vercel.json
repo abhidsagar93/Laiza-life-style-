@@ -1,0 +1,15 @@
+{
+  "rewrites": [
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/admin", "destination": "/index.html" },
+    { "source": "/admin/", "destination": "/index.html" }
+  ],
+  "images": {
+    "sizes": [256, 384, 640, 828, 1080],
+    "formats": ["image/webp"],
+    "minimumCacheTTL": 2678400,
+    "remotePatterns": [
+      { "protocol": "https", "hostname": "jdgerknvpzpkuhdevrdm.supabase.co", "pathname": "/storage/v1/object/public/**" }
+    ]
+  }
+}
