@@ -7,6 +7,8 @@ const { createClient } = require('@supabase/supabase-js');
 
 const SITE = 'https://laizalifestyle.com';
 const PAGES = ['privacy', 'terms', 'shipping', 'returns', 'cancellation'];
+const INFO_PAGES = ['about', 'story', 'contact'];
+const CAT_SLUG = { 'leather wallets': 'wallets', 'card holders': 'card-holders', 'leather key chains': 'keychains' };
 const GUIDES = [
   'best-leather-wallets-for-men-india',
   'bifold-vs-trifold-vs-card-holder',
@@ -31,18 +33,24 @@ module.exports = async (req, res) => {
     { loc: SITE + '/?page=guides', changefreq: 'weekly', priority: '0.6', lastmod: today }
   ];
   GUIDES.forEach(g => urls.push({ loc: `${SITE}/?page=guides&post=${g}`, changefreq: 'monthly', priority: '0.6' }));
+  INFO_PAGES.forEach(pg => urls.push({ loc: `${SITE}/?page=${pg}`, changefreq: 'monthly', priority: '0.5' }));
   PAGES.forEach(pg => urls.push({ loc: `${SITE}/?page=${pg}`, changefreq: 'yearly', priority: '0.3' }));
 
   const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
   if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
     try {
       const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-      const { data } = await db.from('products').select('name, image_url, created_at').eq('is_active', true);
+      const { data } = await db.from('products').select('name, image_url, created_at, category').eq('is_active', true);
       (data || []).forEach(p => urls.push({
         loc: `${SITE}/?product=${slugify(p.name)}`,
         changefreq: 'weekly', priority: '0.9',
         lastmod: String(p.created_at || today).slice(0, 10),
         image: p.image_url, title: p.name
+      }));
+      const cats = [...new Set((data || []).map(p => p.category).filter(Boolean))];
+      cats.forEach(c => urls.push({
+        loc: `${SITE}/?category=${CAT_SLUG[c.toLowerCase()] || slugify(c)}`,
+        changefreq: 'weekly', priority: '0.8', lastmod: today
       }));
     } catch (_) { /* still return the pages we know */ }
   }
