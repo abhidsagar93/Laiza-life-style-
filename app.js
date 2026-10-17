@@ -1235,6 +1235,11 @@ Tracking: `+result.tracking_url:""}${result.address_warning?`
         </div>
       </div>
 
+      ${lzCanCod(o)?`<div class="order-modal-section" id="lzCodSection-${o.id}" style="border:1px solid #e8d9b5;background:#fffaf0;border-radius:10px;padding:12px;">
+        <h5>Customer wants Cash on Delivery?</h5>
+        <p style="font-size:13px;margin:4px 0 10px;color:#555;">Online payment is not received yet. You can change this order to Cash on Delivery. The online offer (${money(o.offer_discount||0)}) will be removed, so the new total becomes <b>${money(Number(o.total||0)+Number(o.offer_discount||0))}</b>. The PayU link will stop working and the invoice (if made) is updated.</p>
+        <button type="button" class="btn btn-primary" id="lzCodBtn-${o.id}" onclick="lzSwitchToCod('${o.id}')" style="background:#3b2a1e;color:#fff;border:0;border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer;">Change to Cash on Delivery</button>
+      </div>`:""}
       <div class="order-modal-section" id="payuLinkSection-${o.id}">
         <h5>PayU Payment Link</h5>
         <div id="payuLinkContent-${o.id}">
@@ -2622,3 +2627,6 @@ window.lzAccAlEdit=async function(k,id){const[t]=T(k),r=(k==="a"?__lzAl.as:__lzA
 window.lzAccAlDel=async function(k,id){if(!confirm("Delete this entry?"))return;const[t]=T(k),{error}=await supabaseClient.from(t).delete().eq("id",id);if(error){showToast("Could not delete: "+error.message,"error");return}lzAccTab("al")};
 })();
 
+
+function lzCanCod(o){try{if(!o)return!1;const pm=String(o.payment_method||"").toLowerCase(),ch=o.channel||"website",st=String(o.status||"").toLowerCase();return ch==="website"&&/payu|online/.test(pm)&&o.payment_status!=="paid"&&!["shipped","delivered","cancelled","returned","refunded"].includes(st)&&!o.awb_code}catch(e){return!1}}
+async function lzSwitchToCod(id){const btn=document.getElementById("lzCodBtn-"+id);try{const{data:o}=await supabaseClient.from("orders").select("order_number,total,offer_discount").eq("id",id).single();const nt=Number(o?.total||0)+Number(o?.offer_discount||0);if(!confirm(`Change order ${o?.order_number||""} to Cash on Delivery?\n\nNew total to collect: ₹${nt.toLocaleString("en-IN")}\n(online offer removed, PayU link stopped)`))return;btn&&(btn.disabled=!0,btn.textContent="Changing…");const{data,error}=await supabaseClient.rpc("lz_switch_to_cod",{p_order_id:id});if(error)throw error;showToast(`Changed to Cash on Delivery. New total ₹${Number(data?.new_total||nt).toLocaleString("en-IN")}`,"success",5e3);try{loadAdminOrders()}catch(e){}try{window.loadAdminDashboard&&loadAdminDashboard()}catch(e){}openOrderDetail(id)}catch(e){btn&&(btn.disabled=!1,btn.textContent="Change to Cash on Delivery");showToast("Could not change: "+(e?.message||e),"error",6e3)}}
