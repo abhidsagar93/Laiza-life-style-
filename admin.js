@@ -512,7 +512,7 @@ function applyOrderReportFilters(){const{orders,orderItems}=window.orderReportCa
       <tr>
         <td data-label="Order #">${o.order_number}${o.channel&&o.channel!=="website"?` <span class="lzx-pill">${o.channel==="shop"?"Shop":"Counter"}</span>`:""}</td>
         <td data-label="Date">${new Date(o.created_at).toLocaleDateString("en-IN")}</td>
-        <td data-label="Customer">${escapeHtml(o.profiles?.full_name)||"Guest"}</td>
+        <td data-label="Customer">${escapeHtml(o.profiles?.full_name||o.shipping_full_name)||"Guest"}</td>
         <td data-label="Products" style="max-width:200px;white-space:normal;">${escapeHtml(productNames)}</td>
         <td data-label="Status">${ORDER_STATUS_LABEL[o.status]||o.status}</td>
         <td data-label="Payment Method">${o.payment_method||"—"}</td>
@@ -762,8 +762,8 @@ async function loadAdminOrders(period,statusFilter){const{data:orders}=await sup
       <tr>
         <td data-label="Order #">${o.order_number}${o.channel&&o.channel!=="website"?` <span class="lzx-pill">${o.channel==="shop"?"Shop":"Counter"}</span>`:""}</td>
         <td data-label="Date">${new Date(o.created_at).toLocaleDateString("en-IN")}</td>
-        <td data-label="Customer">${escapeHtml(o.profiles?.full_name)||"Guest"}</td>
-        <td data-label="Phone">${escapeHtml(o.profiles?.phone)||"—"}</td>
+        <td data-label="Customer">${escapeHtml(o.profiles?.full_name||o.shipping_full_name)||"Guest"}</td>
+        <td data-label="Phone">${escapeHtml(o.profiles?.phone||o.shipping_phone)||"—"}</td>
         <td data-label="Products" style="max-width:220px;white-space:normal;">${escapeHtml(productNames)}</td>
         <td data-label="Qty">${totalQty}</td>
         <td data-label="Amount">${money(o.total)}</td>
