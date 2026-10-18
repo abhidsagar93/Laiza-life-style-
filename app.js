@@ -1959,24 +1959,34 @@ function lzPdW(){var w=window.innerWidth||390;if(w>700)return 1080;var n=w*.92*(
   "finance|expenses":{p:"adminPanelAnalytics",t:"Expenses",s:function(h){return /expense/.test(h)}},
   "reports|sales & profit":{p:"adminPanelAnalytics",s:function(h){return !/expense/.test(h)}},
   "reports|products":{p:"adminPanelAnalytics",t:"Product Performance",s:function(h){return /date range|charts/.test(h)}},
-  "settings|store settings":{p:"adminPanelSettings",s:function(h){return !SET_OTHER.test(h)}},
+  "products|all products":{p:"adminPanelProducts",t:"All Products",s:function(h){return /all products|optimize existing/.test(h)}},"products|add product":{p:"adminPanelProducts",t:"Add / Edit Product",s:function(h){return /add product|edit product|additional images|product variants/.test(h)}},"settings|store settings":{p:"adminPanelSettings",s:function(h){return !SET_OTHER.test(h)}},
   "settings|payment gateway":{p:"adminPanelSettings",t:"Payment Gateway",s:function(h){return /payment gateway|order, payment|save all settings/.test(h)}},
   "settings|delivery integration":{p:"adminPanelSettings",t:"Delivery Integration",s:function(h){return /delivery integration|ithink|save all settings/.test(h)}},
   "settings|tax / gst & shipping":{p:"adminPanelSettings",t:"Tax / GST & Shipping",s:function(h){return /tax \/ gst|save all settings/.test(h)}}};
  function blocks(P){return [].slice.call(P.querySelectorAll(".dash-panel")).filter(function(d){return !(d.parentElement&&d.parentElement.closest(".dash-panel"))})}
- function secApply(key){["adminPanelAnalytics","adminPanelSettings"].forEach(function(id){var P=document.getElementById(id);if(!P)return;
+ function secApply(key){["adminPanelAnalytics","adminPanelSettings","adminPanelProducts"].forEach(function(id){var P=document.getElementById(id);if(!P)return;
    blocks(P).forEach(function(d){if(d.dataset.lzsec){d.style.display="";delete d.dataset.lzsec}});
    var h1=P.querySelector(".welcome-row h1");if(h1&&h1.dataset.lzt){h1.textContent=h1.dataset.lzt;delete h1.dataset.lzt}});
   var R=key&&RULES[key];if(!R)return;var P=document.getElementById(R.p);if(!P)return;
   blocks(P).forEach(function(d){if(!R.s(HT(d))){d.dataset.lzsec="1";d.style.display="none"}});
   var h1=P.querySelector(".welcome-row h1");if(h1&&R.t){h1.dataset.lzt=h1.textContent;h1.textContent=R.t}
   setTimeout(function(){window.scrollTo({top:0,behavior:"smooth"})},450)}
+ function mob(name,g){var sel=document.getElementById("adminMobileNav"),n=nav();if(!sel||!n)return;
+  var tops=[].slice.call(n.children).filter(function(x){return x.matches("a[data-panel]")||x.classList.contains("nav-group")});
+  var sig=tops.map(function(x){return x.tagName==="A"?(x.style.display==="none"?"":label(x)):(vis(x).length&&x.style.display!=="none"?label(x.querySelector(".nav-group-header")):"")}).join("|");
+  if(sel.dataset.lzsig!==sig){sel.dataset.lzsig=sig;sel.innerHTML="";tops.forEach(function(x,i){var t=x.tagName==="A"?(x.style.display==="none"?"":label(x)):(vis(x).length&&x.style.display!=="none"?label(x.querySelector(".nav-group-header")):"");
+    if(!t)return;var o=document.createElement("option");o.value="lzm"+i;o.textContent=x.tagName==="A"?t:t+"  ▸";sel.appendChild(o)});
+   sel.removeAttribute("onchange");sel.onchange=function(){var x=tops[+String(sel.value).slice(3)];if(!x)return;x.tagName==="A"?x.click():x.querySelector(".nav-group-header").click()}}
+  [].forEach.call(sel.options,function(o){o.hidden&&(o.hidden=false)});
+  if(!sel.dataset.lzobs){sel.dataset.lzobs=1;new MutationObserver(function(){[].forEach.call(sel.options,function(o){o.hidden&&(o.hidden=false)})}).observe(sel,{subtree:true,attributes:true,attributeFilter:["hidden"]})}
+  var idx=g?tops.indexOf(g):tops.findIndex(function(x){return x.tagName==="A"&&x.dataset.panel===name});if(idx>-1)sel.value="lzm"+idx}
  window.lzGrpSync=function(name){init();secApply(null);var n=nav(),main=document.querySelector("#adminView main.dash-main");if(!n||!main)return;
   var bar=document.getElementById("lzGrpBar");
   [].forEach.call(n.querySelectorAll(".nav-group-header.lz-on"),function(h){h.classList.remove("lz-on")});
   var g=null;
   if(last&&last.dataset.panel===name&&Date.now()-lastAt<4000)g=last.closest(".nav-group");
   if(!g){var c=n.querySelector('.nav-group-items > a[data-panel="'+name+'"]');g=c&&c.closest(".nav-group")}
+  try{mob(name,g)}catch(e){}
   if(!g){bar&&bar.remove();return}
   var h=g.querySelector(".nav-group-header");h&&h.classList.add("lz-on");
   if(g.querySelector("#navAccounts")){bar&&bar.remove();return}   // Accounts has its own tabs
@@ -1988,6 +1998,12 @@ function lzPdW(){var w=window.innerWidth||390;if(w>700)return 1080;var n=w*.92*(
    b.onclick=function(){last=x;lastAt=Date.now();x.click()};bar.lastChild.appendChild(b)});
   if(main.firstChild!==bar)main.insertBefore(bar,main.firstChild);
   var on=bar.querySelector("button.on"),row=bar.lastChild;if(on&&row.scrollWidth>row.clientWidth)row.scrollLeft=Math.max(0,on.offsetLeft-row.offsetLeft-row.clientWidth/2+on.offsetWidth/2)};
+ window.lzProdEditView=function(){var n=nav(),P=document.getElementById("adminPanelProducts");if(!n||!P||!P.classList.contains("active"))return;
+  var f=document.getElementById("productFormTitle"),blk=f&&f.closest(".dash-panel");if(!blk||blk.style.display!=="none")return;
+  var x=[].slice.call(n.querySelectorAll('#navProducts > a')).filter(function(y){return /add product/i.test(label(y))})[0];if(!x)return;
+  last=x;lastAt=Date.now();lzGrpSync("products");setTimeout(function(){var e=document.getElementById("prodName");e&&e.scrollIntoView({behavior:"smooth",block:"center"})},500)};
+ (function w(){var t=document.getElementById("productFormTitle");if(!t){document.readyState==="loading"&&document.addEventListener("DOMContentLoaded",w);return}
+  new MutationObserver(function(){/edit/i.test(t.textContent||"")&&lzProdEditView()}).observe(t,{childList:true,characterData:true,subtree:true})})();
  var _sap=window.showAdminPanel;
  if(typeof _sap==="function"){showAdminPanel=function(name){var r=_sap.apply(this,arguments);try{lzGrpSync(name)}catch(e){}return r}}
  document.readyState==="loading"?document.addEventListener("DOMContentLoaded",init):init();
