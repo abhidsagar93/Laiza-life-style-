@@ -2214,6 +2214,33 @@ window.lzccOffersInit=function(ss){ss=ss||{};const set=(id,v)=>{const i=document
  if(want){var tries=0,t=setInterval(async function(){tries++;try{var r=await supabaseClient.auth.getSession();if(r.data&&r.data.session){clearInterval(t);box()}}catch(e){}if(tries>20)clearInterval(t)},700)}
 })();
 
+;(function(){var $=function(i){return document.getElementById(i)};
+async function prods(){var ps=(typeof allProducts!=="undefined"&&allProducts&&allProducts.length)?allProducts:null;
+ if(!ps){var r=await supabaseClient.from("products").select("id,name,price,is_active").order("name");ps=r.data||[]}return ps}
+async function render(checked){var box=$("lzDiscProdList");if(!box)return;var ps=await prods();checked=checked||new Set();
+ box.innerHTML=ps.length?ps.map(function(p){return '<label><input type="checkbox" value="'+p.id+'"'+(checked.has(p.id)?" checked":"")+' onchange="lzDiscCount()"><span>'+String(p.name).replace(/[<&]/g,"")+(p.is_active===false?' <i style="color:#999">(hidden)</i>':"")+'</span></label>'}).join(""):"No products found.";lzDiscCount()}
+window.lzDiscCount=function(){var n=document.querySelectorAll("#lzDiscProdList input:checked").length,c=$("lzDiscProdCount");c&&(c.textContent=n?"("+n+" selected)":"")};
+window.lzDiscAll=function(on){document.querySelectorAll("#lzDiscProdList input").forEach(function(i){i.checked=!!on});lzDiscCount()};
+window.lzDiscScope=async function(keep){var sc=$("discountScope").value;$("discountCategoryField").style.display=sc==="category"?"block":"none";var f=$("lzDiscProdField");if(!f)return;f.style.display=sc==="products"?"block":"none";
+ if(sc==="products"&&!keep){var id=$("discountEditId").value,set=new Set();if(id){var r=await supabaseClient.from("product_discounts").select("product_id").eq("discount_id",id);(r.data||[]).forEach(function(x){set.add(x.product_id)})}await render(set)}};
+window.lzDiscSubmit=async function(e){e.preventDefault();var sc=$("discountScope").value,ids=[].map.call(document.querySelectorAll("#lzDiscProdList input:checked"),function(i){return i.value});
+ if(sc==="products"&&!ids.length){alert("Tick at least one product for this discount.");return}
+ var id=$("discountEditId").value,payload={name:$("discountName").value.trim(),campaign_type:$("discountCampaignType").value,discount_type:$("discountType").value,value:Number($("discountValue").value),scope:sc,
+  category_id:sc==="category"?$("discountCategorySelect").value:null,starts_at:$("discountStart").value?new Date($("discountStart").value).toISOString():null,ends_at:$("discountEnd").value?new Date($("discountEnd").value).toISOString():null,is_active:$("discountActive").checked};
+ var btn=$("discountSubmitBtn");btn&&(btn.disabled=true);try{var did=id;
+  if(id){var u=await supabaseClient.from("discounts").update(payload).eq("id",id);if(u.error){alert("Could not save: "+u.error.message);return}}
+  else{var c=await supabaseClient.from("discounts").insert(payload).select().single();if(c.error||!c.data){alert("Could not create: "+(c.error?c.error.message:"no reply"));return}did=c.data.id}
+  if(sc==="products"){var cur=await supabaseClient.from("product_discounts").select("product_id").eq("discount_id",did),have=new Set((cur.data||[]).map(function(x){return x.product_id})),want=new Set(ids);
+   var add=ids.filter(function(x){return!have.has(x)}).map(function(x){return{discount_id:did,product_id:x}}),del=[].concat.apply([],[Array.from(have).filter(function(x){return!want.has(x)})]);
+   if(add.length){var ai=await supabaseClient.from("product_discounts").insert(add);if(ai.error&&!/duplicate/i.test(ai.error.message)){alert("Saved the discount, but could not add products: "+ai.error.message)}}
+   if(del.length)await supabaseClient.from("product_discounts").delete().eq("discount_id",did).in("product_id",del)}
+  else if(id){await supabaseClient.from("product_discounts").delete().eq("discount_id",did)}
+  try{showToast(id?"Discount updated":"Discount created","success")}catch(_){}
+  try{loadAdminDiscounts()}catch(_){}try{loadStoreProducts()}catch(_){}cancelDiscountEdit();lzDiscScope(true)}finally{btn&&(btn.disabled=false)}};
+// editing a campaign (editDiscount lives in admin.js): it changes the form title → refresh the tick-list
+function watch(){var t=$("discountFormTitle");if(!t||t.__lzw)return;t.__lzw=1;new MutationObserver(function(){lzDiscScope()}).observe(t,{childList:true,characterData:true,subtree:true})}
+var n=0,iv=setInterval(function(){n++;watch();if(($("discountFormTitle")&&$("discountFormTitle").__lzw)||n>200)clearInterval(iv)},300);})();
+
 function initLzDeck(root){var stack=root.querySelector(".lzd-stack");if(!stack)return;var cards=[].slice.call(stack.querySelectorAll(".lzd-card"));if(!cards.length)return;
 root.classList.add("lzd-simple");var count=root.querySelector(".lzd-count"),top=0;
 var show=function(){cards.forEach(function(c,k){var on=k===top;c.style.transform="";c.style.filter="";c.style.zIndex=on?"2":"1";c.style.opacity=on?"1":"0";c.setAttribute("aria-hidden",on?"false":"true")});if(count)count.textContent=(top+1)+" / "+cards.length};
