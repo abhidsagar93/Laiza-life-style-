@@ -2226,7 +2226,7 @@ window.lzDiscScope=async function(keep){var sc=$("discountScope").value;$("disco
 window.lzDiscSubmit=async function(e){e.preventDefault();var sc=$("discountScope").value,ids=[].map.call(document.querySelectorAll("#lzDiscProdList input:checked"),function(i){return i.value});
  if(sc==="products"&&!ids.length){alert("Tick at least one product for this discount.");return}
  var id=$("discountEditId").value,payload={name:$("discountName").value.trim(),campaign_type:$("discountCampaignType").value,discount_type:$("discountType").value,value:Number($("discountValue").value),scope:sc,
-  category_id:sc==="category"?$("discountCategorySelect").value:null,starts_at:$("discountStart").value?new Date($("discountStart").value).toISOString():null,ends_at:$("discountEnd").value?new Date($("discountEnd").value).toISOString():null,is_active:$("discountActive").checked};
+  category_id:sc==="category"?$("discountCategorySelect").value:null,starts_at:$("discountStart").value?new Date($("discountStart").value).toISOString():null,ends_at:$("discountEnd").value?new Date($("discountEnd").value).toISOString():null,is_active:$("discountActive").checked};payload.discount_percent=payload.discount_type==="percent"?payload.value:0;
  var btn=$("discountSubmitBtn");btn&&(btn.disabled=true);try{var did=id;
   if(id){var u=await supabaseClient.from("discounts").update(payload).eq("id",id);if(u.error){alert("Could not save: "+u.error.message);return}}
   else{var c=await supabaseClient.from("discounts").insert(payload).select().single();if(c.error||!c.data){alert("Could not create: "+(c.error?c.error.message:"no reply"));return}did=c.data.id}
