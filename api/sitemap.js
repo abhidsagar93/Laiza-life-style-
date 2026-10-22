@@ -10,6 +10,7 @@ const PAGES = ['privacy', 'terms', 'shipping', 'returns', 'cancellation'];
 const INFO_PAGES = ['about', 'story', 'contact'];
 const CAT_SLUG = { 'leather wallets': 'wallets', 'card holders': 'card-holders', 'leather key chains': 'keychains' };
 const GUIDES = [
+  'diwali-gift-guide-leather-wallets-for-men',
   'best-leather-wallets-for-men-india',
   'bifold-vs-trifold-vs-card-holder',
   'how-to-identify-genuine-leather',
