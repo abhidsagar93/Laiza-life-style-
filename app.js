@@ -2579,7 +2579,7 @@ function mount(){var S=$("lzfSettleBox");if(!S)return false;if($("lzGwBox"))retu
  +'<select id="lzGwAcct">'+(banks.length?banks.map(function(b){return'<option value="'+b.id+'">🏦 '+esc(b.name)+(b.account_last4?" ••"+esc(b.account_last4):"")+'</option>'}).join(""):'<option value="">Default bank</option>')+'</select>'
  +'<button type="button" class="b" onclick="lzGwSave(this)">Save settlement + charges</button></div>'
  +'<div class="r" style="font-size:12.5px;color:#7a6c57"><span style="flex:0 0 auto">PayU fee rate %</span><input type="number" step="0.01" min="0" style="flex:0 0 90px" value="'+pct()+'" onchange="lzGwPct(this.value)"><span>+ 18% GST on the fee (2% → 2.36% in total)</span></div>'
- +'<div id="lzGwSum"></div><p class="n" style="margin:10px 0 0">Manual entry (other gateways, or without charges) is below.</p>';
+ +'<div id="lzGwSum"></div>';
  var head=S.querySelector(".panel-head");var p=head&&head.nextSibling&&head.nextSibling.nodeName==="P"?head.nextSibling:head;
  S.insertBefore(w,p?p.nextSibling:S.firstChild);load();return true}
 var n=0,iv=setInterval(function(){n++;if(mount()||n>400)clearInterval(iv)},600);
@@ -2644,6 +2644,81 @@ function mount(){var S=$("lzfSettleBox");if(!S)return false;if($("lzCodBox"))ret
  +'<div class="n" id="lzCodDue"></div><div id="lzCodList">Loading…</div>'
  +'<div class="r" style="font-size:12.5px;color:#5f6f63;margin-top:8px"><span style="flex:0 0 auto">Paid on the first Friday at least</span><input type="number" min="0" step="1" style="flex:0 0 70px" value="'+days()+'" onchange="lzCodDays(this.value)"><span>days after delivery (4 = Monday delivery → Friday same week)</span></div>';
  var gw=$("lzGwBox");if(gw)S.insertBefore(w,gw.nextSibling);else{var h=S.querySelector(".panel-head");S.insertBefore(w,h?h.nextSibling:S.firstChild)}
+ load();return true}
+var n=0,iv=setInterval(function(){n++;if(mount()||n>400)clearInterval(iv)},700);
+})();
+
+;(function(){
+var CSS='#lzStlList .s{border:1px solid #eadfca;border-left:4px solid #c9a24b;border-radius:14px;padding:12px 14px;margin:10px 0;background:#fff}'
++'#lzStlList .sh{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline}#lzStlList .sh b{font-size:16px}'
++'#lzStlList .st{display:inline-block;font-size:11px;font-weight:700;border-radius:10px;padding:2px 8px;background:#dcf1e1;color:#1f6b35;margin-left:6px;text-transform:uppercase}#lzStlList .st.p{background:#efe3c8;color:#6b4a12}#lzStlList .st.f{background:#f8dcdc;color:#9b2c2c}'
++'#lzStlList .m{font-size:12.5px;color:#7a6c57}#lzStlList .sum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}#lzStlList .sum div{background:#faf6ef;border-radius:10px;padding:7px 9px}'
++'#lzStlList .sum span{display:block;font-size:11px;color:#7a6c57}#lzStlList .sum b{font-size:14.5px}'
++'#lzStlList .o{border-top:1px dashed #e6dccb;padding:9px 0 2px;display:grid;grid-template-columns:1.1fr 1.4fr 2fr .9fr;gap:8px;font-size:13px}#lzStlList .o small{display:block;color:#7a6c57;font-size:11.5px}'
++'#lzStlList .lk{margin-top:8px}#lzStlList button.b{border:0;background:#2a1c10;color:#fff;border-radius:18px;padding:8px 14px;font:inherit;font-size:12.5px;cursor:pointer}#lzStlList button.w{background:#f6efe2;color:#3a2716;border:1px solid #d9c9a6}'
++'#lzStlList .pick{border:1px solid #eadfca;border-radius:10px;max-height:220px;overflow:auto;margin:8px 0;background:#fffdf8}#lzStlList .pick label{display:flex;gap:8px;align-items:center;padding:7px 9px;border-bottom:1px solid #f2eadb;font-size:13px;text-transform:none;letter-spacing:0;font-weight:500;color:#241e17}'
++'#lzStlList .pick input{width:17px;height:17px}#lzStlList .warn{font-size:12.5px;color:#9b2c2c}'
++'@media(max-width:700px){#lzStlList .o{grid-template-columns:1fr 1fr}#lzStlList .sum{grid-template-columns:1fr 1fr}#lzStlList .sum b{font-size:14px}}';
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function rs(n){return"₹"+Number(n||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function dt(d){if(!d)return"";var x=new Date(String(d).length===10?d+"T00:00:00":d);return isNaN(x)?String(d):x.toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}
+function C(){try{return supabaseClient}catch(e){return null}}
+function nums(t){return String(t||"").match(/LZ[A-Z0-9]+(?:-[A-Z0-9]+)+/g)||[]}
+function label(t){return String(t||"").replace(/\s*·\s*LZ[\s\S]*$/,"").trim()||"—"}
+var S=[],OM={},EX=[],busy=0;
+async function load(){var box=$("lzStlList"),c=C();if(!box||!c||busy)return;busy=1;try{
+ var R=await Promise.all([c.from("settlements").select("*").order("settlement_date",{ascending:false}).limit(150),
+  c.from("expenses").select("id,amount,description,expense_date").or("description.ilike.PayU charges%,description.ilike.COD remittance short%").limit(1000)]);
+ S=R[0].data||[];EX=(R[1].data||[]).filter(function(x){return/^(payu charges|cod remittance short)/i.test(x.description||"")});
+ var all=[];S.forEach(function(s){all=all.concat(nums(s.gateway))});all=Array.from(new Set(all));OM={};
+ for(var k=0;k<all.length;k+=100){var r=await c.from("orders").select("id,order_number,created_at,total,payment_method,payment_status,status,shipping_full_name,customer_name,shipping_phone,shipping_address,shipping_city,shipping_state,shipping_pincode").in("order_number",all.slice(k,k+100));(r.data||[]).forEach(function(o){OM[o.order_number]=o})}
+ var bn=function(id){try{return typeof lzBankName==="function"?lzBankName(id):""}catch(e){return""}};
+ box.innerHTML='<h4 style="margin:18px 0 4px;font-size:15px">Settlement history ('+S.length+')</h4>'+(S.length?S.map(function(s,i){var ns=nums(s.gateway),os=ns.map(function(n){return OM[n]||{order_number:n}});
+  var tot=os.reduce(function(a,o){return a+(Number(o.total)||0)},0),key=ns.join(", "),ch=key?EX.filter(function(x){return String(x.description).indexOf(key)>-1}).reduce(function(a,x){return a+(Number(x.amount)||0)},0):0,amt=Number(s.amount)||0;
+  var cls=s.status==="settled"?"":s.status==="failed"?" f":" p";
+  return'<div class="s"><div class="sh"><span><b>'+esc(label(s.gateway))+'</b><span class="st'+cls+'">'+esc(s.status||"")+'</span></span><span class="m">'+dt(s.settlement_date)+(bn(s.bank_account_id)?" · 🏦 "+esc(bn(s.bank_account_id)):"")+'</span></div>'
+  +'<div class="sum"><div><span>'+(ns.length?"Orders total ("+ns.length+")":"Settlement amount")+'</span><b>'+rs(ns.length?tot:amt)+'</b></div><div><span>Charges</span><b>'+(ch?rs(ch):ns.length&&Math.abs(tot-amt)>0.004?rs(tot-amt)+"*":"—")+'</b></div><div><span>Credited to bank</span><b>'+rs(amt-ch)+'</b></div></div>'
+  +(ns.length&&!ch&&Math.abs(tot-amt)>0.004?'<div class="m">* difference between the orders total and the settlement amount (not saved as an expense).</div>':"")
+  +(ns.length?os.map(function(o){var cod=/cod|cash on delivery/i.test(o.payment_method||"");
+    return'<div class="o"><div><a href="javascript:void(0)" onclick="'+(o.id?"openOrderDetail('"+o.id+"')":"")+'"><b>'+esc(o.order_number)+'</b></a><small>'+dt(o.created_at)+'</small></div>'
+    +'<div>'+esc(o.shipping_full_name||o.customer_name||"—")+'<small>'+esc(o.shipping_phone||"")+'</small></div>'
+    +'<div>'+esc([o.shipping_address,o.shipping_city,o.shipping_state].filter(Boolean).join(", "))+(o.shipping_pincode?" – "+esc(o.shipping_pincode):"")+'</div>'
+    +'<div><b>'+(o.total!=null?rs(o.total):"—")+'</b><small>'+(o.payment_method?(cod?"COD":esc(o.payment_method)):"")+(o.status?" · "+esc(o.status):"")+'</small></div></div>'}).join("")
+   :'<div class="lk"><span class="warn">No orders linked to this settlement.</span> <button type="button" class="b w" onclick="lzStlPick('+i+',this)">Link orders</button><div id="lzStlPick'+i+'"></div></div>')
+  +'</div>'}).join(""):'<div class="m">No settlements yet.</div>');
+ }finally{busy=0}}
+window.lzStlLoad=load;
+window.lzStlPick=async function(i,btn){var s=S[i],c=C(),box=$("lzStlPick"+i);if(!s||!box)return;btn.style.display="none";box.innerHTML='<div class="m">Loading orders…</div>';
+ var since=new Date(new Date(s.settlement_date||Date.now()).getTime()-60*864e5).toISOString(),until=new Date(new Date(s.settlement_date||Date.now()).getTime()+2*864e5).toISOString();
+ var used={};S.forEach(function(x){nums(x.gateway).forEach(function(n){used[n]=1})});
+ var r=await c.from("orders").select("id,order_number,created_at,total,payment_method,payment_status,shipping_full_name,customer_name").gte("created_at",since).lte("created_at",until).order("created_at",{ascending:false}).limit(200);
+ var cod=/cod/i.test(s.gateway||""),os=(r.data||[]).filter(function(o){return!used[o.order_number]&&(cod?/cod|cash on delivery/i.test(o.payment_method||""):(o.payment_status==="paid"&&!/cod|cash on delivery/i.test(o.payment_method||"")))});
+ box.innerHTML='<div class="pick">'+(os.length?os.map(function(o){return'<label><input type="checkbox" value="'+esc(o.order_number)+'" data-t="'+(Number(o.total)||0)+'" onchange="lzStlDiff('+i+')"><span><b>'+esc(o.order_number)+'</b> · '+esc(o.shipping_full_name||o.customer_name||"")+' · '+dt(o.created_at)+'</span><span style="margin-left:auto">'+rs(o.total)+'</span></label>'}).join(""):'<div class="m" style="padding:8px">No matching unlinked orders in the 60 days before this date.</div>')+'</div>'
+ +'<div class="m" id="lzStlDiff'+i+'"></div><label class="m" style="display:flex;gap:6px;align-items:center;text-transform:none;letter-spacing:0;font-weight:500"><input type="checkbox" id="lzStlFee'+i+'" checked style="width:16px;height:16px"> Save the difference as '+(cod?"COD remittance short":"PayU charges")+' (bank balance stays the same)</label>'
+ +'<div style="margin-top:8px"><button type="button" class="b" onclick="lzStlLink('+i+',this)">Save link</button></div>';lzStlDiff(i)};
+window.lzStlDiff=function(i){var s=S[i],el=$("lzStlDiff"+i);if(!s||!el)return;var t=[].reduce.call(document.querySelectorAll("#lzStlPick"+i+" input[value]:checked"),function(a,x){return a+Number(x.dataset.t||0)},0),d=Math.round((t-(Number(s.amount)||0))*100)/100;
+ el.innerHTML=t?"Orders total "+rs(t)+" − settlement "+rs(s.amount)+" = <b>"+rs(d)+"</b>"+(t?" ("+(d/t*100).toFixed(2)+"%)":""):"Tick the orders in this bank credit."};
+window.lzStlLink=async function(i,btn){var s=S[i],c=C();var ck=[].slice.call(document.querySelectorAll("#lzStlPick"+i+" input[value]:checked"));if(!ck.length){alert("Tick at least one order.");return}
+ var ns=ck.map(function(x){return x.value}),t=Math.round(ck.reduce(function(a,x){return a+Number(x.dataset.t||0)},0)*100)/100,amt=Number(s.amount)||0,d=Math.round((t-amt)*100)/100,fee=($("lzStlFee"+i)||{}).checked&&d>0;
+ if(d<0&&!confirm("The orders total ("+rs(t)+") is LESS than the settlement ("+rs(amt)+"). Link anyway?"))return;
+ btn.disabled=true;try{var cod=/cod/i.test(s.gateway||""),upd={gateway:(label(s.gateway)==="—"?(cod?"iThink COD":"PayU"):label(s.gateway))+" · "+ns.join(", ")};if(fee)upd.amount=t;
+  var r=await c.from("settlements").update(upd).eq("id",s.id);if(r.error){alert("Could not save: "+r.error.message);return}
+  if(fee){var cats=await c.from("expense_categories").select("id,name"),cat=(cats.data||[]).find(function(x){return/gateway/i.test(x.name)});
+   if(!cat){var n=await c.from("expense_categories").insert({name:"Payment gateway charges"}).select().single();cat=n.data}
+   var ss=(await c.auth.getSession()).data.session;
+   var e=await c.from("expenses").insert({amount:d,category_id:cat&&cat.id||null,expense_date:s.settlement_date,description:(cod?"COD remittance short · ":"PayU charges · ")+ns.join(", "),payment_mode:"bank",bank_account_id:s.bank_account_id||null,created_by:ss&&ss.user&&ss.user.id||null});
+   if(e.error){await c.from("settlements").update({amount:amt}).eq("id",s.id);alert("Could not save the charges ("+e.error.message+"). The settlement amount was left as it was.");}}
+  try{showToast("Orders linked","success")}catch(_){}try{typeof loadFinanceManagement==="function"&&loadFinanceManagement()}catch(_){}
+  setTimeout(load,600)}finally{btn.disabled=false}};
+function mount(){var tb=$("settlementsTableBody");if(!tb)return false;if($("lzStlList"))return true;
+ if(!$("lzStlCss")){var st=document.createElement("style");st.id="lzStlCss";st.textContent=CSS;document.head.appendChild(st)}
+ var wrap=tb.closest(".table-wrap")||tb.parentNode;wrap.style.display="none";
+ var f=document.querySelector('form[onsubmit*="submitSettlement"]');if(f&&!f.closest("details")){var dd=document.createElement("details");dd.id="lzStlManual";dd.style.cssText="border:1px solid #eadfca;border-radius:12px;padding:10px 12px;margin:6px 0 4px;background:#fff";
+  var sm=document.createElement("summary");sm.style.cssText="cursor:pointer;font-weight:600;font-size:14px";sm.textContent="Manual entry (other gateways, or without charges)";dd.appendChild(sm);
+  var h4=f.previousElementSibling;f.parentNode.insertBefore(dd,f);dd.appendChild(f);if(h4&&h4.tagName==="H4"&&/payment gateway settlements/i.test(h4.textContent))h4.remove()}
+ var d=document.createElement("div");d.id="lzStlList";wrap.parentNode.insertBefore(d,wrap.nextSibling);
+ new MutationObserver(function(){clearTimeout(window.__lzStlT);window.__lzStlT=setTimeout(load,300)}).observe(tb,{childList:true});
  load();return true}
 var n=0,iv=setInterval(function(){n++;if(mount()||n>400)clearInterval(iv)},700);
 })();
