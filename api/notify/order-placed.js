@@ -13,6 +13,7 @@
 
 const { createClient } = require('@supabase/supabase-js');
 const { notifyOrder } = require('../_lib/notify');
+const { pushToAdmins } = require('../_lib/push');
 
 function json(res, code, body) {
   res.status(code).setHeader('Content-Type', 'application/json');
@@ -32,6 +33,24 @@ module.exports = async (req, res) => {
   let body = req.body;
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch (_) { body = {}; } }
   body = body || {};
+
+  // Admin app alerts (kept in this file because the Vercel plan allows only 12 functions):
+  //   { action: 'push_key' }  -> the public VAPID key (public by design)
+  //   { action: 'push_test' } -> sends a test notification to the signed-in admin's phones
+  if (body.action === 'push_key') return json(res, 200, { key: process.env.VAPID_PUBLIC_KEY || '' });
+  if (body.action === 'push_test') {
+    const { SUPABASE_URL: U, SUPABASE_SERVICE_ROLE_KEY: K } = process.env;
+    if (!U || !K) return json(res, 500, { error: 'Server not configured' });
+    const sb = createClient(U, K, { auth: { persistSession: false } });
+    const token = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+    const { data: u } = token ? await sb.auth.getUser(token) : { data: null };
+    if (!u || !u.user) return json(res, 401, { error: 'Not signed in' });
+    const { data: pr } = await sb.from('profiles').select('is_admin').eq('id', u.user.id).maybeSingle();
+    if (!pr || !pr.is_admin) return json(res, 403, { error: 'Admins only' });
+    const r = await pushToAdmins(sb, { title: '🔔 LAIZA alerts are on', body: 'You will get a notification like this for every new order.', url: '/admin', tag: 'lz-test' }, u.user.id);
+    return json(res, 200, r);
+  }
+
   const orderId = body.orderId;
   if (!orderId || !/^[0-9a-f-]{36}$/i.test(String(orderId))) return json(res, 400, { error: 'Invalid order' });
 
