@@ -2884,9 +2884,14 @@ async function card(){var v=$("adminView");if(!v||!v.classList.contains("show")|
  var list=await rows();if(!list.length){b.remove();b=null;return true}
  b.innerHTML='<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff4e5;border:1px solid #f0c98a;border-radius:12px;padding:9px 12px;font-size:13.5px;color:#3a2716"><span style="flex:1 1 220px">📦 <b>'+list.length+' gallery photo'+(list.length>1?"s are":" is")+' still on the old storage.</b> Move them to the new storage (one time, about a minute — keep this page open).</span><button type="button" id="lzMvGo" style="border:0;background:#2a1c10;color:#fff;border-radius:18px;padding:8px 14px;font:inherit;font-size:12.5px;cursor:pointer">Move photos now</button><span id="lzMvLog" style="flex:1 1 100%;font-size:12.5px;color:#6b5f50"></span></div>';
  $("lzMvGo").onclick=function(){go(this)};return true}
+// 1) straight from the old storage; 2) through this website's own Vercel image cache (same site, keeps copies 31 days,
+// works even when the old storage blocks the browser or has stopped).
+async function getImg(u){var tries=[u];[1080,828,640,384].forEach(function(w){[75,60].forEach(function(q){tries.push("/_vercel/image?url="+encodeURIComponent(u)+"&w="+w+"&q="+q)})});
+ var last="";for(var i=0;i<tries.length;i++){try{var r=await fetch(tries[i],{cache:"no-store"});if(!r.ok){last="HTTP "+r.status;continue}var b=await r.blob();if(b.size>500&&/^image\//.test(b.type||"image/"))return b;last="not an image"}catch(e){last=e.message||"Failed to fetch"}}
+ throw new Error(last||"Failed to fetch")}
 async function go(btn){btn.disabled=true;var c=C(),list=await rows(),ok=0,bad=[],log=$("lzMvLog");
  for(var i=0;i<list.length;i++){var x=list[i];log.textContent="Moving "+(i+1)+" of "+list.length+"…";
-  try{var r=await fetch(x.image_url,{cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);var blob=await r.blob();if(!blob.size)throw new Error("empty file");
+  try{var blob=await getImg(x.image_url);
    var t=blob.type||"image/webp",ext=(t.split("/")[1]||"webp").replace("jpeg","jpg"),path="products/"+x.product_id+"/"+Date.now()+"-mv"+Math.random().toString(36).slice(2,8)+"."+ext;
    var up=await c.storage.from("product-images").upload(path,blob,{contentType:t,cacheControl:"31536000",upsert:false});if(up.error)throw up.error;
    var url=c.storage.from("product-images").getPublicUrl(path).data.publicUrl;var u=await c.from("product_images").update({image_url:url}).eq("id",x.id);if(u.error)throw u.error;ok++}
