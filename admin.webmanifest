@@ -1,0 +1,16 @@
+{
+  "id": "/admin",
+  "name": "LAIZA Admin",
+  "short_name": "LAIZA Admin",
+  "description": "LAIZA™ admin panel — orders, stock and accounts, with new-order alerts.",
+  "start_url": "/admin",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#17110C",
+  "theme_color": "#17110C",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
