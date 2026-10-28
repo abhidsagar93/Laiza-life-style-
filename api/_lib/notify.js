@@ -14,6 +14,7 @@
 // payment or shipping logic.
 
 const { sendMetaPurchase } = require('./meta-capi');
+const { pushNewOrder } = require('./push');
 
 const FROM_EMAIL = 'Laiza Lifestyle <orders@laizalifestyle.com>';
 const REPLY_TO = 'laizalifestyle@gmail.com';
@@ -228,6 +229,7 @@ async function alertAdminNewOrder(supabaseAdmin, orderId) {
 
 // event: 'confirmed' | 'shipped' | 'delivered'
 async function notifyOrder(supabaseAdmin, orderId, event) {
+  if (event === 'confirmed') { try { await pushNewOrder(supabaseAdmin, orderId); } catch (_) {} }
   if (event === 'confirmed') { try { await alertAdminNewOrder(supabaseAdmin, orderId); } catch (_) {} }
   if (event === 'confirmed') { try { await sendMetaPurchase(supabaseAdmin, orderId); } catch (_) {} }
   const { data: order } = await supabaseAdmin
