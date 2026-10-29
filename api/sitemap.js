@@ -1,6 +1,7 @@
 // api/sitemap.js  →  https://laizalifestyle.com/sitemap.xml  (vercel.json rewrites /sitemap.xml here)
 // Lists the home page, every active product and every buying guide, built live from Supabase,
 // so new products appear in Google's list automatically.
+// Also: /api/sitemap?format=seo → product list for middleware.js (see seoJson below).
 // Uses existing Vercel env vars: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY.
 
 const { createClient } = require('@supabase/supabase-js');
@@ -27,7 +28,26 @@ function xml(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]));
 }
 
+// ?format=seo → small JSON of active products for middleware.js (page titles/descriptions in the raw HTML).
+// Cached by Vercel's CDN for 1 hour, so Supabase is asked at most about once an hour.
+async function seoJson(req, res) {
+  let list = [];
+  const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = process.env;
+  if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
+    try {
+      const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+      const { data } = await db.from('products').select('name, description, price, compare_price, image_url, category, sku, stock_qty').eq('is_active', true);
+      list = (data || []).map(p => ({ slug: slugify(p.name), name: p.name, description: p.description || '', price: p.price,
+        compare_price: p.compare_price, image_url: p.image_url, category: p.category, sku: p.sku, in_stock: Number(p.stock_qty) > 0 }));
+    } catch (_) { list = []; }
+  }
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('Cache-Control', list.length ? 's-maxage=3600, stale-while-revalidate=86400' : 's-maxage=60');
+  res.status(200).send(JSON.stringify({ products: list }));
+}
+
 module.exports = async (req, res) => {
+  if ((req.query || {}).format === 'seo') return seoJson(req, res);
   const today = new Date().toISOString().slice(0, 10);
   const urls = [
     { loc: SITE + '/', changefreq: 'daily', priority: '1.0', lastmod: today },
