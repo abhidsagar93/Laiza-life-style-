@@ -993,3 +993,50 @@ function lzGstPos(o,map){return o&&(o.place_of_supply||o.shipping_state||map&&ma
 function lzGstLine(o,i,rate,byOrder){var its=byOrder&&byOrder[o.id]||[],base=its.reduce(function(s,x){return s+Number(x.unit_price||0)*Number(x.quantity||0)},0),
  net=Number(o.total||0)-Number(o.shipping_amount||0)-Number(o.cod_fee||0),f=base>0&&net>0?Math.min(1,net/base):1,
  v=Number(i.unit_price||0)*Number(i.quantity||0)*f,t=v/(1+Number(rate||0)/100);return{t:t,g:v-t}}
+
+/* 5 Nov 2026 (patch93): GST Reports → "Every invoice & item (for CA)": one line per item sold in the period with
+   invoice no, item, rate, discount, taxable, CGST/SGST/IGST, payment, order status, and whether it counts as a sale
+   (cancelled / returned / unpaid online are listed but not counted). Print + Excel use the same rows. */
+async function lzCaDetail(){
+ var db=supabaseClient,[start,end]=gstDateRange(),R=function(v){return Math.round(Number(v||0)*100)/100};
+ var biz=(window.gstCache&&window.gstCache.businessState)||(typeof storeSettings!=="undefined"&&storeSettings&&storeSettings.business_state)||"Karnataka";
+ document.getElementById("gstReportTitle").textContent="Every invoice & item (for CA)";
+ var ns=document.getElementById("gstNetSummary");ns&&(ns.style.display="none");
+ document.getElementById("gstReportTbody").innerHTML='<tr><td style="color:#9c8f74">Loading…</td></tr>';
+ var ord=await lzFetchAll("orders","*",function(q){return q.gte("created_at",start.toISOString()).lt("created_at",end.toISOString()).order("created_at",{ascending:true})});
+ ord=(ord||[]).filter(function(o){return o.channel!=="__none"});
+ var ids=ord.map(function(o){return o.id}),items=[],invs=[],iitems=[],cns=[];
+ for(var k=0;k<ids.length;k+=150){var part=ids.slice(k,k+150);
+  var a=await db.from("order_items").select("*, products(hsn_code, gst_rate, sku)").in("order_id",part);items=items.concat(a.data||[]);
+  var b=await db.from("invoices").select("*").in("order_id",part);invs=invs.concat(b.data||[]);
+  var c=await db.from("credit_notes").select("*").in("order_id",part);cns=cns.concat(c.data||[])}
+ var invIds=invs.map(function(i){return i.id});
+ for(k=0;k<invIds.length;k+=150){var d=await db.from("invoice_items").select("*").in("invoice_id",invIds.slice(k,k+150));iitems=iitems.concat(d.data||[])}
+ var invBy={},iiBy={},itBy={},cnBy={};invs.forEach(function(i){invBy[i.order_id]=i});iitems.forEach(function(i){(iiBy[i.invoice_id]=iiBy[i.invoice_id]||[]).push(i)});
+ items.forEach(function(i){(itBy[i.order_id]=itBy[i.order_id]||[]).push(i)});cns.forEach(function(c){if(!c.cancelled_at)(cnBy[c.order_id]=cnBy[c.order_id]||[]).push(c)});
+ var dRate=(window.gstCache&&window.gstCache.defaultGstRate)||18,fmtD=function(x){return x?new Date(x).toLocaleDateString("en-IN"):""};
+ var cols=["Invoice No","Invoice Date","Order No","Order Date","Customer","State","Item","SKU","HSN","Qty","Rate (incl. GST)","Discount","Taxable Value","GST %","CGST","SGST","IGST","Line Total","Payment","Payment Status","Order Status","Credit Note","Counted in sales?"];
+ var rows=[],T={q:0,disc:0,tx:0,c:0,s:0,i:0,tot:0},n=0;
+ ord.forEach(function(o){var inv=invBy[o.id],pos=lzGstPos(o,window.gstCache&&window.gstCache.customerStateMap)||"",intra=pos&&pos.trim().toLowerCase()===String(biz).trim().toLowerCase(),
+  st=String(o.status||""),real=lzGstReal(o),cn=cnBy[o.id]||[],why=real?(cn.length?"Yes – credit note issued":"Yes"):(/^(cancelled)$/.test(st)?"No – cancelled":/^(returned|refunded)$/.test(st)?"No – "+st:/^failed$/.test(st)?"No – payment failed":"No – online payment not received");
+  var lines=inv&&(iiBy[inv.id]||[]).length?iiBy[inv.id].map(function(x){var rate=x.taxable_amount>0?R(Number(x.gst_amount||0)/Number(x.taxable_amount)*100):dRate,gross=Number(x.unit_price||0)*Number(x.quantity||0);
+     return{name:x.product_name,sku:x.sku||"",hsn:x.hsn_code||"",q:Number(x.quantity||0),rate:Number(x.unit_price||0),disc:R(x.discount_amount!=null?x.discount_amount:gross-Number(x.line_total||0)),tx:R(x.taxable_amount),g:R(x.gst_amount),gr:Math.round(rate),tot:R(x.line_total!=null?x.line_total:Number(x.taxable_amount||0)+Number(x.gst_amount||0))}})
+   :(itBy[o.id]||[]).map(function(x){var p=x.products||{},rate=p.gst_rate!=null?Number(p.gst_rate):dRate,L=lzGstLine(o,x,rate,itBy),gross=Number(x.unit_price||0)*Number(x.quantity||0);
+     return{name:x.product_name,sku:p.sku||x.sku||"",hsn:p.hsn_code||"",q:Number(x.quantity||0),rate:Number(x.unit_price||0),disc:R(gross-L.t-L.g),tx:R(L.t),g:R(L.g),gr:rate,tot:R(L.t+L.g)}});
+  lines.forEach(function(l){n++;var cg=intra?R(l.g/2):0,sg=intra?R(l.g-cg):0,ig=intra?0:l.g;
+   rows.push([inv?inv.invoice_number:"— (no invoice)",inv?fmtD(inv.invoice_date||inv.issued_at):"",o.order_number,fmtD(o.created_at),o.shipping_full_name||o.customer_name||"",pos,l.name,l.sku,l.hsn,l.q,l.rate,l.disc,l.tx,l.gr+"%",cg,sg,ig,l.tot,o.payment_method||"",o.payment_status||"",(typeof ORDER_STATUS_LABEL!=="undefined"&&ORDER_STATUS_LABEL[st])||st,cn.map(function(c){return c.note_no||c.credit_note_number||""}).join(", "),why]);
+   if(real){T.q+=l.q;T.disc+=l.disc;T.tx+=l.tx;T.c+=cg;T.s+=sg;T.i+=ig;T.tot+=l.tot}})});
+ rows.push(["TOTAL (counted sales only)","","","","","","","","",T.q,"",R(T.disc),R(T.tx),"",R(T.c),R(T.s),R(T.i),R(T.tot),"","","","",""]);
+ window.gstReportColumns=cols;window.gstReportRows=rows;
+ document.getElementById("gstTaxableSales").textContent=moneyPrecise(T.tx);document.getElementById("gstCgstTotal").textContent=moneyPrecise(T.c);
+ document.getElementById("gstSgstTotal").textContent=moneyPrecise(T.s);document.getElementById("gstIgstTotal").textContent=moneyPrecise(T.i);
+ var esc=function(v){return String(v==null?"":v).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+ document.getElementById("gstReportThead").innerHTML="<tr>"+cols.map(function(c){return"<th>"+esc(c)+"</th>"}).join("")+"</tr>";
+ document.getElementById("gstReportTbody").innerHTML=n?rows.map(function(r,ri){var last=ri===rows.length-1,no=String(r[22]).indexOf("No")===0;
+  return'<tr style="'+(last?"font-weight:700;background:#f6f0e3":no?"color:#a3452c;background:#fbf1ee":"")+'">'+r.map(function(c,ix){return'<td data-label="'+esc(cols[ix])+'">'+esc(typeof c==="number"&&ix>=10&&ix!==13?c.toFixed(2):c)+"</td>"}).join("")+"</tr>"}).join("")
+  :'<tr><td colspan="'+cols.length+'" style="color:#9c8f74;">No orders in this period.</td></tr>'}
+(function(){var orig=window.loadGstReport;if(typeof orig!=="function"||orig.__lzCa)return;
+ var w=async function(){var s=document.getElementById("gstReportType");if(s&&s.value==="ca_detail"){try{return await lzCaDetail()}catch(e){typeof showToast==="function"&&showToast("Could not load report: "+e.message,"error")}return}return orig.apply(this,arguments)};
+ w.__lzCa=1;window.loadGstReport=w;
+ var add=function(){var s=document.getElementById("gstReportType");if(!s||s.querySelector('option[value="ca_detail"]'))return!!s;var o=document.createElement("option");o.value="ca_detail";o.textContent="Every invoice & item (for CA)";s.insertBefore(o,s.firstChild&&s.options[1]||null);return true};
+ if(!add()){var n=0,t=setInterval(function(){if(add()||++n>60)clearInterval(t)},1000)}})();
