@@ -1040,3 +1040,63 @@ async function lzCaDetail(){
  w.__lzCa=1;window.loadGstReport=w;
  var add=function(){var s=document.getElementById("gstReportType");if(!s||s.querySelector('option[value="ca_detail"]'))return!!s;var o=document.createElement("option");o.value="ca_detail";o.textContent="Every invoice & item (for CA)";s.insertBefore(o,s.firstChild&&s.options[1]||null);return true};
  if(!add()){var n=0,t=setInterval(function(){if(add()||++n>60)clearInterval(t)},1000)}})();
+
+/* 6 Nov 2026 (patch94): GST Reports → "GSTR-1 (month)" and "GSTR-3B (month)" on screen, from the same data as the
+   Monthly Accounts Book Excel (invoices + credit notes + purchases), each with the month's invoice list.
+   Month = month of the From date. Print / Excel buttons use the same rows. */
+function lzGstrRange(){var f=(document.getElementById("gstFrom")||{}).value||new Date().toISOString().slice(0,10),ym=f.slice(0,7),y=+ym.slice(0,4),m=+ym.slice(5,7),
+ last=new Date(Date.UTC(y,m,0)).getUTCDate();return{from:ym+"-01",to:ym+"-"+String(last).padStart(2,"0"),label:new Date(Date.UTC(y,m-1,1)).toLocaleString("en-IN",{month:"long",year:"numeric",timeZone:"UTC"})}}
+function lzGstrRender(title,secs){var esc=function(v){return String(v==null?"":v).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})},
+ fmt=function(v){return typeof v==="number"?(Number.isInteger(v)?String(v):v.toFixed(2)):v},w=Math.max.apply(null,secs.map(function(s){return s.cols.length})),rows=[],html="";
+ secs.forEach(function(s){rows.push([s.title]);rows.push(s.cols);html+='<tr><td colspan="'+w+'" style="font-weight:700;background:#efe5cf;color:#3a2416;padding-top:14px">'+esc(s.title)+'</td></tr>'
+  +'<tr>'+s.cols.map(function(c){return'<th style="font-size:12px">'+esc(c)+'</th>'}).join("")+'</tr>';
+  if(!s.rows.length){rows.push(["(none)"]);html+='<tr><td colspan="'+w+'" style="color:#9c8f74">None this month</td></tr>'}
+  s.rows.forEach(function(r){rows.push(r.map(function(v){return typeof v==="number"?Math.round(v*100)/100:v}));var tot=/^TOTAL|^Tax to pay|^Net/i.test(String(r[0]));
+   html+='<tr style="'+(tot?"font-weight:700;background:#f6f0e3":"")+'">'+r.map(function(v,i){return'<td data-label="'+esc(s.cols[i]||"")+'">'+esc(fmt(v))+'</td>'}).join("")+'</tr>'});
+  s.note&&(rows.push([s.note]),html+='<tr><td colspan="'+w+'" style="font-size:12px;color:#7a6a52">'+esc(s.note)+'</td></tr>');rows.push([])});
+ window.gstReportColumns=[title];window.gstReportRows=rows;document.getElementById("gstReportTitle").textContent=title;
+ document.getElementById("gstReportThead").innerHTML="";document.getElementById("gstReportTbody").innerHTML=html}
+function lzGstrInvoices(D){var R=function(a,k){return a.reduce(function(s,r){return s+Number(r[k]||0)},0)},rows=D.sales.map(function(r){return[r.no,r.date,r.name||"",r.gstin||"B2C",r.pos,r.rate+"%",r.taxable,r.cgst,r.sgst,r.igst,r.total,r.order||"",r.status||""]});
+ rows.push(["TOTAL","","","","","",R(D.sales,"taxable"),R(D.sales,"cgst"),R(D.sales,"sgst"),R(D.sales,"igst"),R(D.sales,"total"),"",""]);
+ var out=[{title:"Invoices this month ("+D.sales.length+")",cols:["Invoice No","Date","Customer","GSTIN","Place of supply","Rate","Taxable","CGST","SGST","IGST","Invoice value","Order No","Order status"],rows:rows}];
+ if(D.cancelled.length)out.push({title:"Cancelled / returned invoices (not counted above)",cols:["Invoice No","Date","Customer","Status","Value"],rows:D.cancelled.map(function(r){return[r.no,r.date,r.name||"",r.status||"",r.total]}),note:"Each needs a credit note (or the invoice cancelled on the GST portal before filing)."});
+ return out}
+async function lzGstr1(){var M=lzGstrRange(),D=await lzBooksData(M.from,M.to),S=function(a,k){return a.reduce(function(s,r){return s+Number(r[k]||0)},0)},b2b=D.sales.filter(function(r){return r.gstin});
+ var secs=[{title:"GSTR-1 · "+M.label+" · GSTIN "+((typeof storeSettings!=="undefined"&&storeSettings&&storeSettings.business_gstin)||"—"),cols:["Due date","Invoices","Credit notes","Taxable (after returns)","Total tax"],
+   rows:[["11 "+new Date(Date.UTC(+M.to.slice(0,4),+M.to.slice(5,7),1)).toLocaleString("en-IN",{month:"short",year:"numeric",timeZone:"UTC"})+" (monthly filer)",D.sales.length,D.cnRows.length,D.out.taxable,D.out.cgst+D.out.sgst+D.out.igst]]},
+  {title:"Table 4A · B2B invoices (customers with GSTIN)",cols:["GSTIN","Name","Invoice No","Date","Invoice value","Place of supply","Rate","Taxable","IGST","CGST","SGST"],
+   rows:b2b.map(function(r){return[r.gstin,r.name||"",r.no,r.date,r.total,r.posCode+"-"+r.pos,r.rate+"%",r.taxable,r.igst,r.cgst,r.sgst]})},
+  {title:"Table 7 · B2C (others) — state-wise, rate-wise",cols:["Place of supply","Rate","Taxable","IGST","CGST","SGST"],
+   rows:D.b2c.map(function(r){return[r.code+"-"+r.pos,r.rate+"%",r.taxable,r.igst,r.cgst,r.sgst]}).concat([["TOTAL","",S(D.b2c,"taxable"),S(D.b2c,"igst"),S(D.b2c,"cgst"),S(D.b2c,"sgst")]]),
+   note:"Credit notes to customers without GSTIN: reduce these figures (or report in Table 9B unregistered) — see below."},
+  {title:"Table 9B · Credit notes",cols:["Credit note","Date","Against invoice","GSTIN","Taxable","IGST","CGST","SGST","Total"],
+   rows:D.cnRows.map(function(c){return[c.no,c.date,c.inv||"",c.gstin||"B2C",c.taxable,c.igst,c.cgst,c.sgst,c.total]})},
+  {title:"Table 12 · HSN summary",cols:["HSN","Description","UQC","Qty","Rate","Taxable","Total tax","Total value"],
+   rows:D.hsn.map(function(h){return[h.hsn,h.desc,h.uqc,h.qty,h.rate+"%",h.taxable,h.gst,h.total]})},
+  {title:"Table 13 · Documents issued",cols:["Document","From","To","Total","Cancelled"],
+   rows:[["Invoices for outward supply",D.docs.first||"",D.docs.last||"",D.docs.total||0,D.docs.cancelled||0],["Credit notes",(D.cnRows[0]||{}).no||"",(D.cnRows[D.cnRows.length-1]||{}).no||"",D.cnRows.length,0]]}];
+ lzGstrRender("GSTR-1 — "+M.label,secs.concat(lzGstrInvoices(D)))}
+async function lzGstr3b(){var M=lzGstrRange(),D=await lzBooksData(M.from,M.to),o=D.out,i=D.inp,r2=function(v){return Math.round(v*100)/100};
+ var pI=Math.max(0,o.igst),pC=Math.max(0,o.cgst),pS=Math.max(0,o.sgst),a,rI=i.igst||0,rC=i.cgst||0,rS=i.sgst||0;
+ a=Math.min(rI,pI);pI-=a;rI-=a;a=Math.min(rI,pC);pC-=a;rI-=a;a=Math.min(rI,pS);pS-=a;rI-=a;
+ a=Math.min(rC,pC);pC-=a;rC-=a;a=Math.min(rC,pI);pI-=a;rC-=a;a=Math.min(rS,pS);pS-=a;rS-=a;a=Math.min(rS,pI);pI-=a;rS-=a;
+ var inter={};D.b2c.filter(function(r){return r.igst>0}).forEach(function(r){var k=r.code+"-"+r.pos;inter[k]=inter[k]||[k,0,0];inter[k][1]+=r.taxable;inter[k][2]+=r.igst});
+ var secs=[{title:"GSTR-3B · "+M.label+" (due 20th of next month for monthly filers)",cols:["","Taxable","IGST","CGST","SGST","Total tax"],
+   rows:[["3.1(a) Outward taxable supplies (after credit notes)",o.taxable,o.igst,o.cgst,o.sgst,o.igst+o.cgst+o.sgst]]},
+  {title:"3.2 · Inter-state supplies to unregistered persons (state-wise)",cols:["Place of supply","Taxable","IGST"],rows:Object.keys(inter).map(function(k){return inter[k]})},
+  {title:"4 · Input tax credit (purchases with GST bills)",cols:["","Taxable","IGST","CGST","SGST","Total ITC"],
+   rows:[["4(A)(5) All other ITC",i.taxable||0,i.igst||0,i.cgst||0,i.sgst||0,(i.igst||0)+(i.cgst||0)+(i.sgst||0)]],
+   note:"Only claim ITC for bills that appear in your GSTR-2B for this month."},
+  {title:"6.1 · Tax to pay",cols:["","IGST","CGST","SGST","Total"],
+   rows:[["Output tax",o.igst,o.cgst,o.sgst,o.igst+o.cgst+o.sgst],["ITC used",r2(Math.max(0,o.igst)-pI),r2(Math.max(0,o.cgst)-pC),r2(Math.max(0,o.sgst)-pS),r2(Math.max(0,o.igst)+Math.max(0,o.cgst)+Math.max(0,o.sgst)-pI-pC-pS)],
+    ["Tax to pay in cash",r2(pI),r2(pC),r2(pS),r2(pI+pC+pS)],["ITC left (carry forward)",r2(rI),r2(rC),r2(rS),r2(rI+rC+rS)]],
+   note:"ITC used in the GST order: IGST credit first against IGST, then CGST, then SGST; CGST and SGST credit never against each other. Late fee/interest not included."}];
+ lzGstrRender("GSTR-3B — "+M.label,secs.concat(lzGstrInvoices(D)))}
+(function(){var orig=window.loadGstReport;if(typeof orig!=="function"||orig.__lzGstr)return;
+ var w=async function(){var s=document.getElementById("gstReportType"),v=s&&s.value;if(v==="gstr1"||v==="gstr3b"){var ns=document.getElementById("gstNetSummary");ns&&(ns.style.display="none");
+  document.getElementById("gstReportTbody").innerHTML='<tr><td style="color:#9c8f74">Loading…</td></tr>';
+  try{return v==="gstr1"?await lzGstr1():await lzGstr3b()}catch(e){typeof showToast==="function"&&showToast("Could not load "+v.toUpperCase()+": "+e.message,"error",6e3)}return}return orig.apply(this,arguments)};
+ w.__lzGstr=1;w.__lzCa=1;window.loadGstReport=w;
+ var add=function(){var s=document.getElementById("gstReportType");if(!s)return false;if(s.querySelector('option[value="gstr1"]'))return true;
+  [["gstr3b","GSTR-3B (month of From date)"],["gstr1","GSTR-1 (month of From date)"]].forEach(function(x){var o=document.createElement("option");o.value=x[0];o.textContent=x[1];s.insertBefore(o,s.options[1]||null)});return true};
+ if(!add()){var n=0,t=setInterval(function(){if(add()||++n>60)clearInterval(t)},1000)}})();
